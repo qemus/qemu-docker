@@ -1,18 +1,18 @@
 version: "3"
 services:
     vm:
-        container_name: dsm
-        image: kroese/virtual-dsm:latest
+        container_name: qemu
+        image: kroese/docker-qemu:latest
         environment:
             CPU_CORES: "1"
             RAM_SIZE: "512M"            
-            DISK_SIZE: "16G"            
+            DISK_SIZE: "16G"
+            BOOT: "https://ftp.halifax.rwth-aachen.de/osdn/clonezilla/78259/clonezilla-live-3.0.3-22-amd64.iso"
         devices:
             - /dev/kvm
         cap_add:
             - NET_ADMIN                       
         ports:
-            - 5000:5000
-            - 5001:5001
+            - 22:22
         restart: on-failure
         stop_grace_period: 60s

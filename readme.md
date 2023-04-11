@@ -1,24 +1,23 @@
-virtual-dsm
+docker-qemu
 =============
 
 [![build_img]][build_url]
-[![gh_last_release_svg]][dsm-docker-hub]
-[![Docker Image Size]][dsm-docker-hub]
-[![Docker Pulls Count]][dsm-docker-hub]
+[![gh_last_release_svg]][qemu-docker-hub]
+[![Docker Image Size]][qemu-docker-hub]
+[![Docker Pulls Count]][qemu-docker-hub]
 
-[build_url]: https://github.com/kroese/virtual-dsm/actions
-[dsm-docker-hub]: https://hub.docker.com/r/kroese/virtual-dsm
+[build_url]: https://github.com/kroese/docker-qemu/actions
+[qemu-docker-hub]: https://hub.docker.com/r/kroese/docker-qemu
 
-[build_img]: https://github.com/kroese/virtual-dsm/actions/workflows/build.yml/badge.svg
-[Docker Image Size]: https://img.shields.io/docker/image-size/kroese/virtual-dsm/latest
-[Docker Pulls Count]: https://img.shields.io/docker/pulls/kroese/virtual-dsm.svg?style=flat
-[gh_last_release_svg]: https://img.shields.io/docker/v/kroese/virtual-dsm?arch=amd64&sort=date
+[build_img]: https://github.com/kroese/docker-qemu/actions/workflows/build.yml/badge.svg
+[Docker Image Size]: https://img.shields.io/docker/image-size/kroese/docker-qemu/latest
+[Docker Pulls Count]: https://img.shields.io/docker/pulls/kroese/docker-qemu.svg?style=flat
+[gh_last_release_svg]: https://img.shields.io/docker/v/kroese/docker-qemu?arch=amd64&sort=date
 
-A docker container of Virtual DSM v7.2
+A docker container of QEMU
 
 ## Features
 
- - Upgrades supported
  - KVM acceleration
  - Graceful shutdown
 
@@ -31,16 +30,16 @@ version: "3"
 services:
     vm:
         container_name: dsm
-        image: kroese/virtual-dsm:latest
+        image: kroese/docker-qemu:latest
         environment:
             DISK_SIZE: "16G"
+            BOOT: "https://ftp.halifax.rwth-aachen.de/osdn/clonezilla/78259/clonezilla-live-3.0.3-22-amd64.iso"
         devices:
             - /dev/kvm
         cap_add:
             - NET_ADMIN                       
         ports:
-            - 5000:5000
-            - 5001:5001
+            - 22:22
         restart: on-failure
         stop_grace_period: 60s
 ```
@@ -48,7 +47,7 @@ services:
 Via `docker run`
 
 ```bash
-docker run -p 5000:5000 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 60 kroese/virtual-dsm:latest
+docker run -p 22:22 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 60 kroese/docker-qemu:latest
 ```
 
 ## FAQ
@@ -118,15 +117,3 @@ docker run -p 5000:5000 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 60 
     ```
 
     You can also switch back and forth between versions this way without loosing your file data.
-
-  * ### What are the differences compared to standard DSM? ###
-
-    There are only three minor differences: the Virtual Machine Manager package is not available, Surveillance Station does not include any free licenses, and logging in to your Synology account is not supported.
- 
-## Acknowledgments
-
-Based on an [article](https://jxcn.org/2022/04/vdsm-first-try/) by JXCN.
-
-## Disclaimer
-
-Only run this container on original Synology hardware, any other use is not permitted and might not be legal.

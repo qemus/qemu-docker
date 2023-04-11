@@ -2,7 +2,7 @@
 set -eu
 
 if /run/install.sh; then
-  echo "Starting Virtual DSM..."
+  echo "Starting QEMU..."
 else
   echo "Installation failed (code $?)" && exit 81
 fi
@@ -15,9 +15,10 @@ source /run/network.sh
 
 [ -z "${KVM_NET_OPTS}" ] && echo "Error: Failed to setup network..." && exit 84
 
-source /run/serial.sh
-
-[ -z "${KVM_SERIAL_OPTS}" ] && echo "Error: Failed to setup serial..." && exit 85
+KVM_SERIAL_OPTS="\
+    -serial mon:stdio \
+    -device virtio-serial-pci,id=virtio-serial0,bus=pcie.0,addr=0x3 \
+    -chardev pty,id=charserial0"
 
 source /run/power.sh
 
