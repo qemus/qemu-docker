@@ -3,25 +3,19 @@ set -eu
 
 IMG="/storage"
 [ ! -d "$IMG" ] && echo "Storage folder (${IMG}) not found!" && exit 69
-[ -f "$IMG/boot.img" ] && exit 0
 
-TMP="$IMG/tmp"
+FILE="$IMG/boot.img"
+[ -f "$FILE" ] && exit 0
 
-echo "Install: Downloading $BOOT..."
-
-FILE="$TMP/boot.img"
-rm -rf $TMP && mkdir -p $TMP
+echo "Downloading $BOOT..."
 
 # Check if running with interactive TTY or redirected to docker log
 if [ -t 1 ]; then
-  wget "$BOOT" -O "$FILE" -q --no-check-certificate --show-progress
+  wget "$BOOT" -O "$FILE".tmp -q --no-check-certificate --show-progress
 else
-  wget "$BOOT" -O "$FILE" -q --no-check-certificate --show-progress --progress=dot:giga
+  wget "$BOOT" -O "$FILE".tmp -q --no-check-certificate --show-progress --progress=dot:giga
 fi
 
-[ ! -f "$FILE" ] && echo "Download failed" && exit 61
+[ ! -f "$FILE".tmp ] && echo "Download failed" && exit 61
 
-mv -f "$BOOT" "$IMG"/boot.img
-
-rm -rf $TMP
-
+mv -f "$FILE".tmp "$FILE"
