@@ -24,8 +24,6 @@ RUN ["chmod", "+x", "/run/install.sh"]
 VOLUME /storage
 
 EXPOSE 22
-EXPOSE 80
-EXPOSE 443 
 
 ENV CPU_CORES 1
 ENV DISK_SIZE 16G
