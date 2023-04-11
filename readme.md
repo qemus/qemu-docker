@@ -41,13 +41,13 @@ services:
         ports:
             - 22:22
         restart: on-failure
-        stop_grace_period: 60s
+
 ```
 
 Via `docker run`
 
 ```bash
-docker run -p 22:22 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 60 kroese/docker-qemu:latest
+docker run -p 22:22 --device=/dev/kvm --cap-add NET_ADMIN kroese/docker-qemu:latest
 ```
 
 ## FAQ
