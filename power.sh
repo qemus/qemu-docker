@@ -4,7 +4,7 @@ set -eu
 # Configure QEMU for graceful shutdown
 
 QEMU_MONPORT=7100
-QEMU_POWERDOWN_TIMEOUT=50
+QEMU_POWERDOWN_TIMEOUT=8
 _QEMU_PID=/run/qemu.pid
 _QEMU_SHUTDOWN_COUNTER=/run/qemu.counter
 
@@ -37,7 +37,7 @@ _graceful_shutdown(){
     if echo 'info version'| nc -q 1 -w 1 localhost "${QEMU_MONPORT:-7100}">/dev/null; then
 
       sleep 1
-      #echo "Shutting down, waiting... ($(cat ${_QEMU_SHUTDOWN_COUNTER})/${QEMU_POWERDOWN_TIMEOUT})"
+      echo "Shutting down, waiting... ($(cat ${_QEMU_SHUTDOWN_COUNTER})/${QEMU_POWERDOWN_TIMEOUT})"
 
     fi
   done
