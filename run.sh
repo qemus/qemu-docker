@@ -4,7 +4,7 @@ set -eu
 if /run/install.sh; then
   echo "Starting QEMU..."
 else
-  echo "Installation failed (code $?)" && exit 81
+  echo "Failed to start (code $?)" && exit 81
 fi
 
 source /run/disk.sh
