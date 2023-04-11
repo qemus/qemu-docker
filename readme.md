@@ -33,7 +33,7 @@ services:
         image: kroese/docker-qemu:latest
         environment:
             DISK_SIZE: "16G"
-            BOOT: "https://ftp.halifax.rwth-aachen.de/osdn/clonezilla/78259/clonezilla-live-3.0.3-22-amd64.iso"
+            BOOT: "http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/current/legacy-images/netboot/mini.iso"
         devices:
             - /dev/kvm
         cap_add:
