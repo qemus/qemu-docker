@@ -1,8 +1,8 @@
 version: "3"
 services:
     vm:
-        container_name: dsm
-        image: kroese/virtual-dsm:latest
+        container_name: qemu
+        image: kroese/docker-qemu:latest
         environment:
             CPU_CORES: "1"
             RAM_SIZE: "512M"            
@@ -12,7 +12,7 @@ services:
         cap_add:
             - NET_ADMIN                       
         ports:
-            - 5000:5000
-            - 5001:5001
+            - 22:22
+            - 80:80
         restart: on-failure
         stop_grace_period: 60s
