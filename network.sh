@@ -18,7 +18,7 @@ setupLocalDhcp () {
   IP="$2"
   MAC="$1"
   CIDR="24"
-  HOSTNAME="VirtualDSM"
+  HOSTNAME="QEMU"
   # dnsmasq configuration:
   DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-range=$IP,$IP --dhcp-host=$MAC,,$IP,$HOSTNAME,infinite --dhcp-option=option:netmask,255.255.255.0"
   # Create lease file for faster resolve
@@ -61,14 +61,6 @@ if [ ! -c /dev/net/tun ]; then
 fi
 
 [ ! -c /dev/net/tun ] && echo "Error: TUN network interface not available..." && exit 85
-[ ! -d "$IMG" ] && echo "Storage folder (${IMG}) not found!" && exit 86
-
-#If environment variabele not set fall back to file
-if [ -z "$VM_NET_MAC" ]; then
-  FILE="${IMG}/guest.mac"
-  [ ! -f "$FILE" ] && echo "00:11:32:2C:A7:85" > "$FILE"
-  VM_NET_MAC=$(cat "${FILE}")
-fi
 
 update-alternatives --set iptables /usr/sbin/iptables-legacy > /dev/null
 update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy > /dev/null
