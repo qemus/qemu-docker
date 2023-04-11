@@ -29,6 +29,6 @@ ENV CPU_CORES 1
 ENV DISK_SIZE 16G
 ENV RAM_SIZE 512M
 
-ENV BOOT https://ftp.halifax.rwth-aachen.de/osdn/clonezilla/78259/clonezilla-live-3.0.3-22-amd64.iso
+ENV BOOT http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/current/legacy-images/netboot/mini.iso
 
 ENTRYPOINT ["/run/run.sh"]
