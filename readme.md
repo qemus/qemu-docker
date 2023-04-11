@@ -107,13 +107,13 @@ docker run -p 22:22 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 60 kroe
       RAM_SIZE: "2048M"
     ```
     
-  * ### How do I install a specific version of vDSM? ###
+  * ### TODO? ###
 
-    By default it installs vDSM 7.2, but if you want to use an older version you can add its URL to your compose file:
+    Todo
 
     ```
     environment:
-      URL: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_VirtualDSM_42218.pat"
+      BOOT: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_VirtualDSM_42218.pat"
     ```
 
     You can also switch back and forth between versions this way without loosing your file data.
