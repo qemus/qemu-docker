@@ -10,7 +10,6 @@ NEW_SIZE=$(numfmt --from=iec "${DISK_SIZE}")
 
 FILE="$IMG/data${DISK_SIZE}.img"
 [ ! -f "$FILE" ] && truncate -s "${NEW_SIZE}" "${FILE}"
-
 [ ! -f "$FILE" ] && echo "ERROR: Data image does not exist ($FILE)" && exit 83
 
 KVM_DISK_OPTS="\
