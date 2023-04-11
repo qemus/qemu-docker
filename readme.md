@@ -33,13 +33,14 @@ services:
         image: kroese/docker-qemu:latest
         environment:
             DISK_SIZE: "16G"
+            BOOT: "https://ftp.halifax.rwth-aachen.de/osdn/clonezilla/78259/clonezilla-live-3.0.3-22-amd64.iso"
         devices:
             - /dev/kvm
         cap_add:
             - NET_ADMIN                       
         ports:
-            - 5000:5000
-            - 5001:5001
+            - 22:22
+            - 80:80
         restart: on-failure
         stop_grace_period: 60s
 ```
@@ -47,7 +48,7 @@ services:
 Via `docker run`
 
 ```bash
-docker run -p 5000:5000 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 60 kroese/docker-qemu:latest
+docker run -p 22:22 --device=/dev/kvm --cap-add NET_ADMIN --stop-timeout 60 kroese/docker-qemu:latest
 ```
 
 ## FAQ
