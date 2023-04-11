@@ -40,7 +40,6 @@ services:
             - NET_ADMIN                       
         ports:
             - 22:22
-            - 80:80
         restart: on-failure
         stop_grace_period: 60s
 ```
