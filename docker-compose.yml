@@ -14,5 +14,7 @@ services:
             - NET_ADMIN                       
         ports:
             - 22:22
+       volumes:
+            - /var/qemu:/storage
         restart: on-failure
 
