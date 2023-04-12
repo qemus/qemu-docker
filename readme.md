@@ -52,9 +52,9 @@ docker run -it -e "BOOT=http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.
 
 ## FAQ
 
-  * ### How do I select the bootdisk? ###
+  * ### How do I change the bootdisk? ###
 
-    You change `BOOT` to the URL of the ISO image:
+    You can modify the `BOOT` setting to specify the URL of any ISO image:
 
     ```
     environment:
