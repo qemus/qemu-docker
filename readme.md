@@ -74,9 +74,9 @@ docker run -it -e "BOOT=http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.
 
     To create an empty disk with a maximum capacity of 8 terabyte you would use a value of `"8T"` for example.
 
-  * ### How do I change the location of the data disk? ###
+  * ### How do I change the location of the disks? ###
 
-    By default it resides inside a docker volume, but you can add these lines to your compose file:
+    By default they reside inside a docker volume, but you can add these lines to your compose file:
 
     ```
     volumes:
