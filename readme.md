@@ -74,6 +74,18 @@ docker run -it -e "BOOT=https://releases.ubuntu.com/22.04.2/ubuntu-22.04.2-live-
 
     Just replace `/home/user/data` with the path to the folder you want to use for storage.
 
+  * ### How do I change the amount of CPU/RAM? ###
+
+    By default an amount of 512MB RAM and 1 vCPU is allocated to the container.
+
+    To increase this you can add the following environment variabeles:
+
+    ```
+    environment:
+      CPU_CORES: "4"
+      RAM_SIZE: "2048M"
+    ```
+    
   * ### How do I give the container a dedicated IP address?
 
     By default the container uses bridge networking, and is reachable by the IP of the docker host. 
@@ -94,26 +106,3 @@ docker run -it -e "BOOT=https://releases.ubuntu.com/22.04.2/ubuntu-22.04.2-live-
     ```
 
     This has the advantage that you don't need to do any portmapping anymore.
-
-  * ### How do I change the amount of CPU/RAM? ###
-
-    By default an amount of 512MB RAM and 1 vCPU is allocated to the container.
-
-    To increase this you can add the following environment variabeles:
-
-    ```
-    environment:
-      CPU_CORES: "4"
-      RAM_SIZE: "2048M"
-    ```
-    
-  * ### TODO? ###
-
-    Todo
-
-    ```
-    environment:
-      BOOT: "https://global.synologydownload.com/download/DSM/release/7.0.1/42218/DSM_VirtualDSM_42218.pat"
-    ```
-
-    You can also switch back and forth between versions this way without loosing your file data.
