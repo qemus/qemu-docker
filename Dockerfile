@@ -29,6 +29,6 @@ ENV CPU_CORES 1
 ENV DISK_SIZE 16G
 ENV RAM_SIZE 512M
 
-ENV BOOT http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/current/legacy-images/netboot/mini.iso
+ENV BOOT https://releases.ubuntu.com/22.04.2/ubuntu-22.04.2-live-server-amd64.iso
 
 ENTRYPOINT ["/run/run.sh"]
