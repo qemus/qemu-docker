@@ -47,7 +47,7 @@ services:
 Via `docker run`
 
 ```bash
-docker run -p 22:22 --device=/dev/kvm --cap-add NET_ADMIN kroese/docker-qemu:latest
+docker run -it -e "BOOT=https://releases.ubuntu.com/22.04.2/ubuntu-22.04.2-live-server-amd64.iso" --device=/dev/kvm --cap-add NET_ADMIN kroese/docker-qemu:latest
 ```
 
 ## FAQ
