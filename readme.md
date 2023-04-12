@@ -61,7 +61,7 @@ docker run -it -e "BOOT=http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.
       BOOT: "http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.iso"
     ```
     
-    After starting the container it will be downloaded once, and stored for future use.
+    It will be downloaded once during the first run of the container.
 
   * ### How do I change the size of the data disk? ###
 
