@@ -29,7 +29,7 @@ Via `docker-compose.yml`
 version: "3"
 services:
     vm:
-        container_name: dsm
+        container_name: qemu
         image: kroese/docker-qemu:latest
         environment:
             DISK_SIZE: "16G"
