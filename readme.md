@@ -52,7 +52,18 @@ docker run -it -e "BOOT=http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.
 
 ## FAQ
 
-  * ### How do I change the size of the virtual disk? ###
+  * ### How do I select the bootdisk? ###
+
+    You change `BOOT` to the URL of the ISO image:
+
+    ```
+    environment:
+      BOOT: "http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.iso"
+    ```
+    
+    After starting the container it will be downloaded once, and stored for future use.
+
+  * ### How do I change the size of the data disk? ###
 
     By default it is 16GB, but you can modify the `DISK_SIZE` setting in your compose file:
 
@@ -63,7 +74,7 @@ docker run -it -e "BOOT=http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.
 
     To create an empty disk with a maximum capacity of 8 terabyte you would use a value of `"8T"` for example.
 
-  * ### How do I change the location of the virtual disk? ###
+  * ### How do I change the location of the data disk? ###
 
     By default it resides inside a docker volume, but you can add these lines to your compose file:
 
