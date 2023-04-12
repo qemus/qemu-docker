@@ -33,7 +33,7 @@ services:
         image: kroese/docker-qemu:latest
         environment:
             DISK_SIZE: "16G"
-            BOOT: "https://releases.ubuntu.com/22.04.2/ubuntu-22.04.2-live-server-amd64.iso"
+            BOOT: "http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.iso"
         devices:
             - /dev/kvm
         cap_add:
@@ -47,7 +47,7 @@ services:
 Via `docker run`
 
 ```bash
-docker run -it -e "BOOT=https://releases.ubuntu.com/22.04.2/ubuntu-22.04.2-live-server-amd64.iso" --device=/dev/kvm --cap-add NET_ADMIN kroese/docker-qemu:latest
+docker run -it -e "BOOT=http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.iso" --device=/dev/kvm --cap-add NET_ADMIN kroese/docker-qemu:latest
 ```
 
 ## FAQ
