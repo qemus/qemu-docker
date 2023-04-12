@@ -17,8 +17,7 @@ source /run/network.sh
 
 KVM_SERIAL_OPTS="\
     -serial mon:stdio \
-    -device virtio-serial-pci,id=virtio-serial0,bus=pcie.0,addr=0x3 \
-    -chardev pty,id=charserial0"
+    -device virtio-serial-pci,id=virtio-serial0,bus=pcie.0,addr=0x3"
 
 source /run/power.sh
 
