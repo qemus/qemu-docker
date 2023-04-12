@@ -33,7 +33,7 @@ services:
         image: kroese/docker-qemu:latest
         environment:
             DISK_SIZE: "16G"
-            BOOT: "http://archive.ubuntu.com/ubuntu/dists/focal/main/installer-amd64/current/legacy-images/netboot/mini.iso"
+            BOOT: "https://releases.ubuntu.com/22.04.2/ubuntu-22.04.2-live-server-amd64.iso"
         devices:
             - /dev/kvm
         cap_add:
