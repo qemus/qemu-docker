@@ -14,7 +14,7 @@ docker-qemu
 [Docker Pulls Count]: https://img.shields.io/docker/pulls/kroese/docker-qemu.svg?style=flat
 [gh_last_release_svg]: https://img.shields.io/docker/v/kroese/docker-qemu?arch=amd64&sort=date
 
-A docker container of QEMU using KVM acceleration.
+QEMU in a docker container using KVM acceleration.
 
 ## Features
 
