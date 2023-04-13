@@ -28,7 +28,7 @@ Via `docker-compose.yml`
 ```yaml
 version: "3"
 services:
-    vm:
+    qemu:
         container_name: qemu
         image: kroese/docker-qemu:latest
         environment:
