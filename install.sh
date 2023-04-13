@@ -5,7 +5,7 @@ IMG="/storage"
 [ ! -d "$IMG" ] && echo "Storage folder (${IMG}) not found!" && exit 69
 
 FILE="$IMG/boot.img"
-[ -f "$FILE" ] && exit 0
+[ -f "$FILE" ] && return
 
 echo "Downloading $BOOT..."
 
