@@ -1,27 +1,12 @@
 #!/usr/bin/env bash
 set -eu
 
-if /run/install.sh; then
-  echo "Starting QEMU..."
-else
-  echo "Failed to start (code $?)" && exit 81
-fi
+echo "Starting QEMU..."
 
-source /run/disk.sh
-
-[ -z "${KVM_DISK_OPTS}" ] && echo "Error: Failed to setup disks..." && exit 83
-
-source /run/network.sh
-
-[ -z "${KVM_NET_OPTS}" ] && echo "Error: Failed to setup network..." && exit 84
-
-KVM_SERIAL_OPTS="\
-    -serial mon:stdio \
-    -device virtio-serial-pci,id=virtio-serial0,bus=pcie.0,addr=0x3"
-
-source /run/power.sh
-
-[ -z "${KVM_MON_OPTS}" ] && echo "Error: Failed to setup monitor..." && exit 87
+. /run/install.sh
+. /run/disk.sh
+. /run/network.sh
+. /run/power.sh
 
 KVM_ACC_OPTS=""
 
@@ -34,12 +19,15 @@ fi
 [ -z "${KVM_ACC_OPTS}" ] && echo "Error: KVM acceleration is disabled.." && exit 88
 
 RAM_SIZE=$(echo "${RAM_SIZE}" | sed 's/MB/M/g;s/GB/G/g;s/TB/T/g')
+KVM_SERIAL_OPTS="-serial mon:stdio -device virtio-serial-pci,id=virtio-serial0,bus=pcie.0,addr=0x3"
 EXTRA_OPTS="-nographic -object rng-random,id=rng0,filename=/dev/urandom -device virtio-rng-pci,rng=rng0 -device virtio-balloon-pci,id=balloon0,bus=pcie.0,addr=0x4"
 ARGS="-m ${RAM_SIZE} -smp ${CPU_CORES} ${KVM_ACC_OPTS} ${EXTRA_OPTS} ${KVM_MON_OPTS} ${KVM_SERIAL_OPTS} ${KVM_NET_OPTS} ${KVM_DISK_OPTS}"
 
 set -m
 (
-  for _SIGNAL in {1..64}; do trap "echo Caught trap ${_SIGNAL} for the QEMU process" "${_SIGNAL}"; done
+  for _SIGNAL in {1..64}; do
+    trap "echo Caught trap ${_SIGNAL} for the QEMU process" "${_SIGNAL}";
+  done
   qemu-system-x86_64 ${ARGS} & echo $! > ${_QEMU_PID}
 )
 set +m
