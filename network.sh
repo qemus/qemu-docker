@@ -14,18 +14,6 @@ set -eu
 #  Functions
 # ######################################
 
-setupLocalDhcp () {
-  IP="$2"
-  MAC="$1"
-  CIDR="24"
-  HOSTNAME="QEMU"
-  # dnsmasq configuration:
-  DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-range=$IP,$IP --dhcp-host=$MAC,,$IP,$HOSTNAME,infinite --dhcp-option=option:netmask,255.255.255.0"
-  # Create lease file for faster resolve
-  echo "0 $MAC $IP $HOSTNAME 01:${MAC}" > /var/lib/misc/dnsmasq.leases
-  chmod 644 /var/lib/misc/dnsmasq.leases
-}
-
 # Setup macvtap device to connect later the VM and setup a new macvlan device to connect the host machine to the network
 configureNatNetworks () {
 
@@ -46,7 +34,15 @@ configureNatNetworks () {
   #Enable port forwarding flag
   [[ $(< /proc/sys/net/ipv4/ip_forward) -eq 0 ]] && sysctl -w net.ipv4.ip_forward=1
 
-  setupLocalDhcp $VM_NET_MAC $VM_NET_IP
+  CIDR="24"
+  HOSTNAME="QEMU"
+
+  # dnsmasq configuration:
+  DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-range=$VM_NET_IP,$VM_NET_IP --dhcp-host=$VM_NET_MAC,,$VM_NET_IP,$HOSTNAME,infinite --dhcp-option=option:netmask,255.255.255.0"
+
+  # Create lease file for faster resolve
+  echo "0 $VM_NET_MAC $VM_NET_IP $HOSTNAME 01:${VM_NET_MAC}" > /var/lib/misc/dnsmasq.leases
+  chmod 644 /var/lib/misc/dnsmasq.leases
 }
 
 # ######################################
@@ -80,17 +76,28 @@ for nameserver in "${nameservers[@]}"; do
   fi
 done
 
-DNSMASQ_OPTS="$DNSMASQ_OPTS \
-  --dhcp-option=option:dns-server,$DNS_SERVERS \
-  --dhcp-option=option:router,${VM_NET_IP%.*}.1 \
-  --dhcp-option=option:domain-search,$searchdomains \
-  --dhcp-option=option:domain-name,$domainname"
+if [ -z $DNS_SERVERS ]; then
+  DNS_SERVERS="1.1.1.1"
+else
+  COMMAS=${DNS_SERVERS//[^,]/}
+  COMMAS=${#COMMAS}
+  ((COMMAS < 1)) && DNS_SERVERS="$DNS_SERVERS,1.1.1.1"
+fi
 
-[[ -z $(hostname -d) ]] || DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:domain-name,$(hostname -d)"
+DNSMASQ_OPTS="$DNSMASQ_OPTS \
+	--dhcp-option=option:dns-server,$DNS_SERVERS \
+	--dhcp-option=option:router,${VM_NET_IP%.*}.1"
+
+if [ -n "$searchdomains" -a "$searchdomains" != "." ]; then
+  DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:domain-search,$searchdomains"
+  DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:domain-name,$domainname"
+else
+  [[ -z $(hostname -d) ]] || DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:domain-name,$(hostname -d)"
+fi
 
 $DNSMASQ $DNSMASQ_OPTS
 
-KVM_NET_OPTS="${KVM_NET_OPTS} -device virtio-net-pci,netdev=hostnet0,mac=${VM_NET_MAC},id=net0"
+KVM_NET_OPTS="${KVM_NET_OPTS} -device virtio-net-pci,romfile=,netdev=hostnet0,mac=${VM_NET_MAC},id=net0"
 
 # Hack for guest VMs complaining about "bad udp checksums in 5 packets"
 iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill
