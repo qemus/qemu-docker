@@ -8,7 +8,7 @@ DISK_SIZE=$(echo "${DISK_SIZE}" | sed 's/MB/M/g;s/GB/G/g;s/TB/T/g')
 DATA_SIZE=$(numfmt --from=iec "${DISK_SIZE}")
 
 DATA="$IMG/data${DISK_SIZE}.img"
-[ ! -f "$DATA" ] && truncate -s "${DATA_SIZE}" "${DATA}"
+[ ! -f "$DATA" ] && fallocate -l "${DATA_SIZE}" "${DATA}"
 [ ! -f "$DATA" ] && echo "ERROR: Data image does not exist ($DATA)" && exit 83
 
 KVM_DISK_OPTS="\
