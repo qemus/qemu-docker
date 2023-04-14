@@ -10,8 +10,13 @@ if [ -f "$IMG/boot.img" ]; then
   . /run/install.sh
 fi
 
+# Initialize disks
 . /run/disk.sh
+
+# Initialize network
 . /run/network.sh
+
+# Configure shutdown
 . /run/power.sh
 
 KVM_ACC_OPTS=""
