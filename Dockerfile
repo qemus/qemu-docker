@@ -1,4 +1,4 @@
-FROM debian:bookworm-20230320-slim
+FROM debian:bookworm-20230411-slim
 
 RUN apt-get update && apt-get -y upgrade && \
     apt-get --no-install-recommends -y install \
@@ -19,7 +19,6 @@ COPY install.sh /run/
 COPY network.sh /run/
 
 RUN ["chmod", "+x", "/run/run.sh"]
-RUN ["chmod", "+x", "/run/install.sh"]
 
 VOLUME /storage
 
