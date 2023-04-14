@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 set -eu
 
-IMG="/storage"
-[ ! -d "$IMG" ] && echo "Storage folder (${IMG}) not found!" && exit 69
-
 FILE="$IMG/boot.img"
-[ -f "$FILE" ] && return
+rm -f "$FILE"
 
 echo "Downloading $BOOT..."
 
