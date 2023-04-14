@@ -28,6 +28,7 @@ _graceful_shutdown(){
   [ -f "${_QEMU_SHUTDOWN_COUNTER}" ] && return
 
   set +e
+  echo
   echo "Received $1 signal, shutting down..."
   echo 0 > "${_QEMU_SHUTDOWN_COUNTER}"
 
@@ -48,6 +49,7 @@ _graceful_shutdown(){
     fi
   done
 
+  echo
   echo "Quitting..."
   echo 'quit' | nc -q 1 -w 1 localhost "${QEMU_MONPORT:-7100}">/dev/null || true
 
