@@ -40,10 +40,8 @@ services:
             - NET_ADMIN                       
         ports:
             - 22:22
-        volumes:
-            - /var/qemu:/storage
         restart: on-failure
-
+        stop_grace_period: 1m        
 ```
 
 Via `docker run`
@@ -60,7 +58,7 @@ $ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/k
 
     ```
     environment:
-      BOOT: "http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.iso"
+      BOOT: "http://www.example.com/image.iso"
     ```
     
     It will be downloaded only once, during the first run of the container.
