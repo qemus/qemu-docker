@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 set -eu
 
-FILE="$IMG/boot.img"
-rm -f "$FILE"
+TMP="/boot.img"
+rm -f "$TMP"
 
 echo "Downloading ${BOOT}..."
 
 # Check if running with interactive TTY or redirected to docker log
 if [ -t 1 ]; then
-  wget "${BOOT}" -O "$FILE".tmp -q --no-check-certificate --show-progress
+  wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress --progress=bar:noscroll
 else
-  wget "${BOOT}" -O "$FILE".tmp -q --no-check-certificate --show-progress --progress=dot:giga
+  wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress --progress=dot:giga
 fi
 
-[ ! -f "$FILE".tmp ] && echo "Failed to download ${BOOT}" && exit 61
+[ ! -f "$TMP" ] && echo "Failed to download ${BOOT}" && exit 61
 
-mv -f "$FILE".tmp "$FILE"
+FILE="$IMG/boot.img"
+
+mv -f "$TMP" "$FILE"
