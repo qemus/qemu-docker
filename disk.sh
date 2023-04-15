@@ -10,10 +10,19 @@ DATA_SIZE=$(numfmt --from=iec "${DISK_SIZE}")
 DATA="$IMG/data${DISK_SIZE}.img"
 
 if [ ! -f "$DATA" ]; then
-  if ! fallocate -l "${DATA_SIZE}" "${DATA}"; then
-    rm -f "${DATA}"
+
+  # Check free diskspace
+  SPACE=$(df --output=avail -B 1 "$IMG" | tail -n 1)
+
+  if (( DATA_SIZE > SPACE )); then
     echo "ERROR: Not enough free space to create virtual disk." && exit 82
   fi
+
+  if ! fallocate -l "${DATA_SIZE}" "${DATA}"; then
+    rm -f "${DATA}"
+    echo "ERROR: Could not allocate file for virtual disk." && exit 82
+  fi
+
 fi
 
 [ ! -f "$DATA" ] && echo "ERROR: Data image does not exist ($DATA)" && exit 83
