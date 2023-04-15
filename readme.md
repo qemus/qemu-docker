@@ -49,7 +49,7 @@ services:
 Via `docker run`
 
 ```bash
-$ docker run --name qemu -it -e "BOOT=http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.iso" -v "/var/qemu:/storage" --device=/dev/kvm --cap-add NET_ADMIN kroese/docker-qemu:latest
+$ docker run -it --rm -e "BOOT=http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.iso" --device=/dev/kvm --cap-add NET_ADMIN kroese/docker-qemu:latest
 ```
 
 ## FAQ
