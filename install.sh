@@ -15,6 +15,12 @@ fi
 
 [ ! -f "$TMP" ] && echo "Failed to download ${BOOT}" && exit 61
 
+SIZE=$(stat -c%s "$TMP")
+
+if ((SIZE<1000000)); then
+  echo "Invalid ISO file: Size is smaller than 1 MB." && exit 62
+fi
+
 FILE="$IMG/boot.img"
 
 mv -f "$TMP" "$FILE"
