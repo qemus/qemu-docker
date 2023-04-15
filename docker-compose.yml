@@ -7,14 +7,12 @@ services:
             CPU_CORES: "1"
             RAM_SIZE: "512M"            
             DISK_SIZE: "16G"
-            BOOT: "http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.iso"
+            BOOT: "http://www.example.com/image.iso"
         devices:
             - /dev/kvm
         cap_add:
             - NET_ADMIN                       
         ports:
             - 22:22
-       volumes:
-            - /var/qemu:/storage
         restart: on-failure
-
+        stop_grace_period: 1m
