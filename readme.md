@@ -76,9 +76,9 @@ $ docker run --name qemu -it -e "BOOT=http://www.tinycorelinux.net/13.x/x86/rele
 
     To resize the disk to a capacity of 8 terabyte you would use a value of `"8T"` for example.
 
-  * ### How do I change the location of the disks? ###
+  * ### How do I change the location of the data disk? ###
 
-    By default they reside inside a docker volume, but you can add these lines to your compose file:
+    By default it resides inside a docker volume, but you can add these lines to your compose file:
 
     ```
     volumes:
