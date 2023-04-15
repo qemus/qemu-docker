@@ -74,7 +74,7 @@ $ docker run --name qemu -it -e "BOOT=http://www.tinycorelinux.net/13.x/x86/rele
       DISK_SIZE: "16G"
     ```
 
-    To create an empty disk with a maximum capacity of 8 terabyte you would use a value of `"8T"` for example.
+    To resize the disk to a capacity of 8 terabyte you would use a value of `"8T"` for example.
 
   * ### How do I change the location of the disks? ###
 
