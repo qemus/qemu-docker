@@ -12,24 +12,34 @@ if [ -f "${DATA}" ]; then
 
   OLD_SIZE=$(stat -c%s "${DATA}")
 
-  # Resize disk to new size if needed
+  if [ "$DATA_SIZE" -gt "$OLD_SIZE" ]; then
 
-  if [ "$DATA_SIZE" -ne "$OLD_SIZE" ]; then
-
-    if [ "$DATA_SIZE" -gt "$OLD_SIZE" ]; then
-      echo "Resizing data disk from $OLD_SIZE to $DATA_SIZE bytes.."
-      fallocate -l "${DATA_SIZE}" "${DATA}"
+    echo "Resizing data disk from $OLD_SIZE to $DATA_SIZE bytes.."
+           
+    REQ=$((DATA_SIZE-OLD_SIZE))
+      
+    # Check free diskspace    
+    SPACE=$(df --output=avail -B 1 "${IMG}" | tail -n 1)
+      
+    if (( REQ > SPACE )); then
+      echo "ERROR: Not enough free space to resize virtual disk." && exit 84
     fi
 
-    if [ "$DATA_SIZE" -lt "$OLD_SIZE" ]; then
-
-      echo "INFO: Shrinking existing disks is not supported yet!"
-      echo "INFO: Creating backup of old drive in storage folder..."
-
-      mv -f "${DATA}" "${DATA}.bak"
-
+    if ! fallocate -l "${DATA_SIZE}" "${DATA}"; then
+      echo "ERROR: Could not allocate file for virtual disk." && exit 85
     fi
+      
   fi
+
+  if [ "$DATA_SIZE" -lt "$OLD_SIZE" ]; then
+
+    echo "INFO: Shrinking existing disks is not supported yet!"
+    echo "INFO: Creating backup of old drive in storage folder..."
+
+    mv -f "${DATA}" "${DATA}.bak"
+
+  fi
+  
 fi
 
 if [ ! -f "${DATA}" ]; then
@@ -38,18 +48,18 @@ if [ ! -f "${DATA}" ]; then
   SPACE=$(df --output=avail -B 1 "${IMG}" | tail -n 1)
 
   if (( DATA_SIZE > SPACE )); then
-    echo "ERROR: Not enough free space to create virtual disk." && exit 84
+    echo "ERROR: Not enough free space to create virtual disk." && exit 86
   fi
 
   # Create an empty file
   if ! fallocate -l "${DATA_SIZE}" "${DATA}"; then
     rm -f "${DATA}"
-    echo "ERROR: Could not allocate file for virtual disk." && exit 85
+    echo "ERROR: Could not allocate file for virtual disk." && exit 87
   fi
 
   # Check if file exists
   if [ ! -f "${DATA}" ]; then
-    echo "ERROR: Data image does not exist ($DATA)" && exit 86
+    echo "ERROR: Data image does not exist ($DATA)" && exit 88
   fi
 
 fi
@@ -61,4 +71,3 @@ KVM_DISK_OPTS="\
     -device virtio-scsi-pci,id=hw-userdata,bus=pcie.0,addr=0xa \
     -drive file=${DATA},if=none,id=drive-userdata,format=raw,cache=none,aio=native,discard=on,detect-zeroes=on \
     -device scsi-hd,bus=hw-userdata.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata,id=userdata0,rotation_rate=1,bootindex=1"
-
