@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -eu
 
-BOOT="$IMG/boot.img"
+BOOT="$STORAGE/boot.img"
 [ ! -f "$BOOT" ] && echo "ERROR: Boot image does not exist ($BOOT)" && exit 81
 
-DATA="${IMG}/data.img"
+DATA="${STORAGE}/data.img"
 DISK_SIZE=$(echo "${DISK_SIZE}" | sed 's/MB/M/g;s/GB/G/g;s/TB/T/g')
 DATA_SIZE=$(numfmt --from=iec "${DISK_SIZE}")
 
@@ -19,7 +19,7 @@ if [ -f "${DATA}" ]; then
     REQ=$((DATA_SIZE-OLD_SIZE))
       
     # Check free diskspace    
-    SPACE=$(df --output=avail -B 1 "${IMG}" | tail -n 1)
+    SPACE=$(df --output=avail -B 1 "${STORAGE}" | tail -n 1)
       
     if (( REQ > SPACE )); then
       echo "ERROR: Not enough free space to resize virtual disk." && exit 84
@@ -45,7 +45,7 @@ fi
 if [ ! -f "${DATA}" ]; then
 
   # Check free diskspace
-  SPACE=$(df --output=avail -B 1 "${IMG}" | tail -n 1)
+  SPACE=$(df --output=avail -B 1 "${STORAGE}" | tail -n 1)
 
   if (( DATA_SIZE > SPACE )); then
     echo "ERROR: Not enough free space to create virtual disk." && exit 86
