@@ -1,7 +1,7 @@
 <h1 align="center">QEMU for Docker
 <br />
 <p align="center">
-<img src="https://github.com/kroese/docker-qemu/raw/master/.github/logo.jpg" title="Screenshot" style="max-width:100%;" width="432" />
+<img src="https://github.com/kroese/docker-qemu/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="256" />
 </p>
 
 <div align="center">
