@@ -1,5 +1,10 @@
-docker-qemu
-=============
+<h1 align="center">QEMU for Docker
+<br />
+<p align="center">
+<img src="https://github.com/kroese/docker-qemu/raw/master/.github/logo.jpg" title="Screenshot" style="max-width:100%;" width="432" />
+</p>
+
+<div align="center">
 
 [![build_img]][build_url]
 [![gh_last_release_svg]][qemu-docker-hub]
@@ -14,6 +19,7 @@ docker-qemu
 [Docker Pulls Count]: https://img.shields.io/docker/pulls/kroese/docker-qemu.svg?style=flat
 [gh_last_release_svg]: https://img.shields.io/docker/v/kroese/docker-qemu?arch=amd64&sort=date
 
+</div></h1>
 QEMU in a docker container using KVM acceleration.
 
 ## Features
