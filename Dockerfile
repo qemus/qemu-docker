@@ -13,7 +13,6 @@ RUN apt-get update && apt-get -y upgrade && \
     && apt-get clean
 
 COPY run/*.sh /run/
-
 RUN ["chmod", "+x", "/run/run.sh"]
 
 VOLUME /storage
@@ -24,6 +23,6 @@ ENV CPU_CORES 1
 ENV DISK_SIZE 16G
 ENV RAM_SIZE 512M
 
-ENV BOOT http://www.tinycorelinux.net/13.x/x86/release/Core-13.1.iso
+ENV BOOT http://www.example.com/imago.iso
 
 ENTRYPOINT ["/run/run.sh"]
