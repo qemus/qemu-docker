@@ -23,6 +23,6 @@ ENV CPU_CORES 1
 ENV DISK_SIZE 16G
 ENV RAM_SIZE 512M
 
-ENV BOOT http://www.example.com/imago.iso
+ENV BOOT http://www.example.com/image.iso
 
 ENTRYPOINT ["/run/run.sh"]
