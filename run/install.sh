@@ -21,6 +21,6 @@ if ((SIZE<1000000)); then
   echo "Invalid ISO file: Size is smaller than 1 MB." && exit 62
 fi
 
-FILE="$IMG/boot.img"
+FILE="$STORAGE/boot.img"
 
 mv -f "$TMP" "$FILE"
