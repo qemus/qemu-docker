@@ -10,4 +10,4 @@ Dockerfile.archive
 docker-compose.yml
 
 *.md
-build.sh
+
