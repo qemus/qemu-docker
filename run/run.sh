@@ -3,10 +3,10 @@ set -eu
 
 echo "Starting QEMU..."
 
-IMG="/storage"
-[ ! -d "$IMG" ] && echo "Storage folder (${IMG}) not found!" && exit 69
+STORAGE="/storage"
+[ ! -d "$STORAGE" ] && echo "Storage folder (${STORAGE}) not found!" && exit 69
 
-if [ -f "$IMG/boot.img" ]; then
+if [ -f "$STORAGE/boot.img" ]; then
   . /run/install.sh
 fi
 
