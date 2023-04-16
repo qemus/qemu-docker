@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-echo "Starting QEMU..."
+echo "Starting QEMU for Docker v${VERSION}..."
 
 STORAGE="/storage"
 [ ! -d "$STORAGE" ] && echo "Storage folder (${STORAGE}) not found!" && exit 69
