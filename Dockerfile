@@ -12,11 +12,7 @@ RUN apt-get update && apt-get -y upgrade && \
 	qemu-system-x86 \
     && apt-get clean
 
-COPY run.sh /run/
-COPY disk.sh /run/
-COPY power.sh /run/
-COPY install.sh /run/
-COPY network.sh /run/
+COPY run/*.sh /run/
 
 RUN ["chmod", "+x", "/run/run.sh"]
 
