@@ -44,4 +44,4 @@ set -m
 set +m
 
 # Wait for QEMU process to exit
-tail --pid=$(cat "${_QEMU_PID}") -f /dev/null
+tail --pid="$(cat ${_QEMU_PID})" -f /dev/null
