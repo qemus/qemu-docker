@@ -34,6 +34,7 @@ _graceful_shutdown(){
   [ -f "${_QEMU_SHUTDOWN_COUNTER}" ] && return
 
   set +e
+
   echo
   echo "Received $1 signal, shutting down..."
   echo 0 > "${_QEMU_SHUTDOWN_COUNTER}"
