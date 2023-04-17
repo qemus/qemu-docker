@@ -5,6 +5,7 @@ echo "Starting QEMU for Docker v${VERSION}..."
 
 STORAGE="/storage"
 [ ! -d "$STORAGE" ] && echo "Storage folder (${STORAGE}) not found!" && exit 69
+[ ! -f "/run/run.sh" ] && echo "Script must run inside Docker container!" && exit 60
 
 if [ -f "$STORAGE/boot.img" ]; then
   . /run/install.sh
@@ -40,7 +41,5 @@ set -m
 )
 set +m
 
-# Since we have to start the process with -m, we need to poll every intervall if it's still running
-while [ -d "/proc/$(cat ${_QEMU_PID})"  ]; do
-  snore 1
-done
+pidwait -F "${_QEMU_PID}" &
+wait $!
