@@ -69,7 +69,18 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     If `kvm-ok` returns an error stating KVM acceleration cannot be used, you may need to change your BIOS settings.
 
-  * ### How do I change the size of the virtual disk? ###
+  * ### How do I change the bootdisk? ###
+
+    You can modify the `BOOT` setting to specify the URL of any ISO image:
+
+    ```
+    environment:
+      BOOT: "http://www.example.com/image.iso"
+    ```
+    
+    It will be downloaded only once, during the first run of the container.
+
+  * ### How do I change the size of the data disk? ###
 
     By default it is 16GB, but you can modify the `DISK_SIZE` setting in your compose file:
 
@@ -80,7 +91,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     To resize the disk to a capacity of 8 terabyte you would use a value of `"8T"` for example.
 
-  * ### How do I change the location of the virtual disk? ###
+  * ### How do I change the location of the data disk? ###
 
     By default it resides inside a docker volume, but you can add these lines to your compose file:
 
