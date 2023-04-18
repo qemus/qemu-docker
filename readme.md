@@ -53,23 +53,23 @@ services:
 Via `docker run`
 
 ```bash
-$ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm --cap-add NET_ADMIN kroese/docker-qemu:latest
+docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm --cap-add NET_ADMIN kroese/docker-qemu:latest
 ```
 
 ## FAQ
 
-  * ### How do I change the bootdisk? ###
+  * ### How do I check if my system supports KVM?
 
-    You can modify the `BOOT` setting to specify the URL of any ISO image:
+    To check if your system supports KVM run these commands:
 
     ```
-    environment:
-      BOOT: "http://www.example.com/image.iso"
+    sudo apt install cpu-checker
+    sudo kvm-ok
     ```
-    
-    It will be downloaded only once, during the first run of the container.
 
-  * ### How do I change the size of the data disk? ###
+    If `kvm-ok` returns an error stating KVM acceleration cannot be used, you may need to change your BIOS settings.
+
+  * ### How do I change the size of the virtual disk? ###
 
     By default it is 16GB, but you can modify the `DISK_SIZE` setting in your compose file:
 
@@ -80,7 +80,7 @@ $ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/k
 
     To resize the disk to a capacity of 8 terabyte you would use a value of `"8T"` for example.
 
-  * ### How do I change the location of the data disk? ###
+  * ### How do I change the location of the virtual disk? ###
 
     By default it resides inside a docker volume, but you can add these lines to your compose file:
 
@@ -102,12 +102,12 @@ $ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/k
       CPU_CORES: "4"
       RAM_SIZE: "2048M"
     ```
-    
+
   * ### How do I give the container a dedicated IP address?
 
     By default the container uses bridge networking, and is reachable by the IP of the docker host. 
 
-    If you want to give it a seperate IP address, create a macvlan network that matches your local subnet:
+    If you want to give it a seperate IP address, create a macvlan network that matches your local subnet, for example:
 
     ```
     $ docker network create -d macvlan \
@@ -116,10 +116,10 @@ $ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/k
         --ip-range=192.168.0.100/28 \
         -o parent=eth0 vlan
     ```
-    And change the network of the container to `vlan` in your run command:
+    And change the network of the container to `vlan` in your run command or compose file:
 
     ```
      --network vlan --ip=192.168.0.100
     ```
 
-    This has the advantage that you don't need to do any portmapping anymore.
+    This also has the advantage that you don't need to do any portmapping anymore.
