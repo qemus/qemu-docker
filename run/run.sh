@@ -1,6 +1,15 @@
 #!/usr/bin/env bash
 set -eu
 
+# Docker environment variabeles
+
+: ${URL:=''}.                     # URL of the ISO file
+: ${DEBUG:=''}.               # Enable debug mode
+: ${ALLOCATE:='Y'}       # Preallocate diskspace
+: ${CPU_CORES:='1'}     # vCPU count
+: ${DISK_SIZE:='16G'}    # Initial disk size
+: ${RAM_SIZE:='512M'} # Amount of RAM
+
 echo "Starting QEMU for Docker v${VERSION}..."
 
 STORAGE="/storage"
@@ -20,20 +29,26 @@ fi
 # Configure shutdown
 . /run/power.sh
 
-KVM_ACC_OPTS=""
+KVM_OPTS=""
 
 if [ -e /dev/kvm ] && sh -c 'echo -n > /dev/kvm' &> /dev/null; then
   if [[ $(grep -e vmx -e svm /proc/cpuinfo) ]]; then
-    KVM_ACC_OPTS="-machine type=q35,usb=off,accel=kvm -enable-kvm -cpu host"
+    KVM_OPTS=",accel=kvm -enable-kvm -cpu host"
   fi
 fi
 
-[ -z "${KVM_ACC_OPTS}" ] && echo "Error: KVM acceleration is disabled.." && exit 88
+if [ -z "${KVM_OPTS}" ]; then
+  echo "Error: KVM acceleration is disabled.."
+  [ "$DEBUG" != "Y" ] && exit 88
+fi
 
-RAM_SIZE=$(echo "${RAM_SIZE}" | sed 's/MB/M/g;s/GB/G/g;s/TB/T/g')
-KVM_SERIAL_OPTS="-serial mon:stdio -device virtio-serial-pci,id=virtio-serial0,bus=pcie.0,addr=0x3"
-EXTRA_OPTS="-nographic -object rng-random,id=rng0,filename=/dev/urandom -device virtio-rng-pci,rng=rng0 -device virtio-balloon-pci,id=balloon0,bus=pcie.0,addr=0x4"
-ARGS="-m ${RAM_SIZE} -smp ${CPU_CORES} ${KVM_ACC_OPTS} ${EXTRA_OPTS} ${KVM_MON_OPTS} ${KVM_SERIAL_OPTS} ${KVM_NET_OPTS} ${KVM_DISK_OPTS}"
+DEF_OPTS="-nographic -nodefaults"
+KVM_OPTS="-machine type=q35,usb=off${KVM_OPTS}"
+RAM_OPTS=$(echo "-m ${RAM_SIZE}" | sed 's/MB/M/g;s/GB/G/g;s/TB/T/g')
+CPU_OPTS="-smp ${CPU_CORES},sockets=1,cores=${CPU_CORES},threads=1"
+SERIAL_OPTS="-serial mon:stdio -device virtio-serial-pci,id=virtio-serial0,bus=pcie.0,addr=0x3"
+EXTRA_OPTS="-device virtio-balloon-pci,id=balloon0 -object rng-random,id=rng0,filename=/dev/urandom -device virtio-rng-pci,rng=rng0"
+ARGS="${DEF_OPTS} ${CPU_OPTS} ${RAM_OPTS} ${KVM_OPTS} ${MON_OPTS} ${SERIAL_OPTS} ${NET_OPTS} ${DISK_OPTS} ${EXTRA_OPTS}"
 
 set -m
 (
