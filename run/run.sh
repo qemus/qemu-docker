@@ -3,7 +3,7 @@ set -eu
 
 # Docker environment variabeles
 
-: ${URL:=''}.                     # URL of the ISO file
+: ${BOOT:=''}.                     # URL of the ISO file
 : ${DEBUG:=''}.               # Enable debug mode
 : ${ALLOCATE:='Y'}       # Preallocate diskspace
 : ${CPU_CORES:='1'}     # vCPU count
