@@ -27,9 +27,15 @@ ENV DISK_SIZE "16G"
 ENV RAM_SIZE "512M"
 ENV BOOT "http://www.example.com/image.iso"
 
+ARG DATE_ARG=""
 ARG BUILD_ARG=0
 ARG VERSION_ARG="0.0"
-ENV BUILD=$BUILD_ARG
 ENV VERSION=$VERSION_ARG
+
+LABEL org.opencontainers.image.created=${DATE_ARG}
+LABEL org.opencontainers.image.revision=${BUILD_ARG}
+LABEL org.opencontainers.image.version=${VERSION_ARG}
+LABEL org.opencontainers.image.url=https://hub.docker.com/r/kroese/docker-qemu/
+LABEL org.opencontainers.image.source=https://github.com/kroese/docker-qemu/
 
 ENTRYPOINT ["/run/run.sh"]
