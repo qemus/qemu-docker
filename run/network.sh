@@ -3,6 +3,8 @@ set -eu
 
 # Docker environment variabeles
 
+: ${VM_NET_TAP:='qemu'}
+: ${VM_NET_DEV:='eth0'}
 : ${VM_NET_HOST:='QEMU'}
 : ${VM_NET_MAC:='82:cf:d0:5e:57:66'}
 
@@ -18,24 +20,28 @@ set -eu
 
 configureDHCP() {
 
-  # Create /dev/vhost-net
-  if [ ! -c /dev/vhost-net ]; then
-    mknod /dev/vhost-net c 10 238
-    chmod 660 /dev/vhost-net
-  fi
+  VM_NET_VLAN="vlan"
+  GATEWAY=$(ip r | grep default | awk '{print $3}')
+  NETWORK=$(ip -o route | grep "${VM_NET_DEV}" | grep -v default | awk '{print $1}')
+  IP=$(ip address show dev "${VM_NET_DEV}" | grep inet | awk '/inet / { print $2 }' | cut -f1 -d/)
 
-  if [ ! -c /dev/vhost-net ]; then
-    echo -n "Error: VHOST interface not available. Please add the following "
-    echo "docker variable to your container: --device=/dev/vhost-net" && exit 85
-  fi
+  ip l add link "${VM_NET_DEV}" "${VM_NET_VLAN}" type macvlan mode bridge
 
-  VM_NET_TAP="qemu"
+  ip address add "${IP}" dev "${VM_NET_VLAN}"
+  ip link set dev "${VM_NET_VLAN}" up
+
+  ip route flush dev "${VM_NET_DEV}"
+  ip route flush dev "${VM_NET_VLAN}"
+
+  ip route add "${NETWORK}" dev "${VM_NET_VLAN}" metric 0
+  ip route add default via "${GATEWAY}"
+
   echo "Info: Retrieving IP via DHCP using MAC ${VM_NET_MAC}..."
 
-  ip l add link eth0 name "${VM_NET_TAP}" address "${VM_NET_MAC}" type macvtap mode bridge || true
+  ip l add link "${VM_NET_DEV}" name "${VM_NET_TAP}" address "${VM_NET_MAC}" type macvtap mode bridge || true
   ip l set "${VM_NET_TAP}" up
 
-  ip a flush eth0
+  ip a flush "${VM_NET_DEV}"
   ip a flush "${VM_NET_TAP}"
 
   DHCP_IP=$( dhclient -v "${VM_NET_TAP}" 2>&1 | grep ^bound | cut -d' ' -f3 )
@@ -48,7 +54,19 @@ configureDHCP() {
 
   ip a flush "${VM_NET_TAP}"
 
-  TAP_PATH="/dev/tap$(</sys/class/net/${VM_NET_TAP}/ifindex)"
+  # Create /dev/vhost-net
+  if [ ! -c /dev/vhost-net ]; then
+    mknod /dev/vhost-net c 10 238
+    chmod 660 /dev/vhost-net
+  fi
+
+  if [ ! -c /dev/vhost-net ]; then
+    echo -n "Error: VHOST interface not available. Please add the following "
+    echo "docker variable to your container: --device=/dev/vhost-net" && exit 85
+  fi
+
+  TAP_NR=$(</sys/class/net/"${VM_NET_TAP}"/ifindex)
+  TAP_PATH="/dev/tap${TAP_NR}"
 
   # Create dev file (there is no udev in container: need to be done manually)
   IFS=: read -r MAJOR MINOR < <(cat /sys/devices/virtual/net/"${VM_NET_TAP}"/tap*/dev)
@@ -80,25 +98,25 @@ configureDHCP() {
 
 configureNAT () {
 
-  VM_NET_TAP="qemu"
   VM_NET_IP='20.20.20.21'
 
   #Create bridge with static IP for the VM guest
   brctl addbr dockerbridge
   ip addr add ${VM_NET_IP%.*}.1/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge
   ip link set dockerbridge up
+
   #QEMU Works with taps, set tap to the bridge created
-  ip tuntap add dev ${VM_NET_TAP} mode tap
-  ip link set ${VM_NET_TAP} up promisc on
-  brctl addif dockerbridge ${VM_NET_TAP}
+  ip tuntap add dev "${VM_NET_TAP}" mode tap
+  ip link set "${VM_NET_TAP}" up promisc on
+  brctl addif dockerbridge "${VM_NET_TAP}"
 
   #Add internet connection to the VM
-  iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-  iptables -t nat -A PREROUTING -i eth0 -p tcp  -j DNAT --to $VM_NET_IP
-  iptables -t nat -A PREROUTING -i eth0 -p udp  -j DNAT --to $VM_NET_IP
+  iptables -t nat -A POSTROUTING -o "${VM_NET_DEV}" -j MASQUERADE
+  iptables -t nat -A PREROUTING -i "${VM_NET_DEV}" -p tcp  -j DNAT --to $VM_NET_IP
+  iptables -t nat -A PREROUTING -i "${VM_NET_DEV}" -p udp  -j DNAT --to $VM_NET_IP
 
   # Hack for guest VMs complaining about "bad udp checksums in 5 packets"
-  iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill
+  iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
 
   #Enable port forwarding flag
   [[ $(< /proc/sys/net/ipv4/ip_forward) -eq 0 ]] && sysctl -w net.ipv4.ip_forward=1
@@ -135,7 +153,7 @@ configureNAT () {
 
   [ "$DEBUG" = "Y" ] && echo && echo "$DNSMASQ $DNSMASQ_OPTS"
 
-  $DNSMASQ ${DNSMASQ_OPTS:+ $DNSMASQ_OPTS} 
+  $DNSMASQ ${DNSMASQ_OPTS:+ $DNSMASQ_OPTS}
 }
 
 # ######################################
@@ -158,7 +176,7 @@ GATEWAY=$(ip r | grep default | awk '{print $3}')
 
 if [ "$DEBUG" = "Y" ]; then
 
-  IP=$(ip address show dev eth0 | grep inet | awk '/inet / { print $2 }' | cut -f1 -d/)
+  IP=$(ip address show dev "${VM_NET_DEV}" | grep inet | awk '/inet / { print $2 }' | cut -f1 -d/)
   echo "Info: Container IP is ${IP} with gateway ${GATEWAY}"
 
 fi
