@@ -160,7 +160,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     This also has the advantage that you don't need to do any portmapping anymore, because all ports will be fully exposed this way.
 
-    NOTE: Docker does not allow communication between the host and the container in a macvlan network. There are some ways to fix that if needed, but they go beyond the scope of this FAQ.
+    NOTE: You will not be able to reach this IP from the Docker host, as macvlan does not allow communication between those two. There are some ways to fix that if necessary, but they go beyond the scope of this FAQ.
 
   * ### How can the container get an IP address via DHCP? ###
 
@@ -175,6 +175,4 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
         - 'c 510:* rwm'
     ```
 
-    This will make QEMU retrieve an IP from your router. This will not be the same as the macvlan IP of the container, so to determine which one was assigned to QEMU please check the container logfile or use the devices page of your router for example.
-
-    NOTE: The exact cgroup rule may be different than `510` depending on your system, but the correct rule number will be printed to the logfile in case of error.
+    NOTE: The exact cgroup rule may be different than `510` depending on your system, but the correct rule number will be printed to the log output in case of error.
