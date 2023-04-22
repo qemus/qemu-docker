@@ -7,7 +7,6 @@ RUN apt-get update && apt-get -y upgrade && \
 	iproute2 \
 	dnsmasq \
 	net-tools \
-	bridge-utils \
 	ca-certificates \
 	isc-dhcp-client \
 	netcat-openbsd \
@@ -21,7 +20,6 @@ VOLUME /storage
 
 EXPOSE 22
 
-ENV ALLOCATE "Y"
 ENV CPU_CORES "1"
 ENV DISK_SIZE "16G"
 ENV RAM_SIZE "512M"
