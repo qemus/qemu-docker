@@ -58,17 +58,6 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
 ## FAQ
 
-  * ### How do I check if my system supports KVM?
-
-    To check if your system supports KVM run these commands:
-
-    ```
-    sudo apt install cpu-checker
-    sudo kvm-ok
-    ```
-
-    If `kvm-ok` returns an error stating KVM acceleration cannot be used, you may need to change your BIOS settings.
-
   * ### How do I change the bootdisk? ###
 
     You can modify the `BOOT` setting to specify the URL of any ISO image:
@@ -124,6 +113,17 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
       CPU_CORES: "4"
       RAM_SIZE: "2048M"
     ```
+
+  * ### How do I check if my system supports KVM?
+
+    To check if your system supports KVM run these commands:
+
+    ```
+    sudo apt install cpu-checker
+    sudo kvm-ok
+    ```
+
+    If `kvm-ok` returns an error stating KVM acceleration cannot be used, you may need to change your BIOS settings.
 
   * ### How do I give the container its own IP address?
 
