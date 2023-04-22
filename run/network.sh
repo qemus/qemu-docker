@@ -26,7 +26,6 @@ configureDHCP() {
   IP=$(ip address show dev "${VM_NET_DEV}" | grep inet | awk '/inet / { print $2 }' | cut -f1 -d/)
 
   ip l add link "${VM_NET_DEV}" "${VM_NET_VLAN}" type macvlan mode bridge
-
   ip address add "${IP}" dev "${VM_NET_VLAN}"
   ip link set dev "${VM_NET_VLAN}" up
 
@@ -54,17 +53,6 @@ configureDHCP() {
 
   ip a flush "${VM_NET_TAP}"
 
-  # Create /dev/vhost-net
-  if [ ! -c /dev/vhost-net ]; then
-    mknod /dev/vhost-net c 10 238
-    chmod 660 /dev/vhost-net
-  fi
-
-  if [ ! -c /dev/vhost-net ]; then
-    echo -n "Error: VHOST interface not available. Please add the following "
-    echo "docker variable to your container: --device=/dev/vhost-net" && exit 85
-  fi
-
   TAP_NR=$(</sys/class/net/"${VM_NET_TAP}"/ifindex)
   TAP_PATH="/dev/tap${TAP_NR}"
 
@@ -88,6 +76,12 @@ configureDHCP() {
     echo "--device=/dev/vhost-net --device-cgroup-rule='c ${MAJOR}:* rwm'" && exit 21
   fi
 
+  # Create /dev/vhost-net
+  if [ ! -c /dev/vhost-net ]; then
+    mknod /dev/vhost-net c 10 238
+    chmod 660 /dev/vhost-net
+  fi
+
   if ! exec 40>>/dev/vhost-net; then
     echo -n "ERROR: VHOST can not be found. Please add the following docker "
     echo "variable to your container: --device=/dev/vhost-net" && exit 22
@@ -101,22 +95,24 @@ configureNAT () {
   VM_NET_IP='20.20.20.21'
 
   #Create bridge with static IP for the VM guest
-  brctl addbr dockerbridge
+  ip link add dev dockerbridge type bridge
   ip addr add ${VM_NET_IP%.*}.1/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge
   ip link set dockerbridge up
 
   #QEMU Works with taps, set tap to the bridge created
   ip tuntap add dev "${VM_NET_TAP}" mode tap
   ip link set "${VM_NET_TAP}" up promisc on
-  brctl addif dockerbridge "${VM_NET_TAP}"
+  ip link set dev "${VM_NET_TAP}" master dockerbridge
 
   #Add internet connection to the VM
   iptables -t nat -A POSTROUTING -o "${VM_NET_DEV}" -j MASQUERADE
   iptables -t nat -A PREROUTING -i "${VM_NET_DEV}" -p tcp  -j DNAT --to $VM_NET_IP
   iptables -t nat -A PREROUTING -i "${VM_NET_DEV}" -p udp  -j DNAT --to $VM_NET_IP
 
-  # Hack for guest VMs complaining about "bad udp checksums in 5 packets"
-  iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
+  if (( KERNEL > 4 )); then
+    # Hack for guest VMs complaining about "bad udp checksums in 5 packets"
+    iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
+  fi
 
   #Enable port forwarding flag
   [[ $(< /proc/sys/net/ipv4/ip_forward) -eq 0 ]] && sysctl -w net.ipv4.ip_forward=1
@@ -131,11 +127,17 @@ configureNAT () {
   NET_OPTS="-netdev tap,ifname=${VM_NET_TAP},script=no,downscript=no,id=hostnet0"
 
   # Build DNS options from container /etc/resolv.conf
-  mapfile -t nameservers < <(grep '^nameserver' /etc/resolv.conf | sed 's/nameserver //')
-  searchdomains=$(grep '^search' /etc/resolv.conf | sed 's/search //' | sed 's/ /,/g')
+
+  if [ "$DEBUG" = "Y" ]; then
+    echo "/etc/resolv.conf:" && echo && cat /etc/resolv.conf && echo
+  fi
+
+  mapfile -t nameservers < <(grep '^nameserver' /etc/resolv.conf | sed 's/\t/ /g' | sed 's/nameserver //' | sed 's/ //g')
+  searchdomains=$(grep '^search' /etc/resolv.conf | sed 's/\t/ /g' | sed 's/search //' | sed 's/#.*//' | sed 's/\s*$//g' | sed 's/ /,/g')
   domainname=$(echo "$searchdomains" | awk -F"," '{print $1}')
 
   for nameserver in "${nameservers[@]}"; do
+    nameserver=$(echo "$nameserver" | sed 's/#.*//' )
     if ! [[ "$nameserver" =~ .*:.* ]]; then
       [[ -z "$DNS_SERVERS" ]] && DNS_SERVERS="$nameserver" || DNS_SERVERS="$DNS_SERVERS,$nameserver"
     fi
@@ -151,7 +153,8 @@ configureNAT () {
     [[ -z $(hostname -d) ]] || DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:domain-name,$(hostname -d)"
   fi
 
-  [ "$DEBUG" = "Y" ] && echo && echo "$DNSMASQ $DNSMASQ_OPTS"
+  DNSMASQ_OPTS=$(echo "$DNSMASQ_OPTS" | sed 's/\t/ /g' | tr -s ' ' | sed 's/^ *//')
+  [ "$DEBUG" = "Y" ] && echo "$DNSMASQ $DNSMASQ_OPTS" && echo
 
   $DNSMASQ ${DNSMASQ_OPTS:+ $DNSMASQ_OPTS}
 }
@@ -177,7 +180,7 @@ GATEWAY=$(ip r | grep default | awk '{print $3}')
 if [ "$DEBUG" = "Y" ]; then
 
   IP=$(ip address show dev "${VM_NET_DEV}" | grep inet | awk '/inet / { print $2 }' | cut -f1 -d/)
-  echo "Info: Container IP is ${IP} with gateway ${GATEWAY}"
+  echo "Info: Container IP is ${IP} with gateway ${GATEWAY}" && echo
 
 fi
 
