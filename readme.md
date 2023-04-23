@@ -58,7 +58,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
 ## FAQ
 
-  * ### How do I change the bootdisk? ###
+  * ### How do I specify the boot disk?
 
     You can modify the `BOOT` environment variable in your compose file to specify the URL of an ISO image:
 
