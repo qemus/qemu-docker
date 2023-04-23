@@ -60,7 +60,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
   * ### How do I specify the boot disk?
 
-    You can modify the `BOOT` environment variable in your compose file to specify the URL of an ISO image:
+    You can modify the `BOOT` environment variable to specify the URL of an ISO image:
 
     ```
     environment:
@@ -110,9 +110,9 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
   * ### How do I assign an individual IP address to the container?
 
-    By default the container uses bridge networking, and uses the same IP address as the docker host. 
+    By default, the container uses bridge networking which shares the IP address with the host. 
 
-    If you want to assign a unique IP address to the container, you can create a macvlan network by running the following command:
+    If you want to assign an individual IP address to the container, you can create a macvlan network as follows:
 
     ```
     $ docker network create -d macvlan \
@@ -142,11 +142,11 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
    
     An added benefit of this approach is that you won't have to perform any port mapping anymore, since all ports will be exposed by default.
 
-    Please note that this IP address won't be accessible from the Docker host due to the design of macvlan, which doesn't permit communication between the two. If this is a concern, there are some solutions available, but they go beyond the scope of this FAQ.
+    Please note that this IP address won't be accessible from the Docker host due to the design of macvlan, which doesn't permit communication between the two. If this is a concern, there are some workarounds available, but they go beyond the scope of this FAQ.
 
   * ### How can the container acquire an IP address via DHCP?
 
-    After configuring the container for macvlan (see above), add the following lines to your compose file to enable DHCP:
+    After configuring the container for macvlan (see above), add the following lines to your compose file:
 
     ```
     environment:
