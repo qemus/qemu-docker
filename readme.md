@@ -60,14 +60,14 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
   * ### How do I change the bootdisk? ###
 
-    You can modify the `BOOT` setting to specify the URL of any ISO image:
+    You can modify the `BOOT` environment variable in your compose file to specify the URL of an ISO image:
 
     ```
     environment:
       BOOT: "http://www.example.com/image.iso"
     ```
     
-    It will be downloaded only once, during the first run of the container.
+    It will be downloaded only once, during the initial run of the container.
 
   * ### How do I change the size of the data disk?
 
