@@ -1,4 +1,4 @@
-FROM debian:bookworm-20230411-slim
+FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get -y upgrade && \
     apt-get --no-install-recommends -y install \
