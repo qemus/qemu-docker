@@ -1,7 +1,10 @@
 FROM debian:bookworm-slim
 
+ARG DEBCONF_NOWARNINGS="yes"
+ARG DEBIAN_FRONTEND noninteractive
+
 RUN apt-get update && apt-get -y upgrade && \
-    apt-get --no-install-recommends -y install \
+	apt-get --no-install-recommends -y install \
 	wget \
 	iptables \
 	iproute2 \
