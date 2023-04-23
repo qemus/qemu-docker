@@ -87,7 +87,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
       - /home/user/data:/storage
     ```
 
-  * ### How can I increase the allocated amount of CPU/RAM?
+  * ### How can I increase the amount of CPU/RAM?
 
     By default, a single core and 512MB of RAM is allocated to the container. To increase this, add the following environment variables:
 
