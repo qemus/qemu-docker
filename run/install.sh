@@ -4,7 +4,7 @@ set -eu
 TMP="/boot.img"
 rm -f "$TMP"
 
-echo "Downloading ${BOOT}..."
+echo "Downloading ${BOOT} as boot image..."
 
 # Check if running with interactive TTY or redirected to docker log
 if [ -t 1 ]; then
