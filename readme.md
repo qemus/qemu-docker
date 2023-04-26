@@ -1,7 +1,7 @@
 <h1 align="center">QEMU for Docker
 <br />
 <p align="center">
-<img src="https://github.com/kroese/docker-qemu/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="256" />
+<img src="https://github.com/qemu-tools/qemu-docker/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="256" />
 </p>
 
 <div align="center">
@@ -11,13 +11,13 @@
 [![Docker Image Size]][qemu-docker-hub]
 [![Docker Pulls Count]][qemu-docker-hub]
 
-[build_url]: https://github.com/kroese/docker-qemu/actions
-[qemu-docker-hub]: https://hub.docker.com/r/kroese/docker-qemu
+[build_url]: https://github.com/qemu-tools/qemu-docker/actions
+[qemu-docker-hub]: https://hub.docker.com/r/qemux/qemu-docker
 
-[build_img]: https://github.com/kroese/docker-qemu/actions/workflows/build.yml/badge.svg
-[Docker Image Size]: https://img.shields.io/docker/image-size/kroese/docker-qemu/latest
-[Docker Pulls Count]: https://img.shields.io/docker/pulls/kroese/docker-qemu.svg?style=flat
-[gh_last_release_svg]: https://img.shields.io/docker/v/kroese/docker-qemu?arch=amd64&sort=date
+[build_img]: https://github.com/qemu-tools/qemu-docker/actions/workflows/build.yml/badge.svg
+[Docker Image Size]: https://img.shields.io/docker/image-size/qemux/qemu-docker/latest
+[Docker Pulls Count]: https://img.shields.io/docker/pulls/qemux/qemu-docker.svg?style=flat
+[gh_last_release_svg]: https://img.shields.io/docker/v/qemux/qemu-docker?arch=amd64&sort=date
 
 </div></h1>
 QEMU in a docker container using KVM acceleration.
@@ -36,7 +36,7 @@ version: "3"
 services:
     qemu:
         container_name: qemu
-        image: kroese/docker-qemu:latest
+        image: qemux/qemu-docker:latest
         environment:
             DISK_SIZE: "16G"
             BOOT: "http://www.example.com/image.iso"
@@ -53,7 +53,7 @@ services:
 Via `docker run`
 
 ```bash
-docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm --cap-add NET_ADMIN kroese/docker-qemu:latest
+docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm --cap-add NET_ADMIN qemux/qemu-docker:latest
 ```
 
 ## FAQ
