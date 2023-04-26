@@ -34,7 +34,7 @@ version: "3"
 services:
     qemu:
         container_name: qemu
-        image: qemux/qemu-docker:latest
+        image: ghcr.io/qemu-tools/qemu-docker:latest
         environment:
             DISK_SIZE: "16G"
             BOOT: "http://www.example.com/image.iso"
@@ -51,7 +51,7 @@ services:
 Via `docker run`
 
 ```bash
-docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm --cap-add NET_ADMIN qemux/qemu-docker:latest
+docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm --cap-add NET_ADMIN ghcr.io/qemu-tools/qemu-docker:latest
 ```
 
 ## FAQ
