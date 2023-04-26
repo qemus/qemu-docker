@@ -19,9 +19,9 @@ RUN apt-get update && apt-get -y upgrade && \
 COPY run/*.sh /run/
 RUN ["chmod", "+x", "/run/run.sh"]
 
-EXPOSE 22
-
 VOLUME /storage
+
+EXPOSE 22
 
 ENV CPU_CORES "1"
 ENV DISK_SIZE "16G"
