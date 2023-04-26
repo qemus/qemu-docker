@@ -36,7 +36,7 @@ ENV VERSION=$VERSION_ARG
 LABEL org.opencontainers.image.created=${DATE_ARG}
 LABEL org.opencontainers.image.revision=${BUILD_ARG}
 LABEL org.opencontainers.image.version=${VERSION_ARG}
-LABEL org.opencontainers.image.url=https://hub.docker.com/r/qemu-tools/qemu-docker/
+LABEL org.opencontainers.image.url=https://hub.docker.com/r/qemux/qemu-docker/
 LABEL org.opencontainers.image.source=https://github.com/qemu-tools/qemu-docker/
 
 ENTRYPOINT ["/run/run.sh"]
