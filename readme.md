@@ -12,12 +12,12 @@
 [![Docker Pulls Count]][qemu-docker-hub]
 
 [build_url]: https://github.com/qemu-tools/qemu-docker/actions
-[qemu-docker-hub]: https://hub.docker.com/r/qemu-tools/qemu-docker
+[qemu-docker-hub]: https://hub.docker.com/r/qemux/qemu-docker
 
 [build_img]: https://github.com/qemu-tools/qemu-docker/actions/workflows/build.yml/badge.svg
-[Docker Image Size]: https://img.shields.io/docker/image-size/qemu-tools/qemu-docker/latest
-[Docker Pulls Count]: https://img.shields.io/docker/pulls/qemu-tools/qemu-docker.svg?style=flat
-[gh_last_release_svg]: https://img.shields.io/docker/v/qemu-tools/qemu-docker?arch=amd64&sort=date
+[Docker Image Size]: https://img.shields.io/docker/image-size/qemux/qemu-docker/latest
+[Docker Pulls Count]: https://img.shields.io/docker/pulls/qemux/qemu-docker.svg?style=flat
+[gh_last_release_svg]: https://img.shields.io/docker/v/qemux/qemu-docker?arch=amd64&sort=date
 
 </div></h1>
 QEMU in a docker container using KVM acceleration.
