@@ -7,11 +7,11 @@
 <div align="center">
 
 [![build_img]][build_url]
-[![gh_last_release_svg]][qemu-docker-hub]
-[![Docker Image Size]][qemu-docker-hub]
+[![gh_last_release_svg]][qemu-ghcr]
+[![Docker Image Size]][qemu-ghcr]
 
 [build_url]: https://github.com/qemu-tools/qemu-docker/actions
-[qemu-docker-hub]: https://github.com/orgs/qemu-tools/packages/container/package/qemu-docker
+[qemu-ghcr]: https://github.com/orgs/qemu-tools/packages/container/package/qemu-docker
 
 [build_img]: https://github.com/qemu-tools/qemu-docker/actions/workflows/build.yml/badge.svg
 [Docker Image Size]: https://ghcr-badge.egpl.dev/qemu-tools/qemu-docker/size?color=SteelBlue
