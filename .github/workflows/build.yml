@@ -69,11 +69,12 @@ jobs:
       name: Create tag
       uses: rickstaa/action-create-tag@v1
       id: "tag_create"
+      if: ${{ false }}
       with:
         tag: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
         tag_exists_error: false
         message: "Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
-        github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
     -
       name: Update minor version
       uses: hmanzur/actions-set-secret@v2.0.0
@@ -81,7 +82,7 @@ jobs:
         name: 'MINOR'
         value: $((${{ secrets.MINOR }}+1))
         repository: ${{ github.repository }}
-        token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 
   mirror:
     runs-on: ubuntu-latest
