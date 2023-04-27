@@ -8,10 +8,12 @@ echo "Downloading ${BOOT} as boot image..."
 
 # Check if running with interactive TTY or redirected to docker log
 if [ -t 1 ]; then
-  wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress --progress=bar:noscroll
+  PROGRESS="--progress=bar:noscroll"
 else
-  wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress --progress=dot:giga
+  PROGRESS="--progress=dot:giga"
 fi
+
+wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"
 
 [ ! -f "$TMP" ] && echo "Failed to download ${BOOT}" && exit 61
 
