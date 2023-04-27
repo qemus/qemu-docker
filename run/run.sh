@@ -18,7 +18,7 @@ KERNEL=$(uname -r | cut -b 1)
 [ ! -d "$STORAGE" ] && echo "Storage folder (${STORAGE}) not found!" && exit 69
 [ ! -f "/run/run.sh" ] && echo "Script must run inside Docker container!" && exit 60
 
-if [ -f "$STORAGE/boot.img" ]; then
+if [ ! -f "$STORAGE/boot.img" ]; then
   . /run/install.sh
 fi
 
