@@ -65,12 +65,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - 
-      name: Push tag
-      uses: anothrNick/github-tag-action@1.61.0 # Don't use @master unless you're happy to test the latest version
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        CUSTOM_TAG: ${{ secrets.MAJOR }}.${{ secrets.MINOR }}
+    -
+      name: Create tag
+      uses: rickstaa/action-create-tag@v1
+      id: "tag_create"
+      if: ${{ false }}
+      with:
+        tag: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        tag_exists_error: false
+        message: "Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
     -
       name: Update minor version
       uses: hmanzur/actions-set-secret@v2.0.0
