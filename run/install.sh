@@ -13,7 +13,9 @@ else
   PROGRESS="--progress=dot:giga"
 fi
 
-wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"
+if ! wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS" ; then
+  echo "Failed to download ${BOOT}" && exit 60
+fi
 
 [ ! -f "$TMP" ] && echo "Failed to download ${BOOT}" && exit 61
 
