@@ -63,9 +63,16 @@ jobs:
   bump:
     needs: build
     runs-on: ubuntu-latest
-    steps: 
+    steps:
+    - uses: actions/checkout@v3
+    - 
+      name: Push tag
+      uses: anothrNick/github-tag-action@1.61.0 # Don't use @master unless you're happy to test the latest version
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        CUSTOM_TAG: ${{ secrets.MAJOR }}.${{ secrets.MINOR }}
     -
-      name: Update Minor version
+      name: Update minor version
       uses: hmanzur/actions-set-secret@v2.0.0
       with:
         name: 'MINOR'
