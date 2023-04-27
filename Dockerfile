@@ -6,6 +6,7 @@ ARG DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -y upgrade && \
 	apt-get --no-install-recommends -y install \
 	wget \
+	procps \
 	iptables \
 	iproute2 \
 	dnsmasq \
