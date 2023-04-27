@@ -28,3 +28,4 @@ fi
 FILE="$STORAGE/boot.img"
 
 mv -f "$TMP" "$FILE"
+#Trigger
