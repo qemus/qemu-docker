@@ -73,7 +73,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       with:
-        tag: "${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        tag: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
         title: "Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
     -
       name: Update minor version
