@@ -71,14 +71,26 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       with:
-        xtag: "v1.99"
-        title: "v$((${{ secrets.MAJOR }})).$((${{ secrets.MINOR }}))"
-        xbody: "Release v1.99"
+        xtag: "v1.98"
+        title: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        xbody: "Release v1.98"
 
   bump:
     needs: release
     runs-on: ubuntu-latest
     steps:
+      -
+        name: Autoincrement minor version
+        run: |
+          echo "NEW_MINOR_VERSION=$((${{ secrets.MINOR }}+1))" >> $GITHUB_ENV
+      -
+        name: Update minor version
+        uses: hmanzur/actions-set-secret@v2.0.0
+        with:
+          name: 'MINOR'
+          value: ${{ env.NEW_MINOR_VERSION }}
+          repository: ${{ github.repository }}
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
     -
       name: Update minor version
       uses: hmanzur/actions-set-secret@v2.0.0
