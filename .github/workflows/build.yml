@@ -66,15 +66,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     -
-      name: Create tag
-      uses: rickstaa/action-create-tag@v1
-      id: "tag_create"
-      if: ${{ false }}
+      name: Create a Release
+      uses: elgohr/Github-Release-Action@v4
+      env:
+        GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       with:
-        tag: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
-        tag_exists_error: false
-        message: "Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        args: "${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        title: Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}
     -
       name: Update minor version
       uses: hmanzur/actions-set-secret@v2.0.0
