@@ -72,7 +72,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       with:
         xtag: "v1.98"
-        title: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        title: "v${{ vars.MAJOR }}.${{ secrets.MINOR }}"
         xbody: "Release v1.98"
 
   bump:
