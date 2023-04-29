@@ -71,9 +71,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       with:
-        xtag: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
-        title: "v${{ secrets.MINOR }}"
-        xbody: "Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        tag: "v1.99"
+        title: "v1.99"
+        body: "Release v1.99"
 
   bump:
     needs: release
