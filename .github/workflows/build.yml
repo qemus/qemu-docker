@@ -73,9 +73,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       with:
-        tag: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
-        title: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
-        body: "Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        tag: v${{ secrets.MAJOR }}.${{ secrets.MINOR }}
+        title: v${{ secrets.MAJOR }}.${{ secrets.MINOR }}
+        body: Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}
     -
       name: Update minor version
       uses: hmanzur/actions-set-secret@v2.0.0
