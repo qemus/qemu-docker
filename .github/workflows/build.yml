@@ -8,8 +8,6 @@ on:
       - '**/*.md'
       - '.gitignore'
       - '.dockerignore'
-env:
-  vers: v${{ secrets.MAJOR }}.${{ secrets.MINOR }}
 
 jobs:
   shellcheck:
@@ -73,26 +71,21 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       with:
-        tag: "$vers"
-        title: "$vers"
-        body: "Release $vers"
-
-  bump:
-    needs: release
-    runs-on: ubuntu-latest
-    steps:
-      -
-        name: Autoincrement minor version
-        run: |
-          echo "NEW_MINOR=$((${{ secrets.MINOR }}+1))" >> $GITHUB_ENV
-      -
-        name: Update minor version
-        uses: hmanzur/actions-set-secret@v2.0.0
-        with:
-          name: 'MINOR'
-          value: ${{ env.NEW_MINOR }}
-          repository: ${{ github.repository }}
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+        tag: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        title: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        body: "Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+    -
+      name: Increment minor version
+      run: |
+        echo "NEW_MINOR=$((${{ secrets.MINOR }}+1))" >> $GITHUB_ENV
+    -
+      name: Update minor version
+      uses: hmanzur/actions-set-secret@v2.0.0
+      with:
+        name: 'MINOR'
+        value: ${{ env.NEW_MINOR }}
+        repository: ${{ github.repository }}
+        token: ${{ secrets.REPO_ACCESS_TOKEN }}
     
   mirror:
     runs-on: ubuntu-latest
