@@ -73,9 +73,14 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       with:
-        xtag: v${{ secrets.MAJOR }}.${{ secrets.MINOR }}
+        xtag: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
         title: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
-        xbody: Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}
+        xbody: "Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+
+  bump:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
     -
       name: Update minor version
       uses: hmanzur/actions-set-secret@v2.0.0
