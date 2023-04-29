@@ -8,8 +8,6 @@ on:
       - '**/*.md'
       - '.gitignore'
       - '.dockerignore'
-      - '.github/**'
-      - '.github/workflows/**'
 
 jobs:
   shellcheck:
@@ -74,7 +72,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       with:
         xtag: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
-        title: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        title: "v${{ secrets.MINOR }}"
         xbody: "Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
 
   bump:
