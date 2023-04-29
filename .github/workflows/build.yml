@@ -60,19 +60,22 @@ jobs:
               docker push "ghcr.io/${{ github.repository }}:${{ secrets.MAJOR }}.${{ secrets.MINOR }}" && \
               docker push "ghcr.io/${{ github.repository }}:latest"
 
-  bump:
+  release:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
     - uses: actions/checkout@v3
     -
-      name: Create a Release
-      uses: elgohr/Github-Release-Action@v4
+      name: Create a release
+      uses: kroese/github-release@v4
       env:
         GITHUB_TOKEN: ${{ secrets.REPO_ACCESS_TOKEN }}
       with:
-        args: "${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
-        title: Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}
+        tag: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        title: "v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
+        body: "Release v${{ secrets.MAJOR }}.${{ secrets.MINOR }}"
     -
       name: Update minor version
       uses: hmanzur/actions-set-secret@v2.0.0
