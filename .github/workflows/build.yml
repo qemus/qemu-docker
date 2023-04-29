@@ -91,15 +91,7 @@ jobs:
           value: ${{ env.NEW_MINOR_VERSION }}
           repository: ${{ github.repository }}
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
-    -
-      name: Update minor version
-      uses: hmanzur/actions-set-secret@v2.0.0
-      with:
-        name: 'MINOR'
-        value: $((${{ secrets.MINOR }}+1))
-        repository: ${{ github.repository }}
-        token: ${{ secrets.REPO_ACCESS_TOKEN }}
-
+    
   mirror:
     runs-on: ubuntu-latest
     permissions:
