@@ -10,7 +10,7 @@
 [![gh_last_release_svg]][qemu-ghcr]
 [![Docker Image Size]][qemu-ghcr]
 
-[build_url]: https://github.com/qemu-tools/qemu-docker/actions
+[build_url]: https://github.com/qemu-tools/qemu-docker/
 [qemu-ghcr]: https://github.com/orgs/qemu-tools/packages/container/package/qemu-docker
 
 [build_img]: https://github.com/qemu-tools/qemu-docker/actions/workflows/build.yml/badge.svg
