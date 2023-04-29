@@ -8,6 +8,8 @@ on:
       - '**/*.md'
       - '.gitignore'
       - '.dockerignore'
+      - '.github/**'
+      - '.github/workflows/**'
 
 jobs:
   shellcheck:
