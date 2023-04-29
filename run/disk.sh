@@ -3,9 +3,10 @@ set -eu
 
 # Docker environment variables
 
-: ${DISK_IO:='native'}      # I/O Mode, can be set to 'native', 'threads' or 'io_turing' 
-: ${DISK_ROTATION:='1'}     # Rotation rate, set to 1 for SSD storage and increase for HDD
-: ${DISK_CACHE:='none'}     # Caching mode, can be set to 'writeback' for better performance
+: ${DISK_IO:='native'}    # I/O Mode, can be set to 'native', 'threads' or 'io_turing' 
+: ${DISK_CACHE:='none'}   # Caching mode, can be set to 'writeback' for better performance
+: ${DISK_DISCARD:='on'}   # Controls whether unmap (TRIM) commands are passed to the host.
+: ${DISK_ROTATION:='1'}   # Rotation rate, set to 1 for SSD storage and increase for HDD
 
 BOOT="$STORAGE/boot.img"
 [ ! -f "$BOOT" ] && echo "ERROR: Boot image does not exist ($BOOT)" && exit 81
@@ -115,5 +116,5 @@ DISK_OPTS="\
     -device virtio-scsi-pci,id=scsi0 \
     -device scsi-cd,bus=scsi0.0,drive=cdrom0 \
     -device virtio-scsi-pci,id=hw-userdata,bus=pcie.0,addr=0xa \
-    -drive file=${DATA},if=none,id=drive-userdata,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=on,detect-zeroes=on \
+    -drive file=${DATA},if=none,id=drive-userdata,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
     -device scsi-hd,bus=hw-userdata.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata,id=userdata0,rotation_rate=${DISK_ROTATION},bootindex=1"
