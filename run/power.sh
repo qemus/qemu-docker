@@ -21,13 +21,12 @@ _trap(){
 
 _graceful_shutdown() {
 
+  set +e
+
   [ ! -f "${_QEMU_PID}" ] && return
   [ -f "${_QEMU_SHUTDOWN_COUNTER}" ] && return
 
-  set +e
-
-  echo
-  echo "Received $1 signal, shutting down..."
+  echo && echo "Received $1 signal, shutting down..."
   echo 0 > "${_QEMU_SHUTDOWN_COUNTER}"
 
   # Send the shutdown (system_powerdown) command to the QMP monitor
@@ -48,8 +47,7 @@ _graceful_shutdown() {
 
   done
 
-  echo
-  echo "Quitting..."
+  echo && echo "Quitting..."
   echo 'quit' | nc -q 1 -w 1 localhost "${QEMU_MONPORT}" > /dev/null || true
 
   return
