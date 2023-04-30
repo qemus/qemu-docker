@@ -20,8 +20,8 @@ fi
 
 SIZE=$(stat -c%s "$TMP")
 
-if ((SIZE<1000000)); then
-  echo "Invalid ISO file: Size is smaller than 1 MB." && exit 62
+if ((SIZE<100000)); then
+  echo "Invalid ISO file: Size is smaller than 100 KB" && exit 62
 fi
 
 FILE="$STORAGE/boot.img"
