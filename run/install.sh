@@ -13,9 +13,8 @@ else
   PROGRESS="--progress=dot:giga"
 fi
 
-if ! wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS" ; then
-  echo "Failed to download ${BOOT}" && exit 60
-fi
+{ wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
+(( rc != 0 )) && echo "ERROR: Failed to download ${BOOT}, reason: $rc" && exit 60
 
 [ ! -f "$TMP" ] && echo "Failed to download ${BOOT}" && exit 61
 
