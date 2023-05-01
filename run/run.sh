@@ -59,15 +59,13 @@ EXTRA_OPTS="-device virtio-balloon-pci,id=balloon0 -object rng-random,id=rng0,fi
 ARGS="${DEF_OPTS} ${CPU_OPTS} ${RAM_OPTS} ${MAC_OPTS} ${MON_OPTS} ${SERIAL_OPTS} ${NET_OPTS} ${DISK_OPTS} ${EXTRA_OPTS}"
 ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
-[ "$DEBUG" = "Y" ] && set -x
-
 set -m
 (
+  [ "$DEBUG" = "Y" ] && set -x
   qemu-system-x86_64 ${ARGS:+ $ARGS} & echo $! > "${_QEMU_PID}"
+  { set +x; } 2>/dev/null
 )
 set +m
-
-{ set +x; } 2>/dev/null
 
 if (( KERNEL > 4 )); then
   pidwait -F "${_QEMU_PID}" & wait $!
