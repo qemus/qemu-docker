@@ -14,8 +14,8 @@
 [qemu-ghcr]: https://github.com/orgs/qemu-tools/packages/container/package/qemu-docker
 
 [build_img]: https://github.com/qemu-tools/qemu-docker/actions/workflows/build.yml/badge.svg
-[Docker Image Size]: https://ghcr-badge.deta.dev/qemu-tools/qemu-docker/size?color=%23066497
-[gh_last_release_svg]: https://ghcr-badge.deta.dev/qemu-tools/qemu-docker/tags?n=1&label=version&color=%23066497&ignore=latest
+[Docker Image Size]: https://ghcr-badge.deta.dev/qemu-tools/qemu-docker/size?color=%23066da5
+[gh_last_release_svg]: https://ghcr-badge.deta.dev/qemu-tools/qemu-docker/tags?n=1&label=version&color=%23066da5&ignore=latest
 
 </div></h1>
 QEMU in a docker container using KVM acceleration.
