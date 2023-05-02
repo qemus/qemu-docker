@@ -32,3 +32,4 @@ mv -f "$TMP" "$FILE"
 
 { set +x; } 2>/dev/null
 [ "$DEBUG" = "Y" ] && echo
+#Trigger
