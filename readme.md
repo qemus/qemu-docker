@@ -6,7 +6,7 @@
 <div align="center">
 
 [![Build]][build_url]
-[![Version]][ghcr_url]
+[![Version]][build_url]
 [![Size]][ghcr_url]
 
 [build_url]: https://github.com/qemu-tools/qemu-docker/
