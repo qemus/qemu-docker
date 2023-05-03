@@ -15,6 +15,9 @@ echo "Starting QEMU for Docker v${VERSION}..."
 STORAGE="/storage"
 KERNEL=$(uname -r | cut -b 1)
 
+trap 'echo >&2 "Error - exited with status $? at line $LINENO:"; 
+         pr -tn $0 | tail -n+$((LINENO - 3)) | head -n7 >&2' ERR
+
 [ ! -d "$STORAGE" ] && echo "Storage folder (${STORAGE}) not found!" && exit 69
 [ ! -f "/run/run.sh" ] && echo "Script must run inside Docker container!" && exit 60
 
@@ -58,6 +61,8 @@ EXTRA_OPTS="-device virtio-balloon-pci,id=balloon0 -object rng-random,id=rng0,fi
 
 ARGS="${DEF_OPTS} ${CPU_OPTS} ${RAM_OPTS} ${MAC_OPTS} ${MON_OPTS} ${SERIAL_OPTS} ${NET_OPTS} ${DISK_OPTS} ${EXTRA_OPTS}"
 ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
+
+trap - ERR
 
 set -m
 (
