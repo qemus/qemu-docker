@@ -20,7 +20,7 @@ set -eu
 
 configureDHCP() {
 
-  VM_NET_VLAN="vlan"
+  VM_NET_VLAN="${VM_NET_TAP}_vlan"
   GATEWAY=$(ip r | grep default | awk '{print $3}')
   NETWORK=$(ip -o route | grep "${VM_NET_DEV}" | grep -v default | awk '{print $1}')
   IP=$(ip address show dev "${VM_NET_DEV}" | grep inet | awk '/inet / { print $2 }' | cut -f1 -d/)
@@ -52,18 +52,6 @@ configureDHCP() {
   ip link set "${VM_NET_TAP}" up
 
   ip address flush "${VM_NET_DEV}"
-  ip address flush "${VM_NET_TAP}"
-
-  echo "INFO: Acquiring an IP address via DHCP using MAC address ${VM_NET_MAC}..."
-
-  DHCP_IP=$(dhclient -v "${VM_NET_TAP}" 2>&1 | grep ^bound | cut -d' ' -f3)
-
-  if [[ "${DHCP_IP}" == [0-9.]* ]]; then
-    echo "INFO: Successfully acquired IP ${DHCP_IP} from the DHCP server..."
-  else
-    echo "ERROR: Cannot acquire an IP address from the DHCP server" && exit 17
-  fi
-
   ip address flush "${VM_NET_TAP}"
 
   { set +x; } 2>/dev/null
@@ -242,5 +230,6 @@ else
 
 fi
 
-[ "$DEBUG" = "Y" ] && echo && echo "Finished network setup.." && echo
 NET_OPTS="${NET_OPTS} -device virtio-net-pci,romfile=,netdev=hostnet0,mac=${VM_NET_MAC},id=net0"
+
+[ "$DEBUG" = "Y" ] && echo && echo "Finished network setup.." && echo
