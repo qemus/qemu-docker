@@ -12,7 +12,6 @@ RUN apt-get update && apt-get -y upgrade && \
 	dnsmasq \
 	net-tools \
 	ca-certificates \
-	isc-dhcp-client \
 	netcat-openbsd \
 	qemu-system-x86 \
     && apt-get clean
