@@ -72,7 +72,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```
     environment:
-      DISK_SIZE: "16G"
+      DISK_SIZE: "256G"
     ```
 
   * ### How do I change the location of the data disk?
@@ -83,6 +83,17 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     volumes:
       - /home/user/data:/storage
     ```
+
+  * ### How do I change the space reserved by the data disk? 
+
+    By default, the entire disk space is reserved in advance. To reserve only the space actually used by the disk, add the following environment variable:
+
+    ```
+    environment:
+      ALLOCATE: "N"
+    ```
+
+    Keep in mind that this will not affect any of your existing disks, it only applies to newly created disks.
 
   * ### How do I increase the amount of CPU/RAM?
 
