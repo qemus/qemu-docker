@@ -77,12 +77,14 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
   * ### How do I change the location of the data disk?
 
-    To change the data disk's location from the default docker volume, include the following bind mount in your compose file and replace the path `/home/user/data` with the desired storage folder:
+    To change the data disk's location from the default docker volume, include the following bind mount in your compose file:
 
     ```
     volumes:
       - /home/user/data:/storage
     ```
+
+    Replace the example path `/home/user/data` with the desired storage folder.
 
   * ### How do I change the space reserved by the data disk? 
 
