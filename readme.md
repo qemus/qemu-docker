@@ -5,7 +5,7 @@
 <div align="center">
 
 [![Build]][build_url]
-[![Version]][build_url]
+[![Version]][ghcr_url]
 [![Size]][ghcr_url]
 
 [build_url]: https://github.com/qemu-tools/qemu-docker/
@@ -38,6 +38,7 @@ services:
             BOOT: "http://www.example.com/image.iso"
         devices:
             - /dev/kvm
+            - /dev/vhost-net
         cap_add:
             - NET_ADMIN                       
         ports:
