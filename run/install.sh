@@ -13,7 +13,7 @@ else
   PROGRESS="--progress=dot:giga"
 fi
 
-[ "$DEBUG" = "Y" ] && set -x
+[[ "${DEBUG}" == [Yy1]* ]] && set -x
 
 { wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
 (( rc != 0 )) && echo "ERROR: Failed to download ${BOOT}, reason: $rc" && exit 60
@@ -31,6 +31,6 @@ FILE="$STORAGE/boot.img"
 mv -f "$TMP" "$FILE"
 
 { set +x; } 2>/dev/null
-[ "$DEBUG" = "Y" ] && echo
+[[ "${DEBUG}" == [Yy1]* ]] && echo
 
 return 0
