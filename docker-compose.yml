@@ -10,6 +10,7 @@ services:
             BOOT: "http://www.example.com/image.iso"
         devices:
             - /dev/kvm
+            - /dev/vhost-net
         cap_add:
             - NET_ADMIN                       
         ports:
