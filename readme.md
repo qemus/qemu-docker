@@ -86,7 +86,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
   * ### How do I change the space reserved by the data disk? 
 
-    By default, the entire disk space is reserved in advance. To reserve only the space actually used by the disk, add the following environment variable:
+    By default, the entire disk space is reserved in advance. To create a growable disk, that only reserves the space that is actually used, add the following environment variable:
 
     ```
     environment:
