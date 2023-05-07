@@ -9,7 +9,7 @@ set -Eeuo pipefail
 : ${VM_NET_TAP:='qemu'}
 : ${VM_NET_DEV:='eth0'}
 : ${VM_NET_HOST:='QEMU'}
-: ${VM_NET_MAC:="${MAC}"}
+: ${VM_NET_MAC:="$MAC"}
 
 : ${DNS_SERVERS:=''}
 : ${DNSMASQ_OPTS:=''}
