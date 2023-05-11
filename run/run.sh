@@ -3,23 +3,26 @@ set -Eeuo pipefail
 
 # Docker environment variables
 
-: ${BOOT:=''}             # URL of the ISO file
+: ${BOOT:=''}           # URL of the ISO file
 : ${DEBUG:='N'}         # Enable debug mode
 : ${ALLOCATE:='Y'}      # Preallocate diskspace
 : ${CPU_CORES:='1'}     # Amount of CPU cores
 : ${DISK_SIZE:='16G'}   # Initial data disk size
 : ${RAM_SIZE:='512M'}   # Maximum RAM amount
 
-echo "Starting QEMU for Docker v${VERSION}..."
-trap 'echo >&2 "Error status $? for: ${BASH_COMMAND} (line $LINENO/$BASH_LINENO)"' ERR
+echo "❯ Starting QEMU for Docker v${VERSION}..."
 
-[ ! -f "/run/run.sh" ] && echo "ERROR: Script must run inside Docker container!" && exit 11
-[ "$(id -u)" -ne "0" ] && echo "ERROR: Script must be executed with root privileges." && exit 12
+info () { echo -e "\E[1;34m❯ \E[1;36m$1\E[0m" ; }
+error () { echo -e >&2 "\E[1;31m❯ ERROR: $1\E[0m" ; }
+trap 'error "Status $? while: ${BASH_COMMAND} (line $LINENO/$BASH_LINENO)"' ERR
+
+[ ! -f "/run/run.sh" ] && error "Script must run inside Docker container!" && exit 11
+[ "$(id -u)" -ne "0" ] && error "Script must be executed with root privileges." && exit 12
 
 STORAGE="/storage"
 KERNEL=$(uname -r | cut -b 1)
 
-[ ! -d "$STORAGE" ] && echo "ERROR: Storage folder (${STORAGE}) not found!" && exit 13
+[ ! -d "$STORAGE" ] && error "Storage folder (${STORAGE}) not found!" && exit 13
 
 if [ ! -f "$STORAGE/boot.img" ]; then
   . /run/install.sh
@@ -46,7 +49,7 @@ else
 fi
 
 if [ -n "${KVM_ERR}" ]; then
-  echo "ERROR: KVM acceleration not detected ${KVM_ERR}, please enable it."
+  error "KVM acceleration not detected ${KVM_ERR}, see the FAQ about this."
   [[ "${DEBUG}" == [Yy1]* ]] && exit 88
 else
   KVM_OPTS=",accel=kvm -enable-kvm -cpu host"
