@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 # Docker environment variables
 
-: ${DISK_IO:='native'}    # I/O Mode, can be set to 'native', 'threads' or 'io_turing' 
+: ${DISK_IO:='native'}    # I/O Mode, can be set to 'native', 'threads' or 'io_turing'
 : ${DISK_CACHE:='none'}   # Caching mode, can be set to 'writeback' for better performance
 : ${DISK_DISCARD:='on'}   # Controls whether unmap (TRIM) commands are passed to the host.
 : ${DISK_ROTATION:='1'}   # Rotation rate, set to 1 for SSD storage and increase for HDD
@@ -21,7 +21,7 @@ if [ -f "${DATA}" ]; then
 
   if [ "$DATA_SIZE" -gt "$OLD_SIZE" ]; then
 
-    echo "INFO: Resizing data disk from $OLD_SIZE to $DATA_SIZE bytes.."
+    info "Resizing data disk from $OLD_SIZE to $DATA_SIZE bytes.."
 
     if [[ "${ALLOCATE}" == [Nn]* ]]; then
 
@@ -36,20 +36,20 @@ if [ -f "${DATA}" ]; then
       SPACE=$(df --output=avail -B 1 "${STORAGE}" | tail -n 1)
 
       if (( REQ > SPACE )); then
-        echo "ERROR: Not enough free space to resize data disk to ${DISK_SIZE}."
-        echo "ERROR: Specify a smaller size or disable preallocation with ALLOCATE=N." && exit 84
+        error "Not enough free space to resize data disk to ${DISK_SIZE}."
+        error "Specify a smaller size or disable preallocation with ALLOCATE=N." && exit 84
       fi
 
       # Resize file by allocating more space
       if ! fallocate -l "${DATA_SIZE}" "${DATA}"; then
-        echo "ERROR: Could not allocate a file for the data disk." && exit 85
+        error "Could not allocate a file for the data disk." && exit 85
       fi
 
       if [[ "${ALLOCATE}" == [Zz]* ]]; then
 
         GB=$(( (REQ + 1073741823)/1073741824 ))
 
-        echo "INFO: Preallocating ${GB} GB of diskspace, please wait..."
+        info "Preallocating ${GB} GB of diskspace, please wait..."
         dd if=/dev/urandom of="${DATA}" seek="${OLD_SIZE}" count="${REQ}" bs=1M iflag=count_bytes oflag=seek_bytes status=none
 
       fi
@@ -58,8 +58,8 @@ if [ -f "${DATA}" ]; then
 
   if [ "$DATA_SIZE" -lt "$OLD_SIZE" ]; then
 
-    echo "INFO: Shrinking existing disks is not supported yet!"
-    echo "INFO: Creating backup of old drive in storage folder..."
+    info "Shrinking existing disks is not supported yet!"
+    info "Creating backup of old drive in storage folder..."
 
     mv -f "${DATA}" "${DATA}.bak"
 
@@ -79,19 +79,19 @@ if [ ! -f "${DATA}" ]; then
     SPACE=$(df --output=avail -B 1 "${STORAGE}" | tail -n 1)
 
     if (( DATA_SIZE > SPACE )); then
-      echo "ERROR: Not enough free space to create a data disk of ${DISK_SIZE}."
-      echo "ERROR: Specify a smaller size or disable preallocation with ALLOCATE=N." && exit 86
+      error "Not enough free space to create a data disk of ${DISK_SIZE}."
+      error "Specify a smaller size or disable preallocation with ALLOCATE=N." && exit 86
     fi
 
     # Create an empty file
     if ! fallocate -l "${DATA_SIZE}" "${DATA}"; then
       rm -f "${DATA}"
-      echo "ERROR: Could not allocate a file for the data disk." && exit 87
+      error "Could not allocate a file for the data disk." && exit 87
     fi
 
     if [[ "${ALLOCATE}" == [Zz]* ]]; then
 
-      echo "INFO: Preallocating ${DISK_SIZE} of diskspace, please wait..."
+      info "Preallocating ${DISK_SIZE} of diskspace, please wait..."
       dd if=/dev/urandom of="${DATA}" count="${DATA_SIZE}" bs=1M iflag=count_bytes status=none
 
     fi
@@ -99,7 +99,7 @@ if [ ! -f "${DATA}" ]; then
 
   # Check if file exists
   if [ ! -f "${DATA}" ]; then
-    echo "ERROR: Data disk does not exist ($DATA)" && exit 88
+    error "Data disk does not exist ($DATA)" && exit 88
   fi
 
 fi
@@ -108,7 +108,7 @@ fi
 SIZE=$(stat -c%s "${DATA}")
 
 if [[ SIZE -ne DATA_SIZE ]]; then
-  echo "ERROR: Data disk has the wrong size: ${SIZE}" && exit 89
+  error "Virtual disk has the wrong size: ${SIZE}" && exit 89
 fi
 
 DISK_OPTS="\
