@@ -8,13 +8,6 @@
 [![Version]][ghcr_url]
 [![Size]][ghcr_url]
 
-[build_url]: https://github.com/qemu-tools/qemu-docker/
-[ghcr_url]: https://github.com/orgs/qemu-tools/packages/container/package/qemu-docker
-
-[Build]: https://github.com/qemu-tools/qemu-docker/actions/workflows/build.yml/badge.svg
-[Size]: https://ghcr-badge.deta.dev/qemu-tools/qemu-docker/size?color=%23066da5
-[Version]: https://ghcr-badge.deta.dev/qemu-tools/qemu-docker/tags?n=1&label=version&color=%23066da5&ignore=latest
-
 </div></h1>
 QEMU in a docker container using KVM acceleration.
 
@@ -170,3 +163,10 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     ```
 
     Please note that the exact `cgroup` rule number may vary depending on your system, but the log output will indicate the correct number in case of an error.
+
+[build_url]: https://github.com/qemu-tools/qemu-docker/
+[ghcr_url]: https://github.com/orgs/qemu-tools/packages/container/package/qemu-docker
+
+[Build]: https://github.com/qemu-tools/qemu-docker/actions/workflows/build.yml/badge.svg
+[Size]: https://ghcr-badge.deta.dev/qemu-tools/qemu-docker/size?color=%23066da5
+[Version]: https://ghcr-badge.deta.dev/qemu-tools/qemu-docker/tags?n=1&label=version&color=%23066da5&ignore=latest
