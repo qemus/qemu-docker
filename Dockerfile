@@ -4,7 +4,7 @@ ARG DEBCONF_NOWARNINGS="yes"
 ARG DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get -y upgrade && \
-	apt-get --no-install-recommends -y install \
+    apt-get --no-install-recommends -y install \
 	wget \
 	procps \
 	iptables \
@@ -14,10 +14,11 @@ RUN apt-get update && apt-get -y upgrade && \
 	ca-certificates \
 	netcat-openbsd \
 	qemu-system-x86 \
-    && apt-get clean
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY run/*.sh /run/
-RUN ["chmod", "+x", "/run/run.sh"]
+RUN chmod +x /run/*.sh
 
 VOLUME /storage
 
