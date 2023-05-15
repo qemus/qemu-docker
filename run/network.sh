@@ -47,14 +47,14 @@ configureDHCP() {
     (( rc != 0 )) && error "Cannot mknod: ${TAP_PATH} ($rc)" && exit 20
   fi
 
-  { exec 30>>"$TAP_PATH"; rc=$?; } || :
+  { exec 30>>"$TAP_PATH"; rc=$?; } 2>/dev/null || :
 
   if (( rc != 0 )); then
     error "Cannot create TAP interface ($rc). Please add the following docker settings to your "
     error "container: --device-cgroup-rule='c ${MAJOR}:* rwm' --device=/dev/vhost-net" && exit 21
   fi
 
-  { exec 40>>/dev/vhost-net; rc=$?; } || :
+  { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
 
   if (( rc != 0 )); then
     error "VHOST can not be found ($rc). Please add the following "
@@ -62,6 +62,52 @@ configureDHCP() {
   fi
 
   NET_OPTS="-netdev tap,id=hostnet0,vhost=on,vhostfd=40,fd=30"
+
+  return 0
+}
+
+configureDNS () {
+
+  # dnsmasq configuration:
+  DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-range=$VM_NET_IP,$VM_NET_IP --dhcp-host=$VM_NET_MAC,,$VM_NET_IP,$VM_NET_HOST,infinite --dhcp-option=option:netmask,255.255.255.0"
+
+  # Create lease file for faster resolve
+  echo "0 $VM_NET_MAC $VM_NET_IP $VM_NET_HOST 01:${VM_NET_MAC}" > /var/lib/misc/dnsmasq.leases
+  chmod 644 /var/lib/misc/dnsmasq.leases
+
+  # Build DNS options from container /etc/resolv.conf
+
+  if [[ "${DEBUG}" == [Yy1]* ]]; then
+    echo "/etc/resolv.conf:" && echo && cat /etc/resolv.conf && echo
+  fi
+
+  mapfile -t nameservers < <( { grep '^nameserver' /etc/resolv.conf || true; } | sed 's/\t/ /g' | sed 's/nameserver //' | sed 's/ //g')
+  searchdomains=$( { grep '^search' /etc/resolv.conf || true; } | sed 's/\t/ /g' | sed 's/search //' | sed 's/#.*//' | sed 's/\s*$//g' | sed 's/ /,/g')
+  domainname=$(echo "$searchdomains" | awk -F"," '{print $1}')
+
+  for nameserver in "${nameservers[@]}"; do
+    nameserver=$(echo "$nameserver" | sed 's/#.*//' )
+    if ! [[ "$nameserver" =~ .*:.* ]]; then
+      [[ -z "$DNS_SERVERS" ]] && DNS_SERVERS="$nameserver" || DNS_SERVERS="$DNS_SERVERS,$nameserver"
+    fi
+  done
+
+  [[ -z "$DNS_SERVERS" ]] && DNS_SERVERS="1.1.1.1"
+
+  DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:dns-server,$DNS_SERVERS --dhcp-option=option:router,${VM_NET_IP%.*}.1"
+
+  if [ -n "$searchdomains" ] && [ "$searchdomains" != "." ]; then
+    DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:domain-search,$searchdomains --dhcp-option=option:domain-name,$domainname"
+  else
+    [[ -z $(hostname -d) ]] || DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:domain-name,$(hostname -d)"
+  fi
+
+  DNSMASQ_OPTS=$(echo "$DNSMASQ_OPTS" | sed 's/\t/ /g' | tr -s ' ' | sed 's/^ *//')
+
+  [[ "${DEBUG}" == [Yy1]* ]] && set -x
+  $DNSMASQ ${DNSMASQ_OPTS:+ $DNSMASQ_OPTS}
+  { set +x; } 2>/dev/null
+  [[ "${DEBUG}" == [Yy1]* ]] && echo
 
   return 0
 }
@@ -109,54 +155,12 @@ configureNAT () {
     fi
   fi
 
-  # dnsmasq configuration:
-  DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-range=$VM_NET_IP,$VM_NET_IP --dhcp-host=$VM_NET_MAC,,$VM_NET_IP,$VM_NET_HOST,infinite --dhcp-option=option:netmask,255.255.255.0"
-
-  # Create lease file for faster resolve
-  echo "0 $VM_NET_MAC $VM_NET_IP $VM_NET_HOST 01:${VM_NET_MAC}" > /var/lib/misc/dnsmasq.leases
-  chmod 644 /var/lib/misc/dnsmasq.leases
-
   NET_OPTS="-netdev tap,ifname=${VM_NET_TAP},script=no,downscript=no,id=hostnet0"
 
-  { exec 40>>/dev/vhost-net; rc=$?; } || :
+  { exec 40>>/dev/vhost-net; rc=$?; } 2>/dev/null || :
   (( rc == 0 )) && NET_OPTS="$NET_OPTS,vhost=on,vhostfd=40"
 
-  # Build DNS options from container /etc/resolv.conf
-
-  if [[ "${DEBUG}" == [Yy1]* ]]; then
-    echo "/etc/resolv.conf:" && echo && cat /etc/resolv.conf && echo
-  fi
-
-  mapfile -t nameservers < <( { grep '^nameserver' /etc/resolv.conf || true; } | sed 's/\t/ /g' | sed 's/nameserver //' | sed 's/ //g')
-  searchdomains=$( { grep '^search' /etc/resolv.conf || true; } | sed 's/\t/ /g' | sed 's/search //' | sed 's/#.*//' | sed 's/\s*$//g' | sed 's/ /,/g')
-  domainname=$(echo "$searchdomains" | awk -F"," '{print $1}')
-
-  for nameserver in "${nameservers[@]}"; do
-    nameserver=$(echo "$nameserver" | sed 's/#.*//' )
-    if ! [[ "$nameserver" =~ .*:.* ]]; then
-      [[ -z "$DNS_SERVERS" ]] && DNS_SERVERS="$nameserver" || DNS_SERVERS="$DNS_SERVERS,$nameserver"
-    fi
-  done
-
-  [[ -z "$DNS_SERVERS" ]] && DNS_SERVERS="1.1.1.1"
-
-  DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:dns-server,$DNS_SERVERS --dhcp-option=option:router,${VM_NET_IP%.*}.1"
-
-  if [ -n "$searchdomains" ] && [ "$searchdomains" != "." ]; then
-    DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:domain-search,$searchdomains --dhcp-option=option:domain-name,$domainname"
-  else
-    [[ -z $(hostname -d) ]] || DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:domain-name,$(hostname -d)"
-  fi
-
-  DNSMASQ_OPTS=$(echo "$DNSMASQ_OPTS" | sed 's/\t/ /g' | tr -s ' ' | sed 's/^ *//')
-
-  [[ "${DEBUG}" == [Yy1]* ]] && set -x
-
-  $DNSMASQ ${DNSMASQ_OPTS:+ $DNSMASQ_OPTS}
-
-  { set +x; } 2>/dev/null
-
-  [[ "${DEBUG}" == [Yy1]* ]] && echo
+  configureDNS
 
   return 0
 }
@@ -196,8 +200,7 @@ fi
 if [[ "${DHCP}" == [Yy1]* ]]; then
 
   if [[ "$GATEWAY" == "172."* ]]; then
-    error "You cannot enable DHCP while the container is "
-    error "in a bridge network, only on a macvlan network!" && exit 86
+    error "You can only enable DHCP while the container is on a macvlan network!" && exit 86
   fi
 
   # Configuration for DHCP IP
