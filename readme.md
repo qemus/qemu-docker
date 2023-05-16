@@ -131,7 +131,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```yaml
     services:
-        dsm:
+        qemu:
             container_name: qemu
             ..<snip>..
             networks:
