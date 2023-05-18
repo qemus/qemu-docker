@@ -70,7 +70,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
   * ### How do I change the location of the data disk?
 
-    To change the data disk's location from the default docker volume, include the following bind mount in your compose file:
+    To change the data disk's location from the default Docker volume, include the following bind mount in your compose file:
 
     ```yaml
     volumes:
@@ -81,7 +81,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
   * ### How do I change the space reserved by the data disk? 
 
-    By default, the entire disk space is reserved in advance. To create a growable disk, that only reserves the space that is actually used, add the following environment variable:
+    By default, the entire disk space is reserved in advance. To create a growable disk that only reserves the space that is actually used, add the following environment variable:
 
     ```yaml
     environment:
@@ -90,9 +90,9 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     Keep in mind that this will not affect any of your existing disks, it only applies to newly created disks.
 
-  * ### How do I increase the amount of CPU/RAM?
+  * ### How do I increase the amount of CPU or RAM?
 
-    By default, a single core and 512MB of RAM is allocated to the container. To increase this, add the following environment variables:
+    By default, a single core and 512 MB of RAM are allocated to the container. To increase this, add the following environment variables:
 
     ```yaml
     environment:
@@ -113,7 +113,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
   * ### How do I assign an individual IP address to the container?
 
-    By default, the container uses bridge networking which shares the IP address with the host. 
+    By default, the container uses bridge networking, which shares the IP address with the host. 
 
     If you want to assign an individual IP address to the container, you can create a macvlan network as follows:
 
@@ -127,7 +127,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     
     Be sure to modify these values to match your local subnet. 
 
-    Once you have created the network, change your compose file to make it look as follows:
+    Once you have created the network, change your compose file to look as follows:
 
     ```yaml
     services:
@@ -143,7 +143,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
             external: true
     ```
    
-    An added benefit of this approach is that you won't have to perform any port mapping anymore, since all ports will be exposed by default.
+    An added benefit of this approach is that you won't have to perform any port mapping anymore since all ports will be exposed by default.
 
     Please note that this IP address won't be accessible from the Docker host due to the design of macvlan, which doesn't permit communication between the two. If this is a concern, you need to create a [second macvlan](https://blog.oddbit.com/post/2018-03-12-using-docker-macvlan-networks/#host-access) as a workaround.
 
@@ -162,7 +162,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
         - 'c 511:* rwm'
     ```
 
-    Please note that the exact `cgroup` rule number may vary depending on your system, but the log output will indicate the correct number in case of an error.
+    Please note that the exact `cgroup` rule number may vary depending on your system, but the log output will indicate the correct number in the event of an error.
 
 [build_url]: https://github.com/qemu-tools/qemu-docker/
 [ghcr_url]: https://github.com/orgs/qemu-tools/packages/container/package/qemu-docker
