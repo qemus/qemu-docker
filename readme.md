@@ -13,6 +13,7 @@ QEMU in a docker container using KVM acceleration.
 
 ## Features
 
+ - Multi-platform
  - KVM acceleration
  - Graceful shutdown
 
