@@ -160,10 +160,8 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     devices:
         - /dev/vhost-net
     device_cgroup_rules:
-        - 'c 511:* rwm'
+        - 'c *:* rwm'
     ```
-
-    Please note that the exact `cgroup` rule number may vary depending on your system, but the log output will indicate the correct number in the event of an error.
 
 [build_url]: https://github.com/qemu-tools/qemu-docker/
 [ghcr_url]: https://github.com/orgs/qemu-tools/packages/container/package/qemu-docker
