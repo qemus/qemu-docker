@@ -163,6 +163,8 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
         - 'c *:* rwm'
     ```
 
+    Please note that even if you don't need DHCP, it's still recommended to enable this feature as it prevents NAT issues and increases performance by using a `macvtap` interface.
+
 [build_url]: https://github.com/qemu-tools/qemu-docker/
 [ghcr_url]: https://github.com/orgs/qemu-tools/packages/container/package/qemu-docker
 
