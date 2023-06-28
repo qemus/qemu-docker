@@ -165,6 +165,16 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     Please note that even if you don't need DHCP, it's still recommended to enable this feature as it prevents NAT issues and increases performance by using a `macvtap` interface.
 
+  * ### How do I provide other arguments to QEMU?
+
+    You can create the `QEMU_EXTRA_ARGS` environment variable to provide additional arguments to QEMU at runtime:
+
+    ```yaml
+    environment:
+        QEMU_EXTRA_ARGS: "-drive file=/seed.iso,format=raw,if=virtio"
+    ```
+
+
 [build_url]: https://github.com/qemu-tools/qemu-docker/
 [ghcr_url]: https://github.com/orgs/qemu-tools/packages/container/package/qemu-docker
 
