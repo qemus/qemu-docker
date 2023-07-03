@@ -68,7 +68,9 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     environment:
         DISK_SIZE: "256G"
     ```
-
+    
+    This can also be used to resize the existing disk to a larger capacity without data loss.
+    
   * ### How do I change the location of the data disk?
 
     To change the data disk's location from the default Docker volume, include the following bind mount in your compose file:
@@ -79,17 +81,6 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     ```
 
     Replace the example path `/home/user/data` with the desired storage folder.
-
-  * ### How do I change the space reserved by the data disk? 
-
-    By default, the entire disk space is reserved in advance. To create a growable disk that only reserves the space that is actually used, add the following environment variable:
-
-    ```yaml
-    environment:
-        ALLOCATE: "N"
-    ```
-
-    Keep in mind that this will not affect any of your existing disks, it only applies to newly created disks.
 
   * ### How do I increase the amount of CPU or RAM?
 
@@ -111,6 +102,15 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     ```
 
     If you receive an error from `kvm-ok` indicating that KVM acceleration can't be used, check your BIOS settings.
+    
+  * ### How do I provide extra arguments to QEMU?
+
+    You can create the `ARGUMENTS` environment variable to provide additional arguments to QEMU at runtime:
+
+    ```yaml
+    environment:
+        ARGUMENTS: "-drive file=/seed.iso,format=raw,if=virtio"
+    ```
 
   * ### How do I assign an individual IP address to the container?
 
