@@ -5,8 +5,9 @@
 <div align="center">
 
 [![Build]][build_url]
-[![Version]][ghcr_url]
-[![Size]][ghcr_url]
+[![Version]][tag_url]
+[![Size]][tag_url]
+[![Pulls]][hub_url]
 
 </div></h1>
 QEMU in a docker container using KVM acceleration.
@@ -26,7 +27,7 @@ version: "3"
 services:
     qemu:
         container_name: qemu
-        image: ghcr.io/qemu-tools/qemu-docker:latest
+        image: qemux/qemu-docker:latest
         environment:
             DISK_SIZE: "16G"
             BOOT: "http://www.example.com/image.iso"
@@ -44,7 +45,7 @@ services:
 Via `docker run`
 
 ```bash
-docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm --cap-add NET_ADMIN ghcr.io/qemu-tools/qemu-docker:latest
+docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm --cap-add NET_ADMIN qemux/qemu-docker:latest
 ```
 
 ## FAQ
@@ -166,8 +167,10 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     Please note that even if you don't need DHCP, it's still recommended to enable this feature as it prevents NAT issues and increases performance by using a `macvtap` interface.
 
 [build_url]: https://github.com/qemu-tools/qemu-docker/
-[ghcr_url]: https://github.com/orgs/qemu-tools/packages/container/package/qemu-docker
+[hub_url]: https://hub.docker.com/r/qemux/qemu-docker/
+[tag_url]: https://hub.docker.com/r/qemux/qemu-docker/tags
 
 [Build]: https://github.com/qemu-tools/qemu-docker/actions/workflows/build.yml/badge.svg
-[Size]: https://ghcr-badge.deta.dev/qemu-tools/qemu-docker/size?color=%23066da5
-[Version]: https://ghcr-badge.deta.dev/qemu-tools/qemu-docker/tags?n=1&label=version&color=%23066da5&ignore=latest
+[Size]: https://img.shields.io/docker/image-size/qemux/qemu-docker/latest?color=066da5&label=size
+[Pulls]: https://img.shields.io/docker/pulls/qemux/qemu-docker.svg?style=flat&label=pulls&logo=docker
+[Version]: https://img.shields.io/docker/v/qemux/qemu-docker?arch=amd64&sort=date&color=066da5
