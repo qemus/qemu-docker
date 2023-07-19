@@ -30,7 +30,7 @@ services:
         image: qemux/qemu-docker:latest
         environment:
             DISK_SIZE: "16G"
-            BOOT: "http://www.example.com/image.iso"
+            BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
         devices:
             - /dev/kvm
             - /dev/vhost-net
@@ -56,7 +56,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```yaml
     environment:
-        BOOT: "http://www.example.com/image.iso"
+        BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
     ```
     
     It will be downloaded only once, during the initial run of the container.
