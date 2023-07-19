@@ -7,7 +7,7 @@ services:
             CPU_CORES: "1"
             RAM_SIZE: "512M"            
             DISK_SIZE: "16G"
-            BOOT: "http://www.example.com/image.iso"
+            BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
         devices:
             - /dev/kvm
             - /dev/vhost-net
