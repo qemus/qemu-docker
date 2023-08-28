@@ -33,7 +33,6 @@ services:
             BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
         devices:
             - /dev/kvm
-            - /dev/vhost-net
         cap_add:
             - NET_ADMIN                       
         ports:
