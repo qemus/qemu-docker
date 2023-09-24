@@ -38,9 +38,6 @@ fi
 # Initialize network
 . /run/network.sh
 
-# Configure shutdown
-. /run/power.sh
-
 KVM_ERR=""
 KVM_OPTS=""
 
@@ -73,16 +70,6 @@ ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
 trap - ERR
 
-set -m
-(
-  [[ "${DEBUG}" == [Yy1]* ]] && info "$VERS" && set -x
-  qemu-system-x86_64 ${ARGS:+ $ARGS} & echo $! > "${_QEMU_PID}"
-  { set +x; } 2>/dev/null
-)
-set +m
-
-#if (( KERNEL > 5 )) || ( (( KERNEL == 5 )) && (( MINOR > 2 )) ); then
-#  pidwait -F "${_QEMU_PID}" & wait $!
-#else
-
-tail --pid "$(cat "${_QEMU_PID}")" --follow /dev/null & wait $!
+[[ "${DEBUG}" == [Yy1]* ]] && info "$VERS" && set -x
+qemu-system-x86_64 ${ARGS:+ $ARGS}
+{ set +x; } 2>/dev/null
