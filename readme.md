@@ -16,7 +16,6 @@ QEMU in a docker container using KVM acceleration.
 
  - Multi-platform
  - KVM acceleration
- - Graceful shutdown
 
 ## Usage
 
@@ -38,7 +37,6 @@ services:
         ports:
             - 22:22
         restart: on-failure
-        stop_grace_period: 1m        
 ```
 
 Via `docker run`

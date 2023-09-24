@@ -38,9 +38,6 @@ fi
 # Initialize network
 . /run/network.sh
 
-# Configure shutdown
-. /run/power.sh
-
 KVM_ERR=""
 KVM_OPTS=""
 
@@ -68,21 +65,11 @@ MAC_OPTS="-machine type=q35,usb=off,dump-guest-core=off,hpet=off${KVM_OPTS}"
 SERIAL_OPTS="-serial mon:stdio -device virtio-serial-pci,id=virtio-serial0,bus=pcie.0,addr=0x3"
 EXTRA_OPTS="-device virtio-balloon-pci,id=balloon0 -object rng-random,id=rng0,filename=/dev/urandom -device virtio-rng-pci,rng=rng0"
 
-ARGS="${DEF_OPTS} ${CPU_OPTS} ${RAM_OPTS} ${MAC_OPTS} ${MON_OPTS} ${SERIAL_OPTS} ${NET_OPTS} ${DISK_OPTS} ${EXTRA_OPTS} ${ARGUMENTS}"
+ARGS="${DEF_OPTS} ${CPU_OPTS} ${RAM_OPTS} ${MAC_OPTS} ${SERIAL_OPTS} ${NET_OPTS} ${DISK_OPTS} ${EXTRA_OPTS} ${ARGUMENTS}"
 ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
 trap - ERR
 
-set -m
-(
-  [[ "${DEBUG}" == [Yy1]* ]] && info "$VERS" && set -x
-  qemu-system-x86_64 ${ARGS:+ $ARGS} & echo $! > "${_QEMU_PID}"
-  { set +x; } 2>/dev/null
-)
-set +m
-
-#if (( KERNEL > 5 )) || ( (( KERNEL == 5 )) && (( MINOR > 2 )) ); then
-#  pidwait -F "${_QEMU_PID}" & wait $!
-#else
-
-tail --pid "$(cat "${_QEMU_PID}")" --follow /dev/null & wait $!
+[[ "${DEBUG}" == [Yy1]* ]] && info "$VERS" && set -x
+exec qemu-system-x86_64 ${ARGS:+ $ARGS}
+{ set +x; } 2>/dev/null
