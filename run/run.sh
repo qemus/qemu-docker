@@ -71,5 +71,5 @@ ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 trap - ERR
 
 [[ "${DEBUG}" == [Yy1]* ]] && info "$VERS" && set -x
-qemu-system-x86_64 ${ARGS:+ $ARGS}
+exec qemu-system-x86_64 ${ARGS:+ $ARGS}
 { set +x; } 2>/dev/null
