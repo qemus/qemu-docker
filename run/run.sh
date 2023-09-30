@@ -69,7 +69,7 @@ ARGS="${DEF_OPTS} ${CPU_OPTS} ${RAM_OPTS} ${MAC_OPTS} ${SERIAL_OPTS} ${NET_OPTS}
 ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
 trap - ERR
-info "Booting image using QEMU ${VERS}..."
+info "Booting image using ${VERS}..."
 
 [[ "${DEBUG}" == [Yy1]* ]] && set -x
 exec qemu-system-x86_64 ${ARGS:+ $ARGS}
