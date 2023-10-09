@@ -4,7 +4,7 @@ set -Eeuo pipefail
 # Docker environment variables
 
 : ${BOOT:=''}           # URL of the ISO file
-: ${DEBUG:='N'}         # Enable debug mode
+: ${DEBUG:='N'}         # Enable debugging mode
 : ${ALLOCATE:='Y'}      # Preallocate diskspace
 : ${ARGUMENTS:=''}      # Extra QEMU parameters
 : ${CPU_CORES:='1'}     # Amount of CPU cores
@@ -32,11 +32,8 @@ if [ ! -f "$STORAGE/boot.img" ]; then
   . /run/install.sh
 fi
 
-# Initialize disks
-. /run/disk.sh
-
-# Initialize network
-. /run/network.sh
+. /run/disk.sh     # Initialize disks
+. /run/network.sh  # Initialize network
 
 KVM_ERR=""
 KVM_OPTS=""
