@@ -6,6 +6,7 @@ ARG DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -y upgrade && \
     apt-get --no-install-recommends -y install \
 	wget \
+ 	tini \
 	procps \
 	iptables \
 	iproute2 \
@@ -40,4 +41,4 @@ LABEL org.opencontainers.image.version=${VERSION_ARG}
 LABEL org.opencontainers.image.source=https://github.com/qemu-tools/qemu-docker/
 LABEL org.opencontainers.image.url=https://hub.docker.com/r/qemux/qemu-docker/
 
-ENTRYPOINT ["/run/run.sh"]
+ENTRYPOINT ["/usr/bin/tini", "-s", "/run/run.sh"]
