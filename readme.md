@@ -24,19 +24,19 @@ Via `docker-compose.yml`
 ```yaml
 version: "3"
 services:
-    qemu:
-        container_name: qemu
-        image: qemux/qemu-docker:latest
-        environment:
-            DISK_SIZE: "16G"
-            BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
-        devices:
-            - /dev/kvm
-        cap_add:
-            - NET_ADMIN                       
-        ports:
-            - 22:22
-        restart: on-failure
+  qemu:
+    container_name: qemu
+    image: qemux/qemu-docker:latest
+    environment:
+      DISK_SIZE: "16G"
+      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
+    devices:
+      - /dev/kvm
+    cap_add:
+      - NET_ADMIN                       
+    ports:
+      - 22:22
+    restart: on-failure
 ```
 
 Via `docker run`
@@ -53,7 +53,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```yaml
     environment:
-        BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
+      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
     ```
     
     It will be downloaded only once, during the initial run of the container.
@@ -64,7 +64,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```yaml
     environment:
-        DISK_SIZE: "256G"
+      DISK_SIZE: "256G"
     ```
     
     This can also be used to resize the existing disk to a larger capacity without data loss.
@@ -75,7 +75,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```yaml
     volumes:
-        - /home/user/data:/storage
+      - /home/user/data:/storage
     ```
 
     Replace the example path `/home/user/data` with the desired storage folder.
@@ -86,8 +86,8 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```yaml
     environment:
-        CPU_CORES: "4"
-        RAM_SIZE: "2048M"
+      CPU_CORES: "4"
+      RAM_SIZE: "2048M"
     ```
 
   * ### How do I verify if my system supports KVM?
@@ -107,7 +107,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```yaml
     environment:
-        ARGUMENTS: "-drive file=/seed.iso,format=raw,if=virtio"
+      ARGUMENTS: "-drive file=/seed.iso,format=raw,if=virtio"
     ```
 
   * ### How do I assign an individual IP address to the container?
@@ -130,16 +130,16 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```yaml
     services:
-        qemu:
-            container_name: qemu
-            ..<snip>..
-            networks:
-                vlan:             
-                    ipv4_address: 192.168.0.100
+      qemu:
+        container_name: qemu
+        ..<snip>..
+        networks:
+          vlan:             
+            ipv4_address: 192.168.0.100
 
     networks:
-        vlan:
-            external: true
+      vlan:
+        external: true
     ```
    
     An added benefit of this approach is that you won't have to perform any port mapping anymore since all ports will be exposed by default.
@@ -154,11 +154,11 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```yaml
     environment:
-        DHCP: "Y"
+      DHCP: "Y"
     devices:
-        - /dev/vhost-net
+      - /dev/vhost-net
     device_cgroup_rules:
-        - 'c *:* rwm'
+      - 'c *:* rwm'
     ```
 
     Please note that even if you don't need DHCP, it's still recommended to enable this feature as it prevents NAT issues and increases performance by using a `macvtap` interface.
