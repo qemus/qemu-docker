@@ -33,7 +33,7 @@ services:
     devices:
       - /dev/kvm
     cap_add:
-      - NET_ADMIN                       
+      - NET_ADMIN
     ports:
       - 22:22
     restart: on-failure
@@ -134,7 +134,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
         container_name: qemu
         ..<snip>..
         networks:
-          vlan:             
+          vlan:
             ipv4_address: 192.168.0.100
 
     networks:
