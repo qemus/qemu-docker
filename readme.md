@@ -10,7 +10,7 @@
 [![Pulls]][hub_url]
 
 </div></h1>
-QEMU in a docker container using KVM acceleration.
+QEMU in a docker container for running x86_64 virtual machines. It uses high-performance QEMU options (KVM acceleration, kernel-mode networking, etc).
 
 ## Features
 
