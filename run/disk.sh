@@ -123,7 +123,7 @@ fi
 DISK_OPTS="\
     -drive id=cdrom0,if=none,format=raw,readonly=on,file=${BOOT} \
     -device virtio-scsi-pci,id=scsi0 \
-    -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=3 \
+    -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=9 \
     -device virtio-scsi-pci,id=hw-userdata,bus=pcie.0,addr=0xa \
     -drive file=${DATA},if=none,id=drive-userdata,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
     -device scsi-hd,bus=hw-userdata.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata,id=userdata0,rotation_rate=${DISK_ROTATION},bootindex=1"
