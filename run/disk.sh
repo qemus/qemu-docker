@@ -123,7 +123,74 @@ fi
 DISK_OPTS="\
     -drive id=cdrom0,if=none,format=raw,readonly=on,file=${BOOT} \
     -device virtio-scsi-pci,id=scsi0 \
-    -device scsi-cd,bus=scsi0.0,drive=cdrom0 \
+    -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=9 \
     -device virtio-scsi-pci,id=hw-userdata,bus=pcie.0,addr=0xa \
     -drive file=${DATA},if=none,id=drive-userdata,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
     -device scsi-hd,bus=hw-userdata.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata,id=userdata0,rotation_rate=${DISK_ROTATION},bootindex=1"
+
+EXTRA_DISK="/storage2/data.img"
+
+if [ -f "${EXTRA_DISK}" ]; then
+
+  DISK_OPTS="${DISK_OPTS} \
+    -device virtio-scsi-pci,id=hw-userdata2,bus=pcie.0,addr=0xd \
+    -drive file=${EXTRA_DISK},if=none,id=drive-userdata2,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
+    -device scsi-hd,bus=hw-userdata2.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata2,id=userdata2,rotation_rate=${DISK_ROTATION},bootindex=4"
+
+else
+
+  [ -d "$(dirname "${EXTRA_DISK}")" ] && error "Disk image ${EXTRA_DISK} does not exist! Please supply an empty file of at least 6 GB." && exit 53
+
+fi
+
+EXTRA_DISK="/storage3/data.img"
+
+if [ -f "${EXTRA_DISK}" ]; then
+
+  DISK_OPTS="${DISK_OPTS} \
+    -device virtio-scsi-pci,id=hw-userdata3,bus=pcie.0,addr=0xe \
+    -drive file=${EXTRA_DISK},if=none,id=drive-userdata3,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
+    -device scsi-hd,bus=hw-userdata3.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata3,id=userdata3,rotation_rate=${DISK_ROTATION},bootindex=5"
+
+else
+
+  [ -d "$(dirname "${EXTRA_DISK}")" ] && error "Disk image ${EXTRA_DISK} does not exist! Please supply an empty file of at least 6 GB." && exit 54
+
+fi
+
+: ${DEVICE:=''}        # Docker variable to passthrough a block device, like /dev/vdc1.
+: ${DEVICE2:=''}
+: ${DEVICE3:=''}
+
+if [ -n "${DEVICE}" ]; then
+
+  [ ! -b "${DEVICE}" ] && error "Device ${DEVICE} cannot be found! Please add it to the 'devices' section of your compose file." && exit 55
+
+  DISK_OPTS="${DISK_OPTS} \
+    -device virtio-scsi-pci,id=hw-userdata4,bus=pcie.0,addr=0xf \
+    -drive file=${DEVICE},if=none,id=drive-userdata4,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
+    -device scsi-hd,bus=hw-userdata4.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata4,id=userdata4,rotation_rate=${DISK_ROTATION},bootindex=6"
+
+fi
+
+if [ -n "${DEVICE2}" ]; then
+
+  [ ! -b "${DEVICE2}" ] && error "Device ${DEVICE2} cannot be found! Please add it to the 'devices' section of your compose file." && exit 56
+
+  DISK_OPTS="${DISK_OPTS} \
+    -device virtio-scsi-pci,id=hw-userdata5,bus=pcie.0,addr=0x5 \
+    -drive file=${DEVICE2},if=none,id=drive-userdata5,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
+    -device scsi-hd,bus=hw-userdata5.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata5,id=userdata5,rotation_rate=${DISK_ROTATION},bootindex=7"
+
+fi
+
+if [ -n "${DEVICE3}" ]; then
+
+  [ ! -b "${DEVICE3}" ] && error "Device ${DEVICE3} cannot be found! Please add it to the 'devices' section of your compose file." && exit 57
+
+  DISK_OPTS="${DISK_OPTS} \
+    -device virtio-scsi-pci,id=hw-userdata6,bus=pcie.0,addr=0x6 \
+    -drive file=${DEVICE3},if=none,id=drive-userdata6,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
+    -device scsi-hd,bus=hw-userdata6.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata6,id=userdata6,rotation_rate=${DISK_ROTATION},bootindex=8"
+
+fi
