@@ -9,8 +9,6 @@ set -Eeuo pipefail
 : ${DISK_ROTATION:='1'}   # Rotation rate, set to 1 for SSD storage and increase for HDD
 
 BOOT="$STORAGE/boot.img"
-[ ! -f "$BOOT" ] && echo "ERROR: Boot image does not exist ($BOOT)" && exit 81
-
 DATA="${STORAGE}/data.img"
 DISK_SIZE=$(echo "${DISK_SIZE}" | sed 's/MB/M/g;s/GB/G/g;s/TB/T/g')
 DATA_SIZE=$(numfmt --from=iec "${DISK_SIZE}")
@@ -120,10 +118,16 @@ if [[ SIZE -ne DATA_SIZE ]]; then
   error "Virtual disk has the wrong size: ${SIZE}" && exit 89
 fi
 
-DISK_OPTS="\
+DISK_OPTS=""
+
+if [ -f "$BOOT" ]; then
+  DISK_OPTS="${DISK_OPTS} \
     -drive id=cdrom0,if=none,format=raw,readonly=on,file=${BOOT} \
     -device virtio-scsi-pci,id=scsi0 \
-    -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=9 \
+    -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=9"
+fi
+
+DISK_OPTS="${DISK_OPTS} \
     -device virtio-scsi-pci,id=hw-userdata,bus=pcie.0,addr=0xa \
     -drive file=${DATA},if=none,id=drive-userdata,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
     -device scsi-hd,bus=hw-userdata.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata,id=userdata0,rotation_rate=${DISK_ROTATION},bootindex=1"
