@@ -128,33 +128,59 @@ DISK_OPTS="\
     -drive file=${DATA},if=none,id=drive-userdata,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
     -device scsi-hd,bus=hw-userdata.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata,id=userdata0,rotation_rate=${DISK_ROTATION},bootindex=1"
 
+: ${DISK2_SIZE:=''}
+EXTRA_SIZE=DISK2_SIZE
 EXTRA_DISK="/storage2/data.img"
 
-if [ -f "${EXTRA_DISK}" ]; then
+if [ -d "$(dirname "${EXTRA_DISK}")" ]; then
 
+  if [ ! -f "${EXTRA_DISK}" ]; then
+    [ -z "$EXTRA_SIZE" ] && EXTRA_SIZE="16G"
+    if ! truncate -s "${EXTRA_SIZE}" "${EXTRA_DISK}"; then
+      error "Could not create the file for the second disk." && exit 53
+    fi
+  fi
+
+  if [ -n "$EXTRA_SIZE" ]; then
+    CUR_SIZE=$(stat -c%s "${EXTRA_DISK}")
+    DATA_SIZE=$(numfmt --from=iec "${EXTRA_SIZE}")
+    if [ "$DATA_SIZE" -gt "$CUR_SIZE" ]; then
+      truncate -s "${EXTRA_SIZE}" "${EXTRA_DISK}"
+    fi
+  fi
+  
   DISK_OPTS="${DISK_OPTS} \
     -device virtio-scsi-pci,id=hw-userdata2,bus=pcie.0,addr=0xd \
     -drive file=${EXTRA_DISK},if=none,id=drive-userdata2,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
     -device scsi-hd,bus=hw-userdata2.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata2,id=userdata2,rotation_rate=${DISK_ROTATION},bootindex=4"
 
-else
-
-  [ -d "$(dirname "${EXTRA_DISK}")" ] && error "Disk image ${EXTRA_DISK} does not exist! Please supply an empty file of at least 6 GB." && exit 53
-
 fi
 
+: ${DISK3_SIZE:=''}
+EXTRA_SIZE=DISK3_SIZE
 EXTRA_DISK="/storage3/data.img"
 
-if [ -f "${EXTRA_DISK}" ]; then
+if [ -d "$(dirname "${EXTRA_DISK}")" ]; then
+
+  if [ ! -f "${EXTRA_DISK}" ]; then
+    [ -z "$EXTRA_SIZE" ] && EXTRA_SIZE="16G"
+    if ! truncate -s "${EXTRA_SIZE}" "${EXTRA_DISK}"; then
+      error "Could not create the file for the third disk." && exit 54
+    fi
+  fi
+
+  if [ -n "$EXTRA_SIZE" ]; then
+    CUR_SIZE=$(stat -c%s "${EXTRA_DISK}")
+    DATA_SIZE=$(numfmt --from=iec "${EXTRA_SIZE}")
+    if [ "$DATA_SIZE" -gt "$CUR_SIZE" ]; then
+      truncate -s "${EXTRA_SIZE}" "${EXTRA_DISK}"
+    fi
+  fi
 
   DISK_OPTS="${DISK_OPTS} \
     -device virtio-scsi-pci,id=hw-userdata3,bus=pcie.0,addr=0xe \
     -drive file=${EXTRA_DISK},if=none,id=drive-userdata3,format=raw,cache=${DISK_CACHE},aio=${DISK_IO},discard=${DISK_DISCARD},detect-zeroes=on \
     -device scsi-hd,bus=hw-userdata3.0,channel=0,scsi-id=0,lun=0,drive=drive-userdata3,id=userdata3,rotation_rate=${DISK_ROTATION},bootindex=5"
-
-else
-
-  [ -d "$(dirname "${EXTRA_DISK}")" ] && error "Disk image ${EXTRA_DISK} does not exist! Please supply an empty file of at least 6 GB." && exit 54
 
 fi
 
