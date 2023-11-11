@@ -28,7 +28,7 @@ VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
 
 [ ! -d "$STORAGE" ] && error "Storage folder (${STORAGE}) not found!" && exit 13
 
-if [ ! -f "$STORAGE/boot.img" ]; then
+if [ ! -f "$STORAGE/data.img" ]; then
   . /run/install.sh
 fi
 
