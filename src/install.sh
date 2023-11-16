@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+[ -f "$STORAGE/boot.img" ] && return 0
+
 TMP="/boot.img"
 rm -f "$TMP"
 
