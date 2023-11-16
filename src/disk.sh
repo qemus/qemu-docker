@@ -23,9 +23,7 @@ addDisk () {
   local GB
   local DIR
   local REQ
-  local SIZE
   local SPACE
-  local MIN_SIZE
   local CUR_SIZE
   local DATA_SIZE
   local DISK_ID=$1
