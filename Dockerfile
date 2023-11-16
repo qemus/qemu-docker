@@ -18,7 +18,7 @@ RUN apt-get update && apt-get -y upgrade && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY run/*.sh /run/
+COPY src/*.sh /run/
 RUN chmod +x /run/*.sh
 
 VOLUME /storage
@@ -44,4 +44,4 @@ LABEL org.opencontainers.image.url="https://hub.docker.com/r/qemux/qemu-docker/"
 LABEL org.opencontainers.image.source="https://github.com/qemu-tools/qemu-docker/"
 LABEL org.opencontainers.image.description="QEMU in a docker container using KVM acceleration"
 
-ENTRYPOINT ["/usr/bin/tini", "-s", "/run/run.sh"]
+ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
