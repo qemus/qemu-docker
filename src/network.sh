@@ -6,6 +6,8 @@ set -Eeuo pipefail
 : ${DHCP:='N'}
 : ${MAC:='82:cf:d0:5e:57:66'}
 
+: ${CONTROL_PORTS:=''}
+
 : ${VM_NET_TAP:='qemu'}
 : ${VM_NET_DEV:='eth0'}
 : ${VM_NET_MAC:="$MAC"}
@@ -146,11 +148,16 @@ configureNAT () {
 
   ip link set dev "${VM_NET_TAP}" master dockerbridge
 
+  CONTROL_PORT_ARGS=''
+  for PORT in $CONTROL_PORTS ; do
+    CONTROL_PORT_ARGS="$CONTROL_PORT_ARGS ! --dport $PORT"
+  done
+
   # Add internet connection to the VM
   IP=$(ip address show dev "${VM_NET_DEV}" | grep inet | awk '/inet / { print $2 }' | cut -f1 -d/)
 
   iptables -t nat -A POSTROUTING -o "${VM_NET_DEV}" -j MASQUERADE
-  iptables -t nat -A PREROUTING -i "${VM_NET_DEV}" -d "${IP}" -p tcp  -j DNAT --to $VM_NET_IP
+  iptables -t nat -A PREROUTING -i "${VM_NET_DEV}" -d "${IP}" -p tcp $CONTROL_PORT_ARGS -j DNAT --to $VM_NET_IP
   iptables -t nat -A PREROUTING -i "${VM_NET_DEV}" -d "${IP}" -p udp  -j DNAT --to $VM_NET_IP
 
   if (( KERNEL > 4 )); then

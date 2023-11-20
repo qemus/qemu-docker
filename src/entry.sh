@@ -34,6 +34,7 @@ cd /run
 . install.sh    # Get bootdisk
 . disk.sh       # Initialize disks
 . network.sh    # Initialize network
+. display.sh    # Initialize display
 
 KVM_ERR=""
 KVM_OPTS=""
@@ -55,18 +56,19 @@ else
   KVM_OPTS=",accel=kvm -enable-kvm -cpu host"
 fi
 
-DEF_OPTS="-nographic -nodefaults -display none"
+DEF_OPTS="-nodefaults"
 RAM_OPTS=$(echo "-m ${RAM_SIZE}" | sed 's/MB/M/g;s/GB/G/g;s/TB/T/g')
 CPU_OPTS="-smp ${CPU_CORES},sockets=1,dies=1,cores=${CPU_CORES},threads=1"
 MAC_OPTS="-machine type=q35,usb=off,dump-guest-core=off,hpet=off${KVM_OPTS}"
 SERIAL_OPTS="-serial mon:stdio -device virtio-serial-pci,id=virtio-serial0,bus=pcie.0,addr=0x3"
 EXTRA_OPTS="-device virtio-balloon-pci,id=balloon0 -object rng-random,id=rng0,filename=/dev/urandom -device virtio-rng-pci,rng=rng0"
 
-ARGS="${DEF_OPTS} ${CPU_OPTS} ${RAM_OPTS} ${MAC_OPTS} ${SERIAL_OPTS} ${NET_OPTS} ${DISK_OPTS} ${EXTRA_OPTS} ${ARGUMENTS}"
+ARGS="${DEF_OPTS} ${CPU_OPTS} ${RAM_OPTS} ${MAC_OPTS} ${SERIAL_OPTS} ${NET_OPTS} ${DISK_OPTS} ${DISPLAY_OPTS} ${EXTRA_OPTS} ${ARGUMENTS}"
 ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
 trap - ERR
 info "Booting image using ${VERS}..."
+
 
 [[ "${DEBUG}" == [Yy1]* ]] && set -x
 exec qemu-system-x86_64 ${ARGS:+ $ARGS}
