@@ -157,7 +157,9 @@ configureNAT () {
   IP=$(ip address show dev "${VM_NET_DEV}" | grep inet | awk '/inet / { print $2 }' | cut -f1 -d/)
 
   iptables -t nat -A POSTROUTING -o "${VM_NET_DEV}" -j MASQUERADE
+  # shellcheck disable=SC2086
   iptables -t nat -A PREROUTING -i "${VM_NET_DEV}" -d "${IP}" -p tcp $CONTROL_PORT_ARGS -j DNAT --to $VM_NET_IP
+  # shellcheck enable=SC2086
   iptables -t nat -A PREROUTING -i "${VM_NET_DEV}" -d "${IP}" -p udp  -j DNAT --to $VM_NET_IP
 
   if (( KERNEL > 4 )); then
