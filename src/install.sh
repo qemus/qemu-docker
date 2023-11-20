@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-[ -f "$STORAGE/boot.img" ] && return 0
+FILE="$STORAGE/boot.img"
+[ -f "$FILE" ] && return 0
 
 TMP="/boot.img"
 rm -f "$TMP"
@@ -27,8 +28,6 @@ SIZE=$(stat -c%s "$TMP")
 if ((SIZE<100000)); then
   error "Invalid ISO file: Size is smaller than 100 KB" && exit 62
 fi
-
-FILE="$STORAGE/boot.img"
 
 mv -f "$TMP" "$FILE"
 
