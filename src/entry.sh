@@ -33,8 +33,8 @@ cd /run
 
 . install.sh    # Get bootdisk
 . disk.sh       # Initialize disks
-. network.sh    # Initialize network
 . display.sh    # Initialize display
+. network.sh    # Initialize network
 
 KVM_ERR=""
 KVM_OPTS=""
