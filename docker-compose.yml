@@ -18,7 +18,7 @@ services:
         cap_add:
             - NET_ADMIN                       
         ports:
-            - 22:22
+            - 2222:22
             - 5900:5900
         restart: on-failure
         stop_grace_period: 1m
