@@ -135,7 +135,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     environment:
       DISPLAY: "vnc"
     ports:
-      5900:5900
+      - 5900:5900
     ```
     
   * ### How do I provide custom arguments to QEMU?
