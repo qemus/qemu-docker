@@ -4,12 +4,11 @@ services:
         container_name: qemu
         image: qemux/qemu-docker:latest
         environment:
+            DISPLAY: "vnc"
             CPU_CORES: "1"
             RAM_SIZE: "512M"            
             DISK_SIZE: "16G"
             BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
-            DISPLAY: "vnc"
-            CONTROL_PORTS: "5900"
         devices:
             - /dev/kvm
             - /dev/vhost-net
@@ -18,7 +17,7 @@ services:
         cap_add:
             - NET_ADMIN                       
         ports:
-            - 22:22
+            - 2222:22
             - 5900:5900
         restart: on-failure
         stop_grace_period: 1m

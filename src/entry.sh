@@ -33,8 +33,8 @@ cd /run
 
 . install.sh    # Get bootdisk
 . disk.sh       # Initialize disks
-. network.sh    # Initialize network
 . display.sh    # Initialize display
+. network.sh    # Initialize network
 
 KVM_ERR=""
 KVM_OPTS=""
@@ -68,7 +68,6 @@ ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
 trap - ERR
 info "Booting image using ${VERS}..."
-
 
 [[ "${DEBUG}" == [Yy1]* ]] && set -x
 exec qemu-system-x86_64 ${ARGS:+ $ARGS}
