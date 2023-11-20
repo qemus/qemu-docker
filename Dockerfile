@@ -18,12 +18,18 @@ RUN apt-get update && apt-get -y upgrade && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-COPY src/*.sh /run/
+# Using a wildcard causes caching problems on some systems
+COPY src/disk.sh /run/
+COPY src/display.sh /run/
+COPY src/entry.sh /run/
+COPY src/install.sh /run/
+COPY src/network.sh /run/
 RUN chmod +x /run/*.sh
 
 VOLUME /storage
 
 EXPOSE 22
+EXPOSE 5900
 
 ENV CPU_CORES "1"
 ENV DISK_SIZE "16G"
