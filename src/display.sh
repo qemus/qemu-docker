@@ -5,7 +5,7 @@ set -Eeuo pipefail
 
 : ${DISPLAY:='none'}    # Display type
 
-case "$DISPLAY" in
+case "${DISPLAY,,}" in
   vnc)
     DISPLAY_OPTS="-nographic -vga std -vnc :0"
     ;;
