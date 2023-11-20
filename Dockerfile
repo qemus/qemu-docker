@@ -18,12 +18,7 @@ RUN apt-get update && apt-get -y upgrade && \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Using a wildcard causes caching problems on some systems
-COPY src/disk.sh /run/
-COPY src/display.sh /run/
-COPY src/entry.sh /run/
-COPY src/install.sh /run/
-COPY src/network.sh /run/
+COPY ./src /run/
 RUN chmod +x /run/*.sh
 
 VOLUME /storage

@@ -28,6 +28,7 @@ services:
     container_name: qemu
     image: qemux/qemu-docker:latest
     environment:
+      DISPLAY: "vnc"
       DISK_SIZE: "16G"
       BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
     devices:
@@ -35,7 +36,8 @@ services:
     cap_add:
       - NET_ADMIN
     ports:
-      - 22:22
+      - 2222:22
+      - 5900:5900
     restart: on-failure
 ```
 
@@ -124,8 +126,19 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     ```
 
     If you receive an error from `kvm-ok` indicating that KVM acceleration can't be used, check your BIOS settings.
+
+  * ### How can I connect with VNC?
+
+    To enable VNC, add the following lines to your compose file:
+
+    ```yaml
+    environment:
+      DISPLAY: "vnc"
+    ports:
+      - 5900:5900
+    ```
     
-  * ### How do I provide extra arguments to QEMU?
+  * ### How do I provide custom arguments to QEMU?
 
     You can create the `ARGUMENTS` environment variable to provide additional arguments to QEMU at runtime:
 
@@ -186,17 +199,6 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     ```
 
     Please note that even if you don't need DHCP, it's still recommended to enable this feature as it prevents NAT issues and increases performance by using a `macvtap` interface.
-
-  * ### How can I connect with VNC?
-
-    To enable VNC, add the following lines to your compose file:
-
-    ```yaml
-    ports:
-      "5900:5900"
-    environment:
-      DISPLAY: "vnc"
-    ```
 
 [build_url]: https://github.com/qemu-tools/qemu-docker/
 [hub_url]: https://hub.docker.com/r/qemux/qemu-docker/

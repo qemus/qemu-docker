@@ -148,6 +148,10 @@ configureNAT () {
 
   ip link set dev "${VM_NET_TAP}" master dockerbridge
 
+  if  [[ -z "${CONTROL_PORTS}" ]] && [[ "${DISPLAY,,}" == "vnc" ]]; then
+    CONTROL_PORTS='5900'
+  fi
+  
   CONTROL_PORT_ARGS=''
   for PORT in $CONTROL_PORTS ; do
     CONTROL_PORT_ARGS="$CONTROL_PORT_ARGS ! --dport $PORT"
