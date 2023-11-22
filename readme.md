@@ -10,7 +10,9 @@
 [![Pulls]][hub_url]
 
 </div></h1>
-QEMU in a docker container for running x86_64 virtual machines. It uses high-performance QEMU options (KVM acceleration, kernel-mode networking, etc).
+QEMU in a docker container for running AMD64 virtual machines (even on ARM64).
+
+It uses high-performance QEMU options (KVM acceleration, kernel-mode networking, etc) to achieve near-native speed.
 
 ## Features
 
@@ -91,8 +93,8 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
       DISK2_SIZE: "32G"
       DISK3_SIZE: "64G"
     volumes:
-      - /home/example2:/storage2
-      - /home/example3:/storage3
+      - /home/example:/storage2
+      - /mnt/data/example:/storage3
     ```
 
     Additionally, it's also possible to passthrough raw disk devices like this:
@@ -144,7 +146,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```yaml
     environment:
-      ARGUMENTS: "-drive file=/seed.iso,format=raw,if=virtio"
+      ARGUMENTS: "-usbdevice tablet"
     ```
 
   * ### How do I assign an individual IP address to the container?
