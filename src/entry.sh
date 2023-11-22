@@ -1,70 +1,17 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Docker environment variables
-
-: ${BOOT:=''}           # URL of the ISO file
-: ${DEBUG:='N'}         # Enable debugging mode
-: ${ALLOCATE:='Y'}      # Preallocate diskspace
-: ${ARGUMENTS:=''}      # Extra QEMU parameters
-: ${CPU_CORES:='1'}     # Amount of CPU cores
-: ${DISK_SIZE:='16G'}   # Initial data disk size
-: ${RAM_SIZE:='512M'}   # Maximum RAM amount
-
 echo "❯ Starting QEMU for Docker v${VERSION}..."
 echo "❯ For support visit https://github.com/qemu-tools/qemu-docker/"
 
-info () { echo -e "\E[1;34m❯ \E[1;36m$1\E[0m" ; }
-error () { echo -e >&2 "\E[1;31m❯ ERROR: $1\E[0m" ; }
-trap 'error "Status $? while: ${BASH_COMMAND} (line $LINENO/$BASH_LINENO)"' ERR
-
-[ ! -f "/run/entry.sh" ] && error "Script must run inside Docker container!" && exit 11
-[ "$(id -u)" -ne "0" ] && error "Script must be executed with root privileges." && exit 12
-
-KERNEL=$(uname -r | cut -b 1)
-MINOR=$(uname -r | cut -d '.' -f2)
-ARCH=$(dpkg --print-architecture)
-VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
-
-STORAGE="/storage"
-[ ! -d "$STORAGE" ] && error "Storage folder (${STORAGE}) not found!" && exit 13
-
 cd /run
 
+. reset.sh      # Initialize system
 . install.sh    # Get bootdisk
 . disk.sh       # Initialize disks
 . display.sh    # Initialize display
 . network.sh    # Initialize network
-
-KVM_ERR=""
-KVM_OPTS=""
-
-if [ -e /dev/kvm ] && sh -c 'echo -n > /dev/kvm' &> /dev/null; then
-  if ! grep -q -e vmx -e svm /proc/cpuinfo; then
-    KVM_ERR="(vmx/svm disabled)"
-  fi
-else
-  [ -e /dev/kvm ] && KVM_ERR="(no write access)" || KVM_ERR="(device file missing)"
-fi
-
-if [ -n "${KVM_ERR}" ]; then
-  if [ "$ARCH" == "amd64" ]; then
-    error "KVM acceleration not detected ${KVM_ERR}, see the FAQ about this."
-    [[ "${DEBUG}" != [Yy1]* ]] && exit 88
-  fi
-else
-  KVM_OPTS=",accel=kvm -enable-kvm -cpu host"
-fi
-
-DEF_OPTS="-nodefaults"
-RAM_OPTS=$(echo "-m ${RAM_SIZE}" | sed 's/MB/M/g;s/GB/G/g;s/TB/T/g')
-CPU_OPTS="-smp ${CPU_CORES},sockets=1,dies=1,cores=${CPU_CORES},threads=1"
-MAC_OPTS="-machine type=q35,usb=off,dump-guest-core=off,hpet=off${KVM_OPTS}"
-SERIAL_OPTS="-serial mon:stdio -device virtio-serial-pci,id=virtio-serial0,bus=pcie.0,addr=0x3"
-EXTRA_OPTS="-device virtio-balloon-pci,id=balloon0 -object rng-random,id=rng0,filename=/dev/urandom -device virtio-rng-pci,rng=rng0"
-
-ARGS="${DEF_OPTS} ${CPU_OPTS} ${RAM_OPTS} ${MAC_OPTS} ${SERIAL_OPTS} ${NET_OPTS} ${DISK_OPTS} ${DISPLAY_OPTS} ${EXTRA_OPTS} ${ARGUMENTS}"
-ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
+. config.sh     # Configure arguments
 
 trap - ERR
 info "Booting image using ${VERS}..."
