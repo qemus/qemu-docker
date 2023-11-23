@@ -98,17 +98,6 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
       - /mnt/data/example:/storage3
     ```
 
-    Additionally, it's also possible to passthrough raw disk devices like this:
-
-    ```yaml
-    environment:
-      DEVICE2: "/dev/vdc1"
-      DEVICE3: "/dev/vdc2"
-    devices:
-      - /dev/vdc1
-      - /dev/vdc2
-    ```    
-
   * ### How do I increase the amount of CPU or RAM?
 
     By default, a single core and 512 MB of RAM are allocated to the container. To increase this, add the following environment variables:
