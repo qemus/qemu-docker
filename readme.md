@@ -85,19 +85,6 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     Replace the example path `/home/user/data` with the desired storage folder.
 
-  * ### How do I add multiple disks?
-
-    To add multiple disks, modify your compose file like this:
-
-    ```yaml
-    environment:
-      DISK2_SIZE: "32G"
-      DISK3_SIZE: "64G"
-    volumes:
-      - /home/example:/storage2
-      - /mnt/data/example:/storage3
-    ```
-
   * ### How do I increase the amount of CPU or RAM?
 
     By default, a single core and 512 MB of RAM are allocated to the container. To increase this, add the following environment variables:
@@ -129,7 +116,9 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     ports:
       - 5900:5900
     ```
-    
+
+    Afterwards you can connect with any VNC client to port 5900.
+
   * ### How do I provide custom arguments to QEMU?
 
     You can create the `ARGUMENTS` environment variable to provide additional arguments to QEMU at runtime:
