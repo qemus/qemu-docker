@@ -61,8 +61,8 @@ jobs:
           VERSION="${{ vars.MAJOR }}.${{ vars.MINOR }}"
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          TITLE="$(grep --only-matching --perl-regex "(?<=image.title\=).*" $DIRECTORY/Dockerfile)"
-          DESC="$(grep --only-matching --perl-regex "(?<=image.description\=).*" $DIRECTORY/Dockerfile)"
+          TITLE="$(grep --only-matching --perl-regex "(?<=image.title\=).*" $DIRECTORY/Dockerfile) | tr -d '\"' | tr -d \"'\" "
+          DESC="$(grep --only-matching --perl-regex "(?<=image.description\=).*" $DIRECTORY/Dockerfile) | tr -d '\"' | tr -d \"'\" "
    
           TAGS=()
           TAGS=("${{ secrets.DOCKERHUB_REPO }}:latest")
