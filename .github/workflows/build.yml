@@ -72,8 +72,8 @@ jobs:
           
           LABELS=()
           LABELS=("org.opencontainers.image.licenses=MIT")
-          LABELS+=("org.opencontainers.image.title=test test") # ${TITLE}")
-          LABELS+=("org.opencontainers.image.description=test test") #${DESC}")
+          LABELS+=("'org.opencontainers.image.title=test test'") # ${TITLE}")
+          LABELS+=("'org.opencontainers.image.description=test test'") #${DESC}")
           LABELS+=("org.opencontainers.image.version=${VERSION}")
           LABELS+=("org.opencontainers.image.created=${BUILD_DATE}")
           LABELS+=("org.opencontainers.image.revision=${GITHUB_RUN_ID}")
