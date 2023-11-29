@@ -86,8 +86,8 @@ jobs:
             --output "type=image,push=false" \
             --build-arg "VERSION_ARG=${VERSION}" \
             --build-arg "VCS_REF=${GITHUB_SHA::8}" \
-            "$(printf '%s' ${LABELS[@]/#/ --label } )" \
-            "$(printf '%s' ${TAGS[@]/#/ --tag } )" "${DIRECTORY}"
+            "$(printf '%s' "${LABELS[@]/#/ --label }" )" \
+            "$(printf '%s' "${TAGS[@]/#/ --tag }" )" "${DIRECTORY}"
             
             rm -f ${HOME}/.docker/config.json
             jdksks
