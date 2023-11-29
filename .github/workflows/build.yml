@@ -60,9 +60,9 @@ jobs:
           PLATFORMS="linux/amd64,linux/arm64"
           VERSION="${{ vars.MAJOR }}.${{ vars.MINOR }}"
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
-          BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')
-          TITLE=$(grep --only-matching --perl-regex "(?<=image.title\=).*" $DIRECTORY/Dockerfile)
-          DESC=$(grep --only-matching --perl-regex "(?<=image.description\=).*" $DIRECTORY/Dockerfile)
+          BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          TITLE="$(grep --only-matching --perl-regex "(?<=image.title\=).*" $DIRECTORY/Dockerfile)"
+          DESC="$(grep --only-matching --perl-regex "(?<=image.description\=).*" $DIRECTORY/Dockerfile)"
    
           TAGS=()
           TAGS=("${{ secrets.DOCKERHUB_REPO }}:latest")
@@ -72,8 +72,8 @@ jobs:
           
           LABELS=()
           LABELS=("org.opencontainers.image.licenses=\"MIT\"")
-          LABELS+=("org.opencontainers.image.title=${TITLE}")
-          LABELS+=("org.opencontainers.image.description=${DESC}")
+          LABELS+=("org.opencontainers.image.title=\"${TITLE//\"/}\"")
+          LABELS+=("org.opencontainers.image.description=\"${DESC//\"/}\"")
           LABELS+=("org.opencontainers.image.version=\"${VERSION}\"")
           LABELS+=("org.opencontainers.image.created=\"${BUILD_DATE}\"")
           LABELS+=("org.opencontainers.image.revision=\"${GITHUB_RUN_ID}\"")
@@ -81,13 +81,13 @@ jobs:
           LABELS+=("org.opencontainers.image.source=\"https://github.com/${{ github.repository }}/\"")
 
           set -x
-          docker buildx build --platform ${PLATFORMS} \
+          docker buildx build --progress=plain \
+            --platform "${PLATFORMS}" \
             --output "type=image,push=false" \
-            --progress=plain \
             --build-arg "VERSION_ARG=${VERSION}" \
             --build-arg "VCS_REF=${GITHUB_SHA::8}" \
             $(printf "%s" "${LABELS[@]/#/ --label }" ) \
-            $(printf "%s" "${TAGS[@]/#/ --tag }" ) ${DIRECTORY}
+            $(printf "%s" "${TAGS[@]/#/ --tag }" ) "${DIRECTORY}"
             
             rm -f ${HOME}/.docker/config.json
             jdksks
