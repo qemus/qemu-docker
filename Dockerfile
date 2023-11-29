@@ -32,9 +32,6 @@ ENV RAM_SIZE "512M"
 ENV BOOT "http://www.example.com/image.iso"
 
 ARG VERSION_ARG="0.0"
-ENV VERSION=$VERSION_ARG
-
-LABEL org.opencontainers.image.title="QEMU for Docker"
-LABEL org.opencontainers.image.description="QEMU in a docker container using KVM acceleration"
+RUN echo "$VERSION_ARG" > /run/version
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
