@@ -71,14 +71,14 @@ jobs:
           TAGS+=("ghcr.io/${{ github.repository }}:${VERSION}")
           
           LABELS=()
-          LABELS=("'org.opencontainers.image.licenses=\"MIT\"'")
-          LABELS+=("'org.opencontainers.image.title=${TITLE//\'/}'")
-          LABELS+=("'org.opencontainers.image.description=${DESC//\'/}'")
-          LABELS+=("'org.opencontainers.image.version=\"${VERSION}\"'")
-          LABELS+=("'org.opencontainers.image.created=\"${BUILD_DATE}\"'")
-          LABELS+=("'org.opencontainers.image.revision=\"${GITHUB_RUN_ID}\"'")
-          LABELS+=("'org.opencontainers.image.url=\"https://hub.docker.com/r/${{ secrets.DOCKERHUB_REPO }}/\"'")
-          LABELS+=("'org.opencontainers.image.source=\"https://github.com/${{ github.repository }}/\"'")
+          #LABELS=("org.opencontainers.image.licenses=MIT")
+          #LABELS+=("org.opencontainers.image.title=${TITLE//\"/}")
+          LABELS+=("org.opencontainers.image.description=${DESC//\"/}")
+          LABELS+=("org.opencontainers.image.version=${VERSION}")
+          LABELS+=("org.opencontainers.image.created=${BUILD_DATE}")
+          LABELS+=("org.opencontainers.image.revision=${GITHUB_RUN_ID}")
+          LABELS+=("org.opencontainers.image.url=https://hub.docker.com/r/${{ secrets.DOCKERHUB_REPO }}")
+          LABELS+=("org.opencontainers.image.source=https://github.com/${{ github.repository }}")
 
           set -x
           docker buildx build --progress=plain \
