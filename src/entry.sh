@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-echo "❯ Starting QEMU for Docker v${VERSION}..."
+echo "❯ Starting QEMU for Docker v$(</run/version)..."
 echo "❯ For support visit https://github.com/qemu-tools/qemu-docker/"
 
 cd /run
