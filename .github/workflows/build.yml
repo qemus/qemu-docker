@@ -12,7 +12,7 @@ on:
       - '.dockerignore'
       - '.github/**'
       - '.github/workflows/**'
-  
+
 concurrency:
   group: build
   cancel-in-progress: false
@@ -34,7 +34,7 @@ jobs:
         name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0    
+          fetch-depth: 0
       - 
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -54,8 +54,9 @@ jobs:
       - 
         name: Build Docker image
         id: build
-        run: |
-
+        run: |        
+          #!/bin/bash
+          
           DIRECTORY="."
           PLATFORMS="linux/amd64,linux/arm64"
           VERSION="${{ vars.MAJOR }}.${{ vars.MINOR }}"
@@ -88,8 +89,8 @@ jobs:
             $(printf '%s' "${LABELS[@]/#/ --label }" ) \
             $(printf '%s' "${LABELS[@]/#/ --annotation }" ) \
             $(printf '%s' "${TAGS[@]/#/ --tag }" ) "${DIRECTORY}"
-            
-            rm -f ${HOME}/.docker/config.json
+          
+          rm -f ${HOME}/.docker/config.json
       -
         name: Create a release
         uses: action-pack/github-release@v2
@@ -109,4 +110,4 @@ jobs:
         with:
           url: ${{ secrets.GITLAB_URL }}
           token: ${{ secrets.GITLAB_TOKEN }}
-          username: ${{ secrets.GITLAB_USERNAME }}    
+          username: ${{ secrets.GITLAB_USERNAME }}
