@@ -79,18 +79,17 @@ jobs:
           LABELS+=("org.opencontainers.image.revision=${GITHUB_RUN_ID}")
           LABELS+=("org.opencontainers.image.url=https://hub.docker.com/r/${{ secrets.DOCKERHUB_REPO }}")
           LABELS+=("org.opencontainers.image.source=https://github.com/${{ github.repository }}")
-
-          set -x
+          
           docker buildx build --progress=plain \
             --platform "${PLATFORMS}" \
-            --output "type=image,push=false" \
+            --output "type=image,push=true" \
             --build-arg "VERSION_ARG=${VERSION}" \
             --build-arg "VCS_REF=${GITHUB_SHA::8}" \
             $(printf '%s' "${LABELS[@]/#/ --label }" ) \
+            $(printf '%s' "${LABELS[@]/#/ --annotation }" ) \
             $(printf '%s' "${TAGS[@]/#/ --tag }" ) "${DIRECTORY}"
             
             rm -f ${HOME}/.docker/config.json
-            jdksks #$(printf '%s' "${LABELS[@]/#/ --label }" ) \
       -
         name: Create a release
         uses: action-pack/github-release@v2
