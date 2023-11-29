@@ -71,8 +71,8 @@ jobs:
           TAGS+=("ghcr.io/${{ github.repository }}:${VERSION}")
           
           LABELS=()
-          #LABELS=("org.opencontainers.image.licenses=MIT")
-          #LABELS+=("org.opencontainers.image.title=${TITLE//\"/}")
+          LABELS=("org.opencontainers.image.licenses=MIT")
+          LABELS+=("org.opencontainers.image.title=${TITLE//\"/}")
           LABELS+=("org.opencontainers.image.description=${DESC//\"/}")
           LABELS+=("org.opencontainers.image.version=${VERSION}")
           LABELS+=("org.opencontainers.image.created=${BUILD_DATE}")
@@ -86,11 +86,10 @@ jobs:
             --output "type=image,push=false" \
             --build-arg "VERSION_ARG=${VERSION}" \
             --build-arg "VCS_REF=${GITHUB_SHA::8}" \
-            $(printf '%s' "${LABELS[@]/#/ --label }" ) \
             $(printf '%s' "${TAGS[@]/#/ --tag }" ) "${DIRECTORY}"
             
             rm -f ${HOME}/.docker/config.json
-            jdksks
+            jdksks #$(printf '%s' "${LABELS[@]/#/ --label }" ) \
       -
         name: Create a release
         uses: action-pack/github-release@v2
