@@ -61,8 +61,8 @@ jobs:
           VERSION="${{ vars.MAJOR }}.${{ vars.MINOR }}"
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
           BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-          TITLE="$(grep --only-matching --perl-regex "(?<=image.title\=).*" $DIRECTORY/Dockerfile | tr -d '\"' | tr -d \"'\")"
-          DESC="$(grep --only-matching --perl-regex "(?<=image.description\=).*" $DIRECTORY/Dockerfile | tr -d '\"' | tr -d \"'\")"
+          TITLE="$(grep --only-matching --perl-regex \"(?<=image.title\=).*\" $DIRECTORY/Dockerfile)"
+          DESC="$(grep --only-matching --perl-regex \"(?<=image.description\=).*\" $DIRECTORY/Dockerfile)"
    
           TAGS=()
           TAGS=("${{ secrets.DOCKERHUB_REPO }}:latest")
@@ -72,8 +72,8 @@ jobs:
           
           LABELS=()
           LABELS=("org.opencontainers.image.licenses=\"MIT\"")
-          LABELS+=("org.opencontainers.image.title=\"${TITLE//\"/}\"")
-          LABELS+=("org.opencontainers.image.description=\"${DESC//\"/}\"")
+          LABELS+=("org.opencontainers.image.title=${TITLE//'/}")
+          LABELS+=("org.opencontainers.image.description=${DESC//'/}")
           LABELS+=("org.opencontainers.image.version=\"${VERSION}\"")
           LABELS+=("org.opencontainers.image.created=\"${BUILD_DATE}\"")
           LABELS+=("org.opencontainers.image.revision=\"${GITHUB_RUN_ID}\"")
