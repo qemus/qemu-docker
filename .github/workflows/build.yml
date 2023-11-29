@@ -80,13 +80,14 @@ jobs:
           LABELS+=("org.opencontainers.image.url=\"https://hub.docker.com/r/${{ secrets.DOCKERHUB_REPO }}/\"")
           LABELS+=("org.opencontainers.image.source=\"https://github.com/${{ github.repository }}/\"")
 
+          set -x
           docker buildx build --platform ${PLATFORMS} \
             --output "type=image,push=false" \
             --progress=plain \
             --build-arg "VERSION_ARG=${VERSION}" \
             --build-arg "VCS_REF=${GITHUB_SHA::8}" \
             $(printf "%s" "${LABELS[@]/#/ --label }" ) \
-            $(printf "%s" "${TAGS[@]/#/ --tag }" ) $DIRECTORY
+            $(printf "%s" "${TAGS[@]/#/ --tag }" ) ${DIRECTORY}
             
             rm -f ${HOME}/.docker/config.json
             jdksks
