@@ -69,10 +69,10 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     ```yaml
     environment:
-      DISK_SIZE: "256G"
+      DISK_SIZE: "128G"
     ```
     
-    This can also be used to resize the existing disk to a larger capacity without data loss.
+    This can also be used to resize the existing disk to a larger capacity without any data loss.
     
   * ### How do I change the location of the data disk?
 
@@ -87,12 +87,12 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
   * ### How do I increase the amount of CPU or RAM?
 
-    By default, a single core and 512 MB of RAM are allocated to the container. To increase this, add the following environment variables:
+    By default, a single core and 1 GB of RAM are allocated to the container. To increase this, add the following environment variables:
 
     ```yaml
     environment:
+      RAM_SIZE: "4G"
       CPU_CORES: "4"
-      RAM_SIZE: "2048M"
     ```
 
   * ### How do I verify if my system supports KVM?
