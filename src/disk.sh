@@ -19,6 +19,38 @@ if [ -f "$BOOT" ]; then
     -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=10"
 fi
 
+fmt2ext() {
+  local DISK_FMT=$1
+
+  case "${DISK_FMT,,}" in
+    qcow2)
+      echo "qcow2"
+      ;;
+    raw)
+      echo "img"
+      ;;
+    *)
+      error "Unrecognized disk format ${DISK_FMT}" && exit 88
+      ;;
+  esac
+}
+
+ext2fmt() {
+  local DISK_EXT=$1
+
+  case "${DISK_EXT,,}" in
+    qcow2)
+      echo "qcow2"
+      ;;
+    img)
+      echo "raw"
+      ;;
+    *)
+      error "Unrecognized file extension .${DISK_EXT}" && exit 90
+      ;;
+  esac
+}
+
 getSize() {
   local DISK_FILE=$1
 
@@ -79,6 +111,22 @@ doResize() {
   esac
 }
 
+convertDisk() {
+  local CONV_FLAGS=""
+  local SOURCE_FILE=$1
+  local SOURCE_FMT=$2
+  local DST_FILE=$3
+  local DST_FMT=$4
+
+  case "${DST_FMT}" in
+  qcow2)
+    CONV_FLAGS="${CONV_FLAGS} -c"
+  esac
+
+  # shellcheck disable=SC2086
+  qemu-img convert ${CONV_FLAGS} -f "${SOURCE_FMT}" -O "${DST_FMT}" -- "${SOURCE_FILE}" "${DST_FILE}"
+}
+
 createDisk() {
   local GB
   local SPACE
@@ -132,16 +180,38 @@ addDisk () {
   local DIR
   local CUR_SIZE
   local DATA_SIZE
+  local DISK_FILE
+  local DISK_ROOT
   local DISK_ID=$1
-  local DISK_FILE=$2
-  local DISK_DESC=$3
-  local DISK_SPACE=$4
-  local DISK_INDEX=$5
-  local DISK_ADDRESS=$6
-  local DISK_FMT=$7
+  local DISK_BASE=$2
+  local DISK_EXT=$3
+  local DISK_DESC=$4
+  local DISK_SPACE=$5
+  local DISK_INDEX=$6
+  local DISK_ADDRESS=$7
+  local DISK_FMT=$8
+
+  DISK_FILE="${DISK_BASE}.${DISK_EXT}"
+
+  DISK_ROOT="$(basename -- "${DISK_BASE}")"
 
   DIR=$(dirname "${DISK_FILE}")
   [ ! -d "${DIR}" ] && return 0
+
+  if ! [ -f "${DISK_FILE}" ] ; then
+    local OTHER_FORMS="$(find "${DIR}" -maxdepth 1 | sed -n -- "/\/${DISK_ROOT}\./p" | sed -- "/\.${DISK_EXT}$/d")"
+
+    if ! [[ -z "${OTHER_FORMS}" ]] ; then
+      local SOURCE_FILE="$(echo "${OTHER_FORMS}" | head -n1)"
+      local SOURCE_EXT="$(echo "${SOURCE_FILE}" | sed 's/^.*\.//')"
+      local SOURCE_FMT="$(ext2fmt "${SOURCE_EXT}")"
+      info "Other disk formats detected for ${DISK_DESC} (${OTHER_FORMS//$'\n'/, }), converting ${SOURCE_FILE}"
+      if ! convertDisk "${SOURCE_FILE}" "${SOURCE_FMT}" "${DISK_FILE}" "${DISK_FMT}" ; then
+        info "Disk conversion failed, creating new disk image as fallback"
+        rm "${DISK_FILE}"
+      fi
+    fi
+  fi
 
   [ -z "$DISK_SPACE" ] && DISK_SPACE="16G"
   DISK_SPACE=$(echo "${DISK_SPACE}" | sed 's/MB/M/g;s/GB/G/g;s/TB/T/g')
@@ -165,25 +235,14 @@ addDisk () {
   return 0
 }
 
-# Get file format extension
-case "${DISK_FMT,,}" in
-  qcow2)
-    DISK_EXT="qcow2"
-    ;;
-  raw)
-    DISK_EXT="img"
-    ;;
-  *)
-    error "Unrecognized disk format ${DISK_FMT}" && exit 88
-    ;;
-esac
+DISK_EXT="$(fmt2ext "${DISK_FMT}")" || exit $?
 
-DISK1_FILE="${STORAGE}/data.${DISK_EXT}"
-DISK2_FILE="/storage2/data2.${DISK_EXT}"
-DISK3_FILE="/storage3/data3.${DISK_EXT}"
-DISK4_FILE="/storage4/data4.${DISK_EXT}"
-DISK5_FILE="/storage5/data5.${DISK_EXT}"
-DISK6_FILE="/storage6/data6.${DISK_EXT}"
+DISK1_FILE="${STORAGE}/data"
+DISK2_FILE="/storage2/data2"
+DISK3_FILE="/storage3/data3"
+DISK4_FILE="/storage4/data4"
+DISK5_FILE="/storage5/data5"
+DISK6_FILE="/storage6/data6"
 
 : ${DISK2_SIZE:=''}
 : ${DISK3_SIZE:=''}
@@ -191,12 +250,12 @@ DISK6_FILE="/storage6/data6.${DISK_EXT}"
 : ${DISK5_SIZE:=''}
 : ${DISK6_SIZE:=''}
 
-addDisk "userdata" "${DISK1_FILE}" "disk" "${DISK_SIZE}" "1" "0xa" "${DISK_FMT}"
-addDisk "userdata2" "${DISK2_FILE}" "disk2" "${DISK2_SIZE}" "2" "0xb" "${DISK_FMT}"
-addDisk "userdata3" "${DISK3_FILE}" "disk3" "${DISK3_SIZE}" "3" "0xc" "${DISK_FMT}"
-addDisk "userdata4" "${DISK4_FILE}" "disk4" "${DISK4_SIZE}" "4" "0xd" "${DISK_FMT}"
-addDisk "userdata5" "${DISK5_FILE}" "disk5" "${DISK5_SIZE}" "5" "0xe" "${DISK_FMT}"
-addDisk "userdata6" "${DISK6_FILE}" "disk6" "${DISK6_SIZE}" "6" "0xf" "${DISK_FMT}"
+addDisk "userdata"  "${DISK1_FILE}" "${DISK_EXT}" "disk"  "${DISK_SIZE}"  "1" "0xa" "${DISK_FMT}"
+addDisk "userdata2" "${DISK2_FILE}" "${DISK_EXT}" "disk2" "${DISK2_SIZE}" "2" "0xb" "${DISK_FMT}"
+addDisk "userdata3" "${DISK3_FILE}" "${DISK_EXT}" "disk3" "${DISK3_SIZE}" "3" "0xc" "${DISK_FMT}"
+addDisk "userdata4" "${DISK4_FILE}" "${DISK_EXT}" "disk4" "${DISK4_SIZE}" "4" "0xd" "${DISK_FMT}"
+addDisk "userdata5" "${DISK5_FILE}" "${DISK_EXT}" "disk5" "${DISK5_SIZE}" "5" "0xe" "${DISK_FMT}"
+addDisk "userdata6" "${DISK6_FILE}" "${DISK_EXT}" "disk6" "${DISK6_SIZE}" "6" "0xf" "${DISK_FMT}"
 
 addDevice () {
 
