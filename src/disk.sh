@@ -202,12 +202,12 @@ addDisk () {
     local OTHER_FORMS
     OTHER_FORMS="$(find "${DIR}" -maxdepth 1 | sed -n -- "/\/${DISK_ROOT}\./p" | sed -- "/\.${DISK_EXT}$/d")"
 
-    if ! [[ -z "${OTHER_FORMS}" ]] ; then
+    if [[ -n "${OTHER_FORMS}" ]] ; then
       local SOURCE_FILE
       local SOURCE_EXT
       local SOURCE_FMT
       SOURCE_FILE="$(echo "${OTHER_FORMS}" | head -n1)"
-      SOURCE_EXT="$(echo "${SOURCE_FILE}" | sed 's/^.*\.//')"
+      SOURCE_EXT="$(echo "${SOURCE_FILE//*./}" | sed 's/^.*\.//')"
       SOURCE_FMT="$(ext2fmt "${SOURCE_EXT}")"
       info "Other disk formats detected for ${DISK_DESC} (${OTHER_FORMS//$'\n'/, }), converting ${SOURCE_FILE}"
       if ! convertDisk "${SOURCE_FILE}" "${SOURCE_FMT}" "${DISK_FILE}" "${DISK_FMT}" ; then
