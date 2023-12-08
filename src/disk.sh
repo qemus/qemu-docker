@@ -72,7 +72,7 @@ doResize() {
       fi
       ;;
     qcow2)
-      if ! qemu-img resize "${DISK_FILE}" "${DISK_SPACE}" ; then
+      if ! qemu-img resize -f "${DISK_FMT}" "${DISK_FILE}" "${DISK_SPACE}" ; then
         error "Could not resize ${DISK_DESC} file (${DISK_FILE}) to ${DISK_SPACE}" && exit 85
       fi
       ;;
