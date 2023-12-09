@@ -88,7 +88,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
   * ### How do I create a growable disk?
 
-    By default, the entire disk space is reserved in advance. To create a growable disk that only allocates space that is actually used, add the following environment variable:
+    By default, the entire capacity of the disk is reserved in advance. To create a growable disk that only allocates space that is actually used, add the following environment variable:
 
     ```yaml
     environment:
