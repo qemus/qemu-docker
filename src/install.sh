@@ -7,7 +7,7 @@ FILE="$STORAGE/boot.img"
 TMP="/boot.img"
 rm -f "$TMP"
 
-info "Downloading ${BOOT} as boot image..."
+info "Downloading $BOOT as boot image..."
 
 # Check if running with interactive TTY or redirected to docker log
 if [ -t 1 ]; then
@@ -16,12 +16,12 @@ else
   PROGRESS="--progress=dot:giga"
 fi
 
-[[ "${DEBUG}" == [Yy1]* ]] && set -x
+[[ "$DEBUG" == [Yy1]* ]] && set -x
 
 { wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
 
-(( rc != 0 )) && error "Failed to download ${BOOT}, reason: $rc" && exit 60
-[ ! -f "$TMP" ] && error "Failed to download ${BOOT}" && exit 61
+(( rc != 0 )) && error "Failed to download $BOOT, reason: $rc" && exit 60
+[ ! -f "$TMP" ] && error "Failed to download $BOOT" && exit 61
 
 SIZE=$(stat -c%s "$TMP")
 
@@ -32,6 +32,6 @@ fi
 mv -f "$TMP" "$FILE"
 
 { set +x; } 2>/dev/null
-[[ "${DEBUG}" == [Yy1]* ]] && echo
+[[ "$DEBUG" == [Yy1]* ]] && echo
 
 return 0

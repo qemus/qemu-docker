@@ -14,8 +14,8 @@ cd /run
 . config.sh     # Configure arguments
 
 trap - ERR
-info "Booting image using ${VERS}..."
+info "Booting image using $VERS..."
 
-[[ "${DEBUG}" == [Yy1]* ]] && set -x
+[[ "$DEBUG" == [Yy1]* ]] && set -x
 exec qemu-system-x86_64 ${ARGS:+ $ARGS}
 { set +x; } 2>/dev/null
