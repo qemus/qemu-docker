@@ -33,6 +33,7 @@ services:
     environment:
       DISPLAY: "vnc"
       DISK_SIZE: "16G"
+      DISK_FMT: "qcow2"
       BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
     devices:
       - /dev/kvm
@@ -85,6 +86,17 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
     Replace the example path `/home/user/data` with the desired storage folder.
 
+  * ### How do I create a growable disk?
+
+    By default, the entire disk space is reserved in advance. To create a growable disk that only allocates space that is actually used, add the following environment variable:
+
+    ```yaml
+    environment:
+      DISK_FMT: "qcow2"
+    ```
+
+    This can also be used to convert any existing disks to the ```qcow2``` format.
+
   * ### How do I increase the amount of CPU or RAM?
 
     By default, a single core and 1 GB of RAM are allocated to the container. To increase this, add the following environment variables:
@@ -105,37 +117,6 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     ```
 
     If you receive an error from `kvm-ok` indicating that KVM acceleration can't be used, check your BIOS settings.
-
-  * ### How can I connect with VNC?
-
-    To enable VNC, add the following lines to your compose file:
-
-    ```yaml
-    environment:
-      DISPLAY: "vnc"
-    ports:
-      - 5900:5900
-    ```
-
-    Afterwards you can connect with any VNC client to port 5900.
-
-  * ### How do I provide custom arguments to QEMU?
-
-    You can create the `ARGUMENTS` environment variable to provide additional arguments to QEMU at runtime:
-
-    ```yaml
-    environment:
-      ARGUMENTS: "-usbdevice tablet"
-    ```
-
-  * ### How can I use qcow2 disk files?
-
-    Add the following lines to your compose file
-
-    ```yaml
-    environment:
-      DISK_FMT: "qcow2"
-    ```
 
   * ### How do I assign an individual IP address to the container?
 
@@ -189,6 +170,28 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     ```
 
     Please note that even if you don't need DHCP, it's still recommended to enable this feature as it prevents NAT issues and increases performance by using a `macvtap` interface.
+
+  * ### How can I connect with VNC?
+
+    To enable VNC, add the following lines to your compose file:
+
+    ```yaml
+    environment:
+      DISPLAY: "vnc"
+    ports:
+      - 5900:5900
+    ```
+
+    Afterwards you can connect with any VNC client to port 5900.
+
+  * ### How do I provide custom arguments to QEMU?
+
+    You can create the `ARGUMENTS` environment variable to provide additional arguments to QEMU at runtime:
+
+    ```yaml
+    environment:
+      ARGUMENTS: "-usbdevice tablet"
+    ```
 
 [build_url]: https://github.com/qemu-tools/qemu-docker/
 [hub_url]: https://hub.docker.com/r/qemux/qemu-docker/
