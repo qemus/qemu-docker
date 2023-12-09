@@ -53,8 +53,7 @@ ext2fmt() {
 
 getSize() {
   local DISK_FILE=$1
-  local DISK_EXT
-  local DISK_FMT
+  local DISK_EXT DISK_FMT
 
   DISK_EXT="$(echo "${DISK_FILE//*./}" | sed 's/^.*\.//')"
   DISK_FMT="$(ext2fmt "$DISK_EXT")"
@@ -73,18 +72,13 @@ getSize() {
 }
 
 resizeDisk() {
-
-  local GB
-  local REQ
-  local FAIL
-  local SPACE
-  local SPACE_GB
   local DISK_FILE=$1
   local CUR_SIZE=$2
   local DATA_SIZE=$3
   local DISK_SPACE=$4
   local DISK_DESC=$5
   local DISK_FMT=$6
+  local GB REQ FAIL SPACE SPACE_GB
 
   GB=$(( (CUR_SIZE + 1073741823)/1073741824 ))
   info "Resizing $DISK_DESC from ${GB}G to $DISK_SPACE .."
@@ -131,7 +125,6 @@ resizeDisk() {
 }
 
 convertDisk() {
-
   local CONV_FLAGS="-p"
   local SOURCE_FILE=$1
   local SOURCE_FMT=$2
@@ -149,15 +142,11 @@ convertDisk() {
 }
 
 createDisk() {
-
-  local GB
-  local FAIL
-  local SPACE
-  local SPACE_GB
   local DISK_FILE=$1
   local DISK_SPACE=$2
   local DISK_DESC=$3
   local DISK_FMT=$4
+  local GB FAIL SPACE SPACE_GB
 
   FAIL="Could not create a $DISK_SPACE $DISK_FMT file for $DISK_DESC ($DISK_FILE)"
 
@@ -202,11 +191,6 @@ createDisk() {
 }
 
 addDisk () {
-
-  local DIR
-  local CUR_SIZE
-  local DATA_SIZE
-  local DISK_FILE
   local DISK_ID=$1
   local DISK_BASE=$2
   local DISK_EXT=$3
@@ -215,6 +199,7 @@ addDisk () {
   local DISK_INDEX=$6
   local DISK_ADDRESS=$7
   local DISK_FMT=$8
+  local DIR CUR_SIZE DATA_SIZE DISK_FILE
 
   DISK_FILE="$DISK_BASE.$DISK_EXT"
   DIR=$(dirname "$DISK_FILE")
@@ -225,9 +210,7 @@ addDisk () {
   DATA_SIZE=$(numfmt --from=iec "$DISK_SPACE")
 
   if ! [ -f "$DISK_FILE" ] ; then
-    local PREV_EXT
-    local PREV_FMT
-    local PREV_FILE
+    local PREV_EXT PREV_FMT PREV_FILE TMP_FILE
 
     if [[ "${DISK_FMT,,}" != "raw" ]]; then
       PREV_FMT="raw"
@@ -242,7 +225,6 @@ addDisk () {
       info "Detected that ${DISK_DESC^^}_FMT changed from \"$PREV_FMT\" to \"$DISK_FMT\"."
       info "Starting conversion of $DISK_DESC to this new format, please wait until completed..."
 
-      local TMP_FILE
       TMP_FILE="$DISK_BASE.tmp"
       rm -f "$TMP_FILE"
 
