@@ -128,6 +128,15 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
       ARGUMENTS: "-usbdevice tablet"
     ```
 
+  * ### How can I use qcow2 disk files?
+
+    Add the following lines to your compose file
+
+    ```yaml
+    environment:
+      DISK_FMT: "qcow2"
+    ```
+
   * ### How do I assign an individual IP address to the container?
 
     By default, the container uses bridge networking, which shares the IP address with the host. 
@@ -180,15 +189,6 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     ```
 
     Please note that even if you don't need DHCP, it's still recommended to enable this feature as it prevents NAT issues and increases performance by using a `macvtap` interface.
-
-  * ### How can I use qcow2 disk files?
-
-    Add the following lines to your compose file
-
-    ```yaml
-    environment:
-      DISK_FMT: "qcow2"
-    ```
 
 [build_url]: https://github.com/qemu-tools/qemu-docker/
 [hub_url]: https://hub.docker.com/r/qemux/qemu-docker/
