@@ -16,6 +16,7 @@ RUN apt-get update && apt-get -y upgrade && \
 	netcat-openbsd \
 	qemu-system-x86 \
 	qemu-utils \
+	ovmf \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 

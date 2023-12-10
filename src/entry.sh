@@ -11,6 +11,7 @@ cd /run
 . disk.sh       # Initialize disks
 . display.sh    # Initialize display
 . network.sh    # Initialize network
+. boot.sh       # Configure boot
 . config.sh     # Configure arguments
 
 trap - ERR
