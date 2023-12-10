@@ -13,3 +13,5 @@ case "${DISPLAY,,}" in
     DISPLAY_OPTS="-nographic -display none"
     ;;
 esac
+
+return 0
