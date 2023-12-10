@@ -173,6 +173,8 @@ closeNetwork () {
 
   else
 
+    { pkill -f dnsmasq || true; } 2>/dev/null
+
     ip link set "$VM_NET_TAP" down promisc off || true
     ip link delete "$VM_NET_TAP" || true
 
