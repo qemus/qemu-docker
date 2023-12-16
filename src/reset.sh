@@ -33,4 +33,26 @@ VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
 STORAGE="/storage"
 [ ! -d "$STORAGE" ] && error "Storage folder ($STORAGE) not found!" && exit 13
 
+# Helper functions
+
+addPackage () {
+
+  local pkg=$1
+  local desc=$2
+
+  if apt-mark showinstall | grep -qx "$pkg"; then
+    return 0
+  fi
+
+  info "Installing $desc..."
+
+  export DEBCONF_NOWARNINGS="yes"
+  export DEBIAN_FRONTEND="noninteractive"
+
+  apt-get -qq update
+  apt-get -qq --no-install-recommends -y install "$pkg" > /dev/null
+
+  return 0
+}
+
 return 0
