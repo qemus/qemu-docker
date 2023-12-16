@@ -13,6 +13,7 @@ trap 'error "Status $? while: $BASH_COMMAND (line $LINENO/$BASH_LINENO)"' ERR
 
 : ${BOOT:=''}           # URL of the ISO file
 : ${KVM:='Y'}           # Enable KVM acceleration
+: ${GPU:='N'}           # Disable GPU passthrough
 : ${DEBUG:='N'}         # Disable debugging mode
 : ${ALLOCATE:='Y'}      # Preallocate diskspace
 : ${ARGUMENTS:=''}      # Extra QEMU parameters
