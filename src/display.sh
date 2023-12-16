@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 # Docker environment variables
 
+: ${GPU:='N'}           # GPU passthrough
 : ${DISPLAY:='none'}    # Display type
 
 case "${DISPLAY,,}" in
