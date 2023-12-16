@@ -4,6 +4,9 @@ set -Eeuo pipefail
 # Docker environment variables
 : ${CPU_MODEL:='host'}
 
+KVM_ERR=""
+KVM_OPTS=""
+
 if [[ "$ARCH" == "amd64" && "$KVM" != [Nn]* ]]; then
 
   if [ -e /dev/kvm ] && sh -c 'echo -n > /dev/kvm' &> /dev/null; then
