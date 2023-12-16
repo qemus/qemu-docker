@@ -14,7 +14,7 @@ BOOT="$STORAGE/boot.img"
 
 if [ -f "$BOOT" ]; then
   DISK_OPTS="$DISK_OPTS \
-    -device virtio-scsi-pci,id=scsi0 \
+    -device virtio-scsi-pci,id=scsi0,addr=0x5 \
     -drive id=cdrom0,if=none,format=raw,readonly=on,file=$BOOT \
     -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=10"
 fi
