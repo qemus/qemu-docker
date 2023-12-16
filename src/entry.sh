@@ -12,6 +12,7 @@ cd /run
 . display.sh    # Initialize display
 . network.sh    # Initialize network
 . boot.sh       # Configure boot
+. cpu.sh        # Initialize processor
 . config.sh     # Configure arguments
 
 trap - ERR
