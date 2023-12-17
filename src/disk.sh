@@ -4,7 +4,7 @@ set -Eeuo pipefail
 # Docker environment variables
 
 : ${DISK_IO:='native'}    # I/O Mode, can be set to 'native', 'threads' or 'io_turing'
-: ${DISK_FMT:='raw'}      # Disk file format, "raw" by default for backwards compatibility
+: ${DISK_FMT:=''}      # Disk file format, can be set to "raw" or "qcow2" (default)
 : ${DISK_CACHE:='none'}   # Caching mode, can be set to 'writeback' for better performance
 : ${DISK_DISCARD:='on'}   # Controls whether unmap (TRIM) commands are passed to the host.
 : ${DISK_ROTATION:='1'}   # Rotation rate, set to 1 for SSD storage and increase for HDD
@@ -260,6 +260,14 @@ addDisk () {
 
   return 0
 }
+
+if [ -z "$DISK_FMT" ]; then
+  if [ -f "$STORAGE/data.img" ]; then
+    DISK_FMT="raw"
+  else
+    DISK_FMT="qcow2"
+  fi
+fi
 
 DISK_EXT="$(fmt2ext "$DISK_FMT")" || exit $?
 
