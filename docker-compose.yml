@@ -8,7 +8,6 @@ services:
             RAM_SIZE: "1G"
             CPU_CORES: "1"
             DISK_SIZE: "16G"
-            DISK_FMT: "qcow2"
             BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
         devices:
             - /dev/kvm
