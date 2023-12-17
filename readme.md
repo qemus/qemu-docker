@@ -32,8 +32,6 @@ services:
     image: qemux/qemu-docker:latest
     environment:
       DISPLAY: "vnc"
-      DISK_SIZE: "16G"
-      DISK_FMT: "qcow2"
       BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
     devices:
       - /dev/kvm
@@ -48,7 +46,7 @@ services:
 Via `docker run`
 
 ```bash
-docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm --cap-add NET_ADMIN qemux/qemu-docker:latest
+docker run -it --rm -e "BOOT=http://www.example.com/image.iso" -p 5900:5900 --device=/dev/kvm --cap-add NET_ADMIN qemux/qemu-docker:latest
 ```
 
 ## FAQ
@@ -66,7 +64,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
 
   * ### How do I change the size of the data disk?
 
-    To expand the default size of 16 GB, locate the `DISK_SIZE` setting in your compose file and modify it to your preferred capacity:
+    To expand the default size of 16 GB, add the `DISK_SIZE` setting to your compose file and set it to your preferred capacity:
 
     ```yaml
     environment:
@@ -85,17 +83,6 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     ```
 
     Replace the example path `/home/user/data` with the desired storage folder.
-
-  * ### How do I create a growable disk?
-
-    By default, the entire capacity of the disk is reserved in advance. To create a growable disk that only allocates space that is actually used, add the following environment variable:
-
-    ```yaml
-    environment:
-      DISK_FMT: "qcow2"
-    ```
-
-    This can also be used to convert any existing disks to the ```qcow2``` format.
 
   * ### How do I increase the amount of CPU or RAM?
 
@@ -183,6 +170,17 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" --device=/dev/kvm
     ```
 
     Afterwards you can connect with any VNC client to port 5900.
+
+  * ### How do I passthrough the GPU?
+
+    To passthrough your Intel GPU, add the following lines to your compose file:
+
+    ```yaml
+    environment:
+      GPU: "Y"
+    devices:
+      - /dev/dri
+    ```
 
   * ### How do I provide custom arguments to QEMU?
 
