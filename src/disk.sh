@@ -3,11 +3,12 @@ set -Eeuo pipefail
 
 # Docker environment variables
 
-: ${DISK_IO:='native'}    # I/O Mode, can be set to 'native', 'threads' or 'io_turing'
-: ${DISK_FMT:=''}      # Disk file format, can be set to "raw" or "qcow2" (default)
-: ${DISK_CACHE:='none'}   # Caching mode, can be set to 'writeback' for better performance
-: ${DISK_DISCARD:='on'}   # Controls whether unmap (TRIM) commands are passed to the host.
-: ${DISK_ROTATION:='1'}   # Rotation rate, set to 1 for SSD storage and increase for HDD
+: ${DISK_IO:='native'}          # I/O Mode, can be set to 'native', 'threads' or 'io_turing'
+: ${DISK_FMT:=''}            # Disk file format, can be set to "raw" or "qcow2" (default)
+: ${DISK_CACHE:='none'}         # Caching mode, can be set to 'writeback' for better performance
+: ${DISK_DISCARD:='on'}         # Controls whether unmap (TRIM) commands are passed to the host.
+: ${DISK_ROTATION:='1'}         # Rotation rate, set to 1 for SSD storage and increase for HDD
+: ${DISK_FLAGS:='nocow=on'}     # Specify the options for use with the qcow2 format
 
 DISK_OPTS=""
 BOOT="$STORAGE/boot.img"
@@ -133,12 +134,12 @@ convertDisk() {
 
   case "$DST_FMT" in
     qcow2)
-      CONV_FLAGS="$CONV_FLAGS -c"
+      CONV_FLAGS="$CONV_FLAGS -c -o $DISK_FLAGS"
       ;;
   esac
 
   # shellcheck disable=SC2086
-  qemu-img convert $CONV_FLAGS -f "$SOURCE_FMT" -O "$DST_FMT" -- "$SOURCE_FILE" "$DST_FILE"
+  qemu-img convert -f "$SOURCE_FMT" $CONV_FLAGS -O "$DST_FMT" -- "$SOURCE_FILE" "$DST_FILE"
 }
 
 createDisk() {
@@ -182,7 +183,7 @@ createDisk() {
       fi
       ;;
     qcow2)
-      if ! qemu-img create -f "$DISK_FMT" -- "$DISK_FILE" "$DISK_SPACE" ; then
+      if ! qemu-img create -f "$DISK_FMT" -o "$DISK_FLAGS" -- "$DISK_FILE" "$DISK_SPACE" ; then
         rm -f "$DISK_FILE"
         error "$FAIL" && exit 70
       fi
