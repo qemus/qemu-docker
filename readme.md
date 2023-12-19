@@ -79,14 +79,16 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" -p 5900:5900 --de
 
     ```yaml
     volumes:
-      - /home/user/data:/storage
+      - /var/qemu:/storage
     ```
 
-    Replace the example path `/home/user/data` with the desired storage folder.
+    Replace the example path `/var/qemu` with the desired storage folder.
 
   * ### How do I increase the amount of CPU or RAM?
 
-    By default, a single core and 1 GB of RAM are allocated to the container. To increase this, add the following environment variables:
+    By default, a single core and 1 GB of RAM are allocated to the container.
+
+    To increase this, add the following environment variables:
 
     ```yaml
     environment:
