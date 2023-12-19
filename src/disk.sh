@@ -10,12 +10,12 @@ set -Eeuo pipefail
 : ${DISK_ROTATION:='1'}         # Rotation rate, set to 1 for SSD storage and increase for HDD
 : ${DISK_FLAGS:='nocow=on'}     # Specify the options for use with the qcow2 format
 
-DISK_OPTS=""
 BOOT="$STORAGE/boot.img"
+DISK_OPTS="-object iothread,id=io2"
 
 if [ -f "$BOOT" ]; then
   DISK_OPTS="$DISK_OPTS \
-    -device virtio-scsi-pci,id=scsi0,addr=0x5 \
+    -device virtio-scsi-pci,id=scsi0,iothread=io2,addr=0x5 \
     -drive id=cdrom0,if=none,format=raw,readonly=on,file=$BOOT \
     -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=10"
 fi
@@ -72,84 +72,28 @@ getSize() {
   esac
 }
 
-resizeDisk() {
-  local DISK_FILE=$1
-  local CUR_SIZE=$2
-  local DATA_SIZE=$3
-  local DISK_SPACE=$4
-  local DISK_DESC=$5
-  local DISK_FMT=$6
-  local GB REQ FAIL SPACE SPACE_GB
-
-  GB=$(( (CUR_SIZE + 1073741823)/1073741824 ))
-  info "Resizing $DISK_DESC from ${GB}G to $DISK_SPACE .."
-  FAIL="Could not resize $DISK_FMT file of $DISK_DESC ($DISK_FILE) from ${GB}G to $DISK_SPACE .."
-
-  REQ=$((DATA_SIZE-CUR_SIZE))
-  (( REQ < 1 )) && error "Shrinking disks is not supported!" && exit 71
-
-  case "${DISK_FMT,,}" in
-    raw)
-      if [[ "$ALLOCATE" == [Nn]* ]]; then
-
-        # Resize file by changing its length
-        if ! truncate -s "$DISK_SPACE" "$DISK_FILE"; then
-          error "$FAIL" && exit 75
-        fi
-
-      else
-
-        # Check free diskspace
-        SPACE=$(df --output=avail -B 1 "$DIR" | tail -n 1)
-        SPACE_GB=$(( (SPACE + 1073741823)/1073741824 ))
-
-        if (( REQ > SPACE )); then
-          error "Not enough free space to resize $DISK_DESC to $DISK_SPACE in $DIR, it has only $SPACE_GB GB available.."
-          error "Please specify a smaller ${DISK_DESC^^}_SIZE or disable preallocation by setting DISK_FMT to \"qcow2\"." && exit 74
-        fi
-
-        # Resize file by allocating more space
-        if ! fallocate -l "$DISK_SPACE" "$DISK_FILE"; then
-          if ! truncate -s "$DISK_SPACE" "$DISK_FILE"; then
-            error "$FAIL" && exit 75
-          fi
-        fi
-
-      fi
-      ;;
-    qcow2)
-      if ! qemu-img resize -f "$DISK_FMT" "$DISK_FILE" "$DISK_SPACE" ; then
-        error "$FAIL" && exit 72
-      fi
-      ;;
-  esac
-}
-
-convertDisk() {
-  local CONV_FLAGS="-p"
-  local SOURCE_FILE=$1
-  local SOURCE_FMT=$2
-  local DST_FILE=$3
-  local DST_FMT=$4
-
-  case "$DST_FMT" in
-    qcow2)
-      CONV_FLAGS="$CONV_FLAGS -c -o $DISK_FLAGS"
-      ;;
-  esac
-
-  # shellcheck disable=SC2086
-  qemu-img convert -f "$SOURCE_FMT" $CONV_FLAGS -O "$DST_FMT" -- "$SOURCE_FILE" "$DST_FILE"
-}
-
 createDisk() {
   local DISK_FILE=$1
   local DISK_SPACE=$2
   local DISK_DESC=$3
   local DISK_FMT=$4
-  local GB FAIL SPACE SPACE_GB
+  local DIR SPACE DATA_SIZE
 
-  FAIL="Could not create a $DISK_SPACE $DISK_FMT file for $DISK_DESC ($DISK_FILE)"
+  if [[ "$ALLOCATE" != [Nn]* ]]; then
+
+    # Check free diskspace
+    DIR=$(dirname "$DISK_FILE")
+    SPACE=$(df --output=avail -B 1 "$DIR" | tail -n 1)
+    local SPACE_GB=$(( (SPACE + 1073741823)/1073741824 ))
+    DATA_SIZE=$(numfmt --from=iec "$DISK_SPACE")
+
+    if (( DATA_SIZE > SPACE )); then
+      error "Not enough free space to create a $DISK_DESC of $DISK_SPACE in $DIR, it has only $SPACE_GB GB available..."
+      error "Please specify a smaller ${DISK_DESC^^}_SIZE or disable preallocation by setting ALLOCATE=N." && exit 76
+    fi
+  fi
+
+  local FAIL="Could not create a $DISK_SPACE $DISK_FMT file for $DISK_DESC ($DISK_FILE)"
 
   case "${DISK_FMT,,}" in
     raw)
@@ -163,15 +107,6 @@ createDisk() {
 
       else
 
-        # Check free diskspace
-        SPACE=$(df --output=avail -B 1 "$DIR" | tail -n 1)
-        SPACE_GB=$(( (SPACE + 1073741823)/1073741824 ))
-
-        if (( DATA_SIZE > SPACE )); then
-          error "Not enough free space to create a $DISK_DESC of $DISK_SPACE in $DIR, it has only $SPACE_GB GB available.."
-          error "Please specify a smaller ${DISK_DESC^^}_SIZE or disable preallocation by setting DISK_FMT to \"qcow2\"." && exit 76
-        fi
-
         # Create an empty file
         if ! fallocate -l "$DISK_SPACE" "$DISK_FILE"; then
           if ! truncate -s "$DISK_SPACE" "$DISK_FILE"; then
@@ -183,12 +118,131 @@ createDisk() {
       fi
       ;;
     qcow2)
-      if ! qemu-img create -f "$DISK_FMT" -o "$DISK_FLAGS" -- "$DISK_FILE" "$DISK_SPACE" ; then
+      local DISK_OPTS="$DISK_ALLOC"
+      [ -n "$DISK_FLAGS" ] && DISK_OPTS="$DISK_OPTS,$DISK_FLAGS"
+      if ! qemu-img create -f "$DISK_FMT" -o "$DISK_OPTS" -- "$DISK_FILE" "$DISK_SPACE" ; then
         rm -f "$DISK_FILE"
         error "$FAIL" && exit 70
       fi
       ;;
   esac
+
+  return 0
+}
+
+resizeDisk() {
+  local DISK_FILE=$1
+  local DISK_SPACE=$2
+  local DISK_DESC=$3
+  local DISK_FMT=$4
+  local CUR_SIZE DATA_SIZE DIR SPACE
+
+  CUR_SIZE=$(getSize "$DISK_FILE")
+  DATA_SIZE=$(numfmt --from=iec "$DISK_SPACE")
+  local REQ=$((DATA_SIZE-CUR_SIZE))
+  (( REQ < 1 )) && error "Shrinking disks is not supported yet, please increase ${DISK_DESC^^}_SIZE." && exit 71
+
+  if [[ "$ALLOCATE" != [Nn]* ]]; then
+
+    # Check free diskspace
+    DIR=$(dirname "$DISK_FILE")
+    SPACE=$(df --output=avail -B 1 "$DIR" | tail -n 1)
+    local SPACE_GB=$(( (SPACE + 1073741823)/1073741824 ))
+
+    if (( REQ > SPACE )); then
+      error "Not enough free space to resize $DISK_DESC to $DISK_SPACE in $DIR, it has only $SPACE_GB GB available.."
+      error "Please specify a smaller ${DISK_DESC^^}_SIZE or disable preallocation by setting ALLOCATE=N." && exit 74
+    fi
+  fi
+
+  local GB=$(( (CUR_SIZE + 1073741823)/1073741824 ))
+  info "Resizing $DISK_DESC from ${GB}G to $DISK_SPACE..."
+  local FAIL="Could not resize $DISK_FMT file of $DISK_DESC ($DISK_FILE) from ${GB}G to $DISK_SPACE .."
+
+  case "${DISK_FMT,,}" in
+    raw)
+      if [[ "$ALLOCATE" == [Nn]* ]]; then
+
+        # Resize file by changing its length
+        if ! truncate -s "$DISK_SPACE" "$DISK_FILE"; then
+          error "$FAIL" && exit 75
+        fi
+
+      else
+
+        # Resize file by allocating more space
+        if ! fallocate -l "$DISK_SPACE" "$DISK_FILE"; then
+          if ! truncate -s "$DISK_SPACE" "$DISK_FILE"; then
+            error "$FAIL" && exit 75
+          fi
+        fi
+
+      fi
+      ;;
+    qcow2)
+      if ! qemu-img resize -f "$DISK_FMT" "--$DISK_ALLOC" "$DISK_FILE" "$DISK_SPACE" ; then
+        error "$FAIL" && exit 72
+      fi
+      ;;
+  esac
+
+  return 0
+}
+
+convertDisk() {
+  local SOURCE_FILE=$1
+  local SOURCE_FMT=$2
+  local DST_FILE=$3
+  local DST_FMT=$4
+  local DISK_BASE=$5
+  local DISK_DESC=$6
+  local CONV_FLAGS="-p"
+  local DISK_OPTS="$DISK_ALLOC"
+  local TMP_FILE="$DISK_BASE.tmp"
+  local DIR CUR_SIZE SPACE
+
+  [ -f "$DST_FILE" ] && error "Conversion failed, destination file $DST_FILE already exists?" && exit 79
+  [ ! -f "$SOURCE_FILE" ] && error "Conversion failed, source file $SOURCE_FILE does not exists?" && exit 79
+
+  if [[ "$ALLOCATE" != [Nn]* ]]; then
+
+    # Check free diskspace
+    DIR=$(dirname "$TMP_FILE")
+    CUR_SIZE=$(getSize "$SOURCE_FILE")
+    SPACE=$(df --output=avail -B 1 "$DIR" | tail -n 1)
+    local SPACE_GB=$(( (SPACE + 1073741823)/1073741824 ))
+
+    if (( CUR_SIZE > SPACE )); then
+      error "Not enough free space to convert $DISK_DESC to $DST_FMT in $DIR, it has only $SPACE_GB GB available..."
+      error "Please free up some disk space or disable preallocation by setting ALLOCATE=N." && exit 76
+    fi
+  fi
+
+  info "Converting $DISK_DESC to $DST_FMT, please wait until completed..."
+
+  case "$DST_FMT" in
+    qcow2)
+      if [[ "$ALLOCATE" == [Nn]* ]]; then
+        CONV_FLAGS="$CONV_FLAGS -c"
+      fi
+      [ -n "$DISK_FLAGS" ] && DISK_OPTS="$DISK_OPTS,$DISK_FLAGS"
+      ;;
+  esac
+
+  rm -f "$TMP_FILE"
+
+  # shellcheck disable=SC2086
+  if ! qemu-img convert -f "$SOURCE_FMT" $CONV_FLAGS -o "$DISK_OPTS" -O "$DST_FMT" -- "$SOURCE_FILE" "$TMP_FILE"; then
+    rm -f "$TMP_FILE"
+    error "Failed to convert $DISK_DESC to $DST_FMT format in $DIR, is there enough space available?" && exit 79
+  fi
+
+  rm -f "$SOURCE_FILE"
+  mv "$TMP_FILE" "$DST_FILE"
+
+  info "Conversion of $DISK_DESC to $DST_FMT completed succesfully!"
+
+  return 0
 }
 
 addDisk () {
@@ -200,18 +254,34 @@ addDisk () {
   local DISK_INDEX=$6
   local DISK_ADDRESS=$7
   local DISK_FMT=$8
-  local DIR CUR_SIZE DATA_SIZE DISK_FILE
+  local DISK_FILE="$DISK_BASE.$DISK_EXT"
+  local DIR FS FA DATA_SIZE PREV_FMT PREV_EXT CUR_SIZE
 
-  DISK_FILE="$DISK_BASE.$DISK_EXT"
   DIR=$(dirname "$DISK_FILE")
   [ ! -d "$DIR" ] && return 0
+
+  FS=$(stat -f -c %T "$DIR")
+  if [[ "$FS" == "overlay"* ]]; then
+    info "Warning: the filesystem of $DIR is OverlayFS, this usually means it was binded to an invalid path!"
+  fi
+  if [[ "$FS" == "btrfs"* ]]; then
+    if [ -f "$DISK_FILE" ] ; then
+      FA=$(lsattr "$DISK_FILE")
+      [[ "$FA" == *"C"* ]] && FA=$(lsattr -d "$DIR")
+    else
+      FA=$(lsattr -d "$DIR")
+    fi
+    if [[ "$FA" != *"C"* ]]; then
+      info "Warning: the filesystem of $DIR is BTRFS, and COW (copy on write) is not disabled for that folder!"
+      info "This will negatively affect write performance, please empty the folder and disable COW (chattr +C <path>)."
+    fi
+  fi
 
   [ -z "$DISK_SPACE" ] && DISK_SPACE="16G"
   DISK_SPACE=$(echo "$DISK_SPACE" | sed 's/MB/M/g;s/GB/G/g;s/TB/T/g')
   DATA_SIZE=$(numfmt --from=iec "$DISK_SPACE")
 
   if ! [ -f "$DISK_FILE" ] ; then
-    local PREV_EXT PREV_FMT PREV_FILE TMP_FILE
 
     if [[ "${DISK_FMT,,}" != "raw" ]]; then
       PREV_FMT="raw"
@@ -219,24 +289,9 @@ addDisk () {
       PREV_FMT="qcow2"
     fi
     PREV_EXT="$(fmt2ext "$PREV_FMT")"
-    PREV_FILE="$DISK_BASE.$PREV_EXT"
 
-    if [ -f "$PREV_FILE" ] ; then
-
-      info "Detected that ${DISK_DESC^^}_FMT changed from \"$PREV_FMT\" to \"$DISK_FMT\"."
-      info "Starting conversion of $DISK_DESC to this new format, please wait until completed..."
-
-      TMP_FILE="$DISK_BASE.tmp"
-      rm -f "$TMP_FILE"
-
-      if ! convertDisk "$PREV_FILE" "$PREV_FMT" "$TMP_FILE" "$DISK_FMT" ; then
-        rm -f "$TMP_FILE"
-        error "Failed to convert $DISK_DESC to $DISK_FMT format." && exit 79
-      fi
-
-      mv "$TMP_FILE" "$DISK_FILE"
-      rm -f "$PREV_FILE"
-      info "Conversion of $DISK_DESC completed succesfully!"
+    if [ -f "$DISK_BASE.$PREV_EXT" ] ; then
+      convertDisk "$DISK_BASE.$PREV_EXT" "$PREV_FMT" "$DISK_FILE" "$DISK_FMT" "$DISK_BASE" "$DISK_DESC" || exit $?
     fi
   fi
 
@@ -244,8 +299,8 @@ addDisk () {
 
     CUR_SIZE=$(getSize "$DISK_FILE")
 
-    if [ "$DATA_SIZE" -gt "$CUR_SIZE" ]; then
-      resizeDisk "$DISK_FILE" "$CUR_SIZE" "$DATA_SIZE" "$DISK_SPACE" "$DISK_DESC" "$DISK_FMT" || exit $?
+    if (( DATA_SIZE > CUR_SIZE )); then
+      resizeDisk "$DISK_FILE" "$DISK_SPACE" "$DISK_DESC" "$DISK_FMT" || exit $?
     fi
 
   else
@@ -255,7 +310,7 @@ addDisk () {
   fi
 
   DISK_OPTS="$DISK_OPTS \
-    -device virtio-scsi-pci,id=hw-$DISK_ID,bus=pcie.0,addr=$DISK_ADDRESS \
+    -device virtio-scsi-pci,id=hw-$DISK_ID,iothread=io2,bus=pcie.0,addr=$DISK_ADDRESS \
     -drive file=$DISK_FILE,if=none,id=drive-$DISK_ID,format=$DISK_FMT,cache=$DISK_CACHE,aio=$DISK_IO,discard=$DISK_DISCARD,detect-zeroes=on \
     -device scsi-hd,bus=hw-$DISK_ID.0,channel=0,scsi-id=0,lun=0,drive=drive-$DISK_ID,id=$DISK_ID,rotation_rate=$DISK_ROTATION,bootindex=$DISK_INDEX"
 
@@ -272,6 +327,12 @@ fi
 
 DISK_EXT="$(fmt2ext "$DISK_FMT")" || exit $?
 
+if [[ "$ALLOCATE" == [Nn]* ]]; then
+  DISK_ALLOC="preallocation=off"
+else
+  DISK_ALLOC="preallocation=falloc"
+fi
+
 DISK1_FILE="$STORAGE/data"
 DISK2_FILE="/storage2/data2"
 DISK3_FILE="/storage3/data3"
@@ -285,7 +346,7 @@ DISK6_FILE="/storage6/data6"
 : ${DISK5_SIZE:=''}
 : ${DISK6_SIZE:=''}
 
-addDisk "userdata" "$DISK1_FILE" "$DISK_EXT" "disk"  "$DISK_SIZE"  "1" "0xa" "$DISK_FMT" || exit $?
+addDisk "userdata" "$DISK1_FILE" "$DISK_EXT" "disk" "$DISK_SIZE" "1" "0xa" "$DISK_FMT" || exit $?
 addDisk "userdata2" "$DISK2_FILE" "$DISK_EXT" "disk2" "$DISK2_SIZE" "2" "0xb" "$DISK_FMT" || exit $?
 addDisk "userdata3" "$DISK3_FILE" "$DISK_EXT" "disk3" "$DISK3_SIZE" "3" "0xc" "$DISK_FMT" || exit $?
 addDisk "userdata4" "$DISK4_FILE" "$DISK_EXT" "disk4" "$DISK4_SIZE" "4" "0xd" "$DISK_FMT" || exit $?
@@ -303,7 +364,7 @@ addDevice () {
   [ ! -b "$DISK_DEV" ] && error "Device $DISK_DEV cannot be found! Please add it to the 'devices' section of your compose file." && exit 55
 
   DISK_OPTS="$DISK_OPTS \
-    -device virtio-scsi-pci,id=hw-$DISK_ID,bus=pcie.0,addr=$DISK_ADDRESS \
+    -device virtio-scsi-pci,id=hw-$DISK_ID,iothread=io2,bus=pcie.0,addr=$DISK_ADDRESS \
     -drive file=$DISK_DEV,if=none,id=drive-$DISK_ID,format=raw,cache=$DISK_CACHE,aio=$DISK_IO,discard=$DISK_DISCARD,detect-zeroes=on \
     -device scsi-hd,bus=hw-$DISK_ID.0,channel=0,scsi-id=0,lun=0,drive=drive-$DISK_ID,id=$DISK_ID,rotation_rate=$DISK_ROTATION,bootindex=$DISK_INDEX"
 
