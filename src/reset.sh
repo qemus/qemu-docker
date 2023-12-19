@@ -14,7 +14,7 @@ trap 'error "Status $? while: $BASH_COMMAND (line $LINENO/$BASH_LINENO)"' ERR
 : ${BOOT:=''}           # URL of the ISO file
 : ${KVM:='Y'}           # Enable KVM acceleration
 : ${DEBUG:='N'}         # Disable debugging mode
-: ${ALLOCATE:='Y'}      # Preallocate diskspace
+: ${ALLOCATE:='N'}      # Disable preallocation
 : ${ARGUMENTS:=''}      # Extra QEMU parameters
 : ${CPU_CORES:='1'}     # Amount of CPU cores
 : ${RAM_SIZE:='1G'}     # Maximum RAM amount
