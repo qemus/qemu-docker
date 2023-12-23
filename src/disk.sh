@@ -277,16 +277,21 @@ checkFS () {
       fi
     fi
 
-    if [ -f "$DISK_FILE" ] ; then
-      FA=$(lsattr "$DISK_FILE")
-      [[ "$FA" == *"C"* ]] && FA=$(lsattr -d "$DIR")
-    else
+    local FA=""
+    [ -f "$DISK_FILE" ] && FA=$(lsattr "$DISK_FILE")
+
+    if [[ "$FA" == "" || "$FA" == *"C"* ]]; then
       FA=$(lsattr -d "$DIR")
+      if [[ "$FA" != *"C"* ]]; then
+        { chattr -R +C "$DIR"; } || :
+        FA=$(lsattr -d "$DIR")
+      fi      
     fi
 
     if [[ "$FA" != *"C"* ]]; then
       info "Warning: the filesystem of $DIR is ${FS^^}, and COW (copy on write) is not disabled for that folder!"
-      info "This will negatively affect performance, please empty the folder and disable COW (chattr +C <path>)."
+      info "This will negatively affect performance, please empty the folder and add the LINUX_IMMUTABLE flag"
+      info "to the 'cap_add' section of your compose file, or disable COW manually by executing: chattr +C <path>"
     fi
   fi
 
