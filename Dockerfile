@@ -6,17 +6,17 @@ ARG DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -y upgrade && \
     apt-get --no-install-recommends -y install \
  	tini \
-	wget \  
+	wget \
+        ovmf \
 	procps \
 	iptables \
 	iproute2 \
 	dnsmasq \
 	net-tools \
+        qemu-utils \
 	ca-certificates \
 	netcat-openbsd \
 	qemu-system-x86 \
-	qemu-utils \
-	ovmf \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
