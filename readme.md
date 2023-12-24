@@ -11,14 +11,15 @@
 
 </div></h1>
 
-QEMU in a docker container for running AMD64 virtual machines (even on ARM64).
+QEMU in a docker container for running x64 virtual machines (even on ARM platforms).
 
-It uses high-performance QEMU options (KVM acceleration, kernel-mode networking, etc) to achieve near-native speed.
+It uses high-performance QEMU options (like KVM acceleration, kernel-mode networking, IO threading, etc) to achieve near-native speed.
 
 ## Features
 
  - Multi-platform
  - KVM acceleration
+ - GPU passthrough
 
 ## Usage
 
@@ -75,7 +76,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" -p 5900:5900 --de
     
   * ### How do I change the location of the data disk?
 
-    To change the data disk's location from the default Docker volume, include the following bind mount in your compose file:
+    To change the location of the data disk, include the following bind mount in your compose file:
 
     ```yaml
     volumes:
