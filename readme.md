@@ -32,7 +32,6 @@ services:
     container_name: qemu
     image: qemux/qemu-docker:latest
     environment:
-      DISPLAY: "vnc"
       BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
     devices:
       - /dev/kvm
@@ -40,7 +39,6 @@ services:
       - NET_ADMIN
     ports:
       - 2222:22
-      - 5900:5900
     restart: on-failure
 ```
 
@@ -153,8 +151,6 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" -p 5900:5900 --de
     ```yaml
     environment:
       DHCP: "Y"
-    devices:
-      - /dev/vhost-net
     device_cgroup_rules:
       - 'c *:* rwm'
     ```
