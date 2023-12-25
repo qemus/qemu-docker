@@ -2,7 +2,9 @@
 set -Eeuo pipefail
 
 # Docker environment variables
+
 : ${CPU_MODEL:='host'}
+: ${CPU_FEATURES:='+ssse3,+sse4.1,+sse4.2'}
 
 KVM_ERR=""
 KVM_OPTS=""
@@ -21,14 +23,20 @@ if [[ "$ARCH" == "amd64" && "$KVM" != [Nn]* ]]; then
     error "KVM acceleration not detected $KVM_ERR, this will cause a major loss of performance."
     error "See the FAQ on how to enable it, or skip this error by setting KVM=N (not recommended)."
     [[ "$DEBUG" != [Yy1]* ]] && exit 88
-    [[ "$CPU_MODEL" == "host"* ]] && CPU_MODEL="max"
+    [[ "$CPU_MODEL" == "host"* ]] && CPU_MODEL="max,$CPU_FEATURES"
   else
     KVM_OPTS=",accel=kvm -enable-kvm"
   fi
 
 else
 
-  [[ "$CPU_MODEL" == "host"* ]] && CPU_MODEL="max"
+  if [[ "$CPU_MODEL" == "host"* ]]; then
+    if [[ "$ARCH" == "amd64" ]]; then
+      CPU_MODEL="max,$CPU_FEATURES"
+    else
+      CPU_MODEL="qemu64,$CPU_FEATURES"
+    fi
+  fi
 
 fi
 
