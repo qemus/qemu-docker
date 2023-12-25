@@ -19,7 +19,6 @@ It uses high-performance QEMU options (like KVM acceleration, kernel-mode networ
 
  - Multi-platform
  - KVM acceleration
- - GPU passthrough
 
 ## Usage
 
@@ -32,6 +31,7 @@ services:
     container_name: qemu
     image: qemux/qemu-docker:latest
     environment:
+      DISPLAY: "vnc"
       BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
     devices:
       - /dev/kvm
@@ -39,6 +39,7 @@ services:
       - NET_ADMIN
     ports:
       - 2222:22
+      - 5900:5900
     restart: on-failure
 ```
 
@@ -169,17 +170,6 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" -p 5900:5900 --de
     ```
 
     Afterwards you can connect with any VNC client to port 5900.
-
-  * ### How do I passthrough the GPU?
-
-    To passthrough your Intel GPU, add the following lines to your compose file:
-
-    ```yaml
-    environment:
-      GPU: "Y"
-    devices:
-      - /dev/dri
-    ```
 
   * ### How do I provide custom arguments to QEMU?
 
