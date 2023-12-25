@@ -4,7 +4,7 @@ set -Eeuo pipefail
 # Docker environment variables
 
 : ${GPU:='N'}           # GPU passthrough
-: ${DISPLAY:='curses'}  # Display type
+: ${DISPLAY:='none'}  # Display type
 
 case "${DISPLAY,,}" in
   vnc)
