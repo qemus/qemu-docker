@@ -166,6 +166,9 @@ configureNAT () {
 
 closeNetwork () {
 
+  exec 30<&- || true
+  exec 40<&- || true
+
   if [[ "$DHCP" == [Yy1]* ]]; then
 
     ip link set "$VM_NET_TAP" down || true
