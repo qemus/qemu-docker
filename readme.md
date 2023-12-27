@@ -19,6 +19,7 @@ It uses high-performance QEMU options (like KVM acceleration, kernel-mode networ
 
  - Multi-platform
  - KVM acceleration
+ - TAP networking
 
 ## Usage
 
