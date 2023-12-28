@@ -162,7 +162,7 @@ configureNAT() {
   return 0
 }
 
-closeNetwork () {
+closeNetwork() {
 
   exec 30<&- || true
   exec 40<&- || true
