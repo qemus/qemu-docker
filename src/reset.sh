@@ -34,6 +34,18 @@ STORAGE="/storage"
 
 # Helper functions
 
+fKill () {
+  local name=$1
+
+  { pkill -f "$name" || true; } 2>/dev/null
+
+  while pgrep -f -l "$name" >/dev/null; do
+    sleep 0.1
+  done
+
+  return 0
+}
+
 addPackage () {
 
   local pkg=$1
