@@ -24,9 +24,7 @@ COPY ./src /run/
 RUN chmod +x /run/*.sh
 
 VOLUME /storage
-
-EXPOSE 22
-EXPOSE 5900
+EXPOSE 22 5900
 
 ENV CPU_CORES "1"
 ENV RAM_SIZE "1G"
