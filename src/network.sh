@@ -7,8 +7,8 @@ set -Eeuo pipefail
 : ${CONTROL_PORTS:=''}
 : ${MAC:='82:cf:d0:5e:57:66'}
 
+: ${VM_NET_DEV:=''}
 : ${VM_NET_TAP:='qemu'}
-: ${VM_NET_DEV:='eth0'}
 : ${VM_NET_MAC:="$MAC"}
 : ${VM_NET_HOST:='QEMU'}
 
@@ -210,6 +210,12 @@ fi
 
 update-alternatives --set iptables /usr/sbin/iptables-legacy > /dev/null
 update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy > /dev/null
+
+if [ -z "$VM_NET_DEV" ]; then
+  # Automaticly detect the default network interface
+  VM_NET_DEV=$(awk '$2 == 00000000 { print $1 }' /proc/net/route)
+  [ -z "$VM_NET_DEV" ] && VM_NET_DEV="eth0"
+fi
 
 if [ ! -d "/sys/class/net/$VM_NET_DEV" ]; then
   error "Network interface $VM_NET_DEV does not exist inside the container!"
