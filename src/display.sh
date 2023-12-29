@@ -8,10 +8,10 @@ set -Eeuo pipefail
 
 case "${DISPLAY,,}" in
   vnc)
-    DISPLAY_OPTS="-nographic -vga std -vnc :0"
+    DISPLAY_OPTS="-display vnc=:0 -vga virtio"
     ;;
   *)
-    DISPLAY_OPTS="-nographic -display $DISPLAY"
+    DISPLAY_OPTS="-display $DISPLAY -vga none"
     ;;
 esac
 
@@ -19,8 +19,8 @@ if [[ "$GPU" != [Yy1]* ]] || [[ "$ARCH" != "amd64" ]]; then
   return 0
 fi
 
-DISPLAY_OPTS="-display egl-headless,rendernode=/dev/dri/renderD128"
-DISPLAY_OPTS="$DISPLAY_OPTS -device virtio-vga,id=video0,max_outputs=1,bus=pcie.0,addr=0x1"
+DISPLAY_OPTS="-display egl-headless,rendernode=/dev/dri/renderD128 -vga virtio"
+[[ "${DISPLAY,,}" == "vnc" ]] && DISPLAY_OPTS="$DISPLAY_OPTS -vnc :0"
 
 [ ! -d /dev/dri ] && mkdir -m 755 /dev/dri
 
