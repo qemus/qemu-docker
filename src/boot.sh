@@ -7,7 +7,7 @@ set -Eeuo pipefail
 
 case "${BOOT_MODE,,}" in
   uefi)
-    BOOT_OPTS="-bios /usr/share/OVMF/OVMF_CODE.fd"
+    BOOT_OPTS="-bios /usr/share/OVMF/OVMF_CODE_4M.fd"
     ;;
   legacy)
     BOOT_OPTS=""
