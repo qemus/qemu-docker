@@ -5,6 +5,9 @@ set -Eeuo pipefail
 
 : ${BOOT_MODE:='legacy'}  # Boot mode
 
+SECURE=""
+BOOT_OPTS=""
+
 case "${BOOT_MODE,,}" in
   uefi)
     ROM="OVMF_CODE_4M.fd"
@@ -22,7 +25,6 @@ case "${BOOT_MODE,,}" in
     BOOT_OPTS=""
     ;;
   *)
-    BOOT_OPTS=""
     info "Unknown boot mode '${BOOT_MODE}', defaulting to 'legacy'"
     BOOT_MODE="legacy"    
     ;;
@@ -45,6 +47,7 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]]; then
   fi
 
   if [[ "${BOOT_MODE,,}" != "uefi" ]]; then
+    SECURE=",smm=on"
     BOOT_OPTS="$BOOT_OPTS -global driver=cfi.pflash01,property=secure,value=on"
   fi
 
