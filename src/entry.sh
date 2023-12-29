@@ -9,7 +9,7 @@ cd /run
 . reset.sh      # Initialize system
 . install.sh    # Get bootdisk
 . disk.sh       # Initialize disks
-. display.sh    # Initialize display
+. display.sh    # Initialize graphics
 . network.sh    # Initialize network
 . boot.sh       # Configure boot
 . cpu.sh        # Initialize processor

@@ -12,7 +12,6 @@ trap 'error "Status $? while: $BASH_COMMAND (line $LINENO/$BASH_LINENO)"' ERR
 # Docker environment variables
 
 : ${BOOT:=''}           # URL of the ISO file
-: ${KVM:='Y'}           # Enable KVM acceleration
 : ${DEBUG:='N'}         # Disable debugging mode
 : ${ALLOCATE:='N'}      # Disable preallocation
 : ${ARGUMENTS:=''}      # Extra QEMU parameters
