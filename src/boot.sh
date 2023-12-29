@@ -1,16 +1,26 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+OVMF="/usr/share/OVMF"
+
 # Docker environment variables
 
-: ${BOOT_MODE:='legacy'}  # Display type
+: ${BOOT_MODE:='legacy'}  # Boot mode
 
 case "${BOOT_MODE,,}" in
   uefi)
-    BOOT_OPTS="-bios /usr/share/OVMF/OVMF_CODE_4M.fd"
+    VARS="$OVMF/OVMF_VARS_4M.fd"
+    [ ! -f "$VARS" ] && error "UEFI vars file ($VARS) not found!" && exit 44
+    [ ! -f "$STORAGE/uefi.vars" ] && cp "$VARS" "$STORAGE/uefi.vars"
+    BOOT_OPTS="-bios $OVMF/OVMF_CODE_4M.fd"
+    BOOT_OPTS="$BOOT_OPTS -drive file=$STORAGE/uefi.vars,if=pflash,format=raw"
     ;;
   secure)
-    BOOT_OPTS="-bios /usr/share/OVMF/OVMF_CODE_4M.secboot.fd"
+    VARS="$OVMF/OVMF_VARS_4M.secboot.fd"
+    [ ! -f "$VARS" ] && error "UEFI vars file ($VARS) not found!" && exit 44
+    [ ! -f "$STORAGE/uefi.vars" ] && cp "$VARS" "$STORAGE/uefi.vars"
+    BOOT_OPTS="-bios $OVMF/OVMF_CODE_4M.secboot.fd"
+    BOOT_OPTS="$BOOT_OPTS -drive file=$STORAGE/uefi.vars,if=pflash,format=raw"
     ;;
   legacy)
     BOOT_OPTS=""
