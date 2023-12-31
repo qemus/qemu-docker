@@ -172,6 +172,17 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" -p 5900:5900 --de
 
     Afterwards you can connect with any VNC client to port 5900.
 
+  * ### How do I boot via UEFI?
+
+    To enable UEFI booting, add the following line to your compose file:
+
+    ```yaml
+    environment:
+      BOOT_MODE: "uefi"
+    ```
+
+    You can also set this to ```secure``` to enable secure boot, or to ```windows``` to enable Windows 11 booting.
+
   * ### How do I provide custom arguments to QEMU?
 
     You can create the `ARGUMENTS` environment variable to provide additional arguments to QEMU at runtime:
