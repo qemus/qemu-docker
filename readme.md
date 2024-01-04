@@ -41,7 +41,8 @@ services:
     ports:
       - 2222:22
       - 5900:5900
-    restart: on-failure
+    stop_grace_period: 2m
+    restart: unless-stopped
 ```
 
 Via `docker run`
@@ -172,7 +173,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
     Afterwards you can connect with any VNC client to port 5900.
 
-  * ### How do I boot via UEFI?
+  * ### How do I boot with UEFI?
 
     To enable UEFI booting, add the following line to your compose file:
 
