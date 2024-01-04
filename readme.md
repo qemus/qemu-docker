@@ -1,6 +1,6 @@
 <h1 align="center">QEMU for Docker<br />
 <div align="center">
-<img src="https://github.com/qemu-tools/qemu-docker/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="128" />
+<img src="https://github.com/qemus/qemu-docker/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="128" />
 </div>
 <div align="center">
 
@@ -193,11 +193,11 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       ARGUMENTS: "-usbdevice tablet"
     ```
 
-[build_url]: https://github.com/qemu-tools/qemu-docker/
+[build_url]: https://github.com/qemus/qemu-docker/
 [hub_url]: https://hub.docker.com/r/qemux/qemu-docker/
 [tag_url]: https://hub.docker.com/r/qemux/qemu-docker/tags
 
-[Build]: https://github.com/qemu-tools/qemu-docker/actions/workflows/build.yml/badge.svg
+[Build]: https://github.com/qemus/qemu-docker/actions/workflows/build.yml/badge.svg
 [Size]: https://img.shields.io/docker/image-size/qemux/qemu-docker/latest?color=066da5&label=size
 [Pulls]: https://img.shields.io/docker/pulls/qemux/qemu-docker.svg?style=flat&label=pulls&logo=docker
 [Version]: https://img.shields.io/docker/v/qemux/qemu-docker/latest?arch=amd64&sort=semver&color=066da5
