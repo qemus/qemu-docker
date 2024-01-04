@@ -14,9 +14,9 @@ services:
         device_cgroup_rules:
             - 'c *:* rwm'
         cap_add:
-            - NET_ADMIN              
+            - NET_ADMIN
         ports:
             - 2222:22
             - 5900:5900
-        restart: always
         stop_grace_period: 2m
+        restart: unless-stopped
