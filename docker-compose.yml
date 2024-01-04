@@ -8,7 +8,7 @@ services:
             RAM_SIZE: "1G"
             CPU_CORES: "1"
             DISK_SIZE: "16G"
-            BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
+            BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
         devices:
             - /dev/kvm
         device_cgroup_rules:
@@ -18,5 +18,5 @@ services:
         ports:
             - 2222:22
             - 5900:5900
-        restart: on-failure
-        stop_grace_period: 1m
+        restart: always
+        stop_grace_period: 2m
