@@ -33,7 +33,7 @@ services:
     image: qemux/qemu-docker:latest
     environment:
       DISPLAY: "vnc"
-      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
+      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
     devices:
       - /dev/kvm
     cap_add:
@@ -41,13 +41,14 @@ services:
     ports:
       - 2222:22
       - 5900:5900
-    restart: on-failure
+    stop_grace_period: 2m
+    restart: unless-stopped
 ```
 
 Via `docker run`
 
 ```bash
-docker run -it --rm -e "BOOT=http://www.example.com/image.iso" -p 5900:5900 --device=/dev/kvm --cap-add NET_ADMIN qemux/qemu-docker:latest
+docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5900:5900 --device=/dev/kvm --cap-add NET_ADMIN qemux/qemu-docker:latest
 ```
 
 ## FAQ
@@ -58,7 +59,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" -p 5900:5900 --de
 
     ```yaml
     environment:
-      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
+      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
     ```
     
     It will be downloaded only once, during the initial run of the container.
@@ -106,7 +107,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" -p 5900:5900 --de
     sudo kvm-ok
     ```
 
-    If you receive an error from `kvm-ok` indicating that KVM acceleration can't be used, check your BIOS settings.
+    If you receive an error from `kvm-ok` indicating that KVM acceleration can't be used, check the virtualization settings in the BIOS.
 
   * ### How do I assign an individual IP address to the container?
 
@@ -172,7 +173,7 @@ docker run -it --rm -e "BOOT=http://www.example.com/image.iso" -p 5900:5900 --de
 
     Afterwards you can connect with any VNC client to port 5900.
 
-  * ### How do I boot via UEFI?
+  * ### How do I boot with UEFI?
 
     To enable UEFI booting, add the following line to your compose file:
 
