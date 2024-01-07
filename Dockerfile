@@ -2,6 +2,7 @@ FROM debian:trixie-slim
 
 ARG DEBCONF_NOWARNINGS="yes"
 ARG DEBIAN_FRONTEND noninteractive
+ARG DEBCONF_NONINTERACTIVE_SEEN true
 
 RUN apt-get update \
     && apt-get --no-install-recommends -y install \
