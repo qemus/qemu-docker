@@ -64,6 +64,42 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
     
     It will be downloaded only once, during the initial run of the container.
 
+  * ### How do I interact with the VM?
+
+    If you just need text-based output you can use the Docker console, or connect via SSH.
+
+    If you need graphical output, you can enable VNC by adding the following lines to your compose file:
+
+    ```yaml
+    environment:
+      DISPLAY: "vnc"
+    ports:
+      - 5900:5900
+    ```
+
+    If you want to enable the web-based VNC viewer, so that you do not need to install any client software, add the following lines to your compose file instead:
+
+    ```yaml
+    environment:
+      DISPLAY: "web"
+    ports:
+      - 8006:8006
+    ```
+
+    Afterwards you can visit  [http://localhost:8006/vnc.html](http://localhost:8006/vnc.html) using any webbrowser to view the screen of the VM and interact with it via the keyboard/mouse.
+
+  * ### How do I increase the amount of CPU or RAM?
+
+    By default, a single core and 1 GB of RAM are allocated to the container.
+
+    To increase this, add the following environment variables:
+
+    ```yaml
+    environment:
+      RAM_SIZE: "4G"
+      CPU_CORES: "4"
+    ```
+
   * ### How do I change the size of the data disk?
 
     To expand the default size of 16 GB, add the `DISK_SIZE` setting to your compose file and set it to your preferred capacity:
@@ -85,18 +121,6 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
     ```
 
     Replace the example path `/var/qemu` with the desired storage folder.
-
-  * ### How do I increase the amount of CPU or RAM?
-
-    By default, a single core and 1 GB of RAM are allocated to the container.
-
-    To increase this, add the following environment variables:
-
-    ```yaml
-    environment:
-      RAM_SIZE: "4G"
-      CPU_CORES: "4"
-    ```
 
   * ### How do I verify if my system supports KVM?
 
@@ -160,19 +184,6 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
     Please note that even if you don't need DHCP, it's still recommended to enable this feature as it prevents NAT issues and increases performance by using a `macvtap` interface.
 
-  * ### How can I connect with VNC?
-
-    To enable VNC, add the following lines to your compose file:
-
-    ```yaml
-    environment:
-      DISPLAY: "vnc"
-    ports:
-      - 5900:5900
-    ```
-
-    Afterwards you can connect with any VNC client to port 5900.
-
   * ### How do I boot with UEFI?
 
     To enable UEFI booting, add the following line to your compose file:
@@ -182,7 +193,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       BOOT_MODE: "uefi"
     ```
 
-    You can also set this to ```secure``` to enable secure boot, or to ```windows``` to enable Windows 11 booting.
+    You can also set this to ```windows``` to enable Windows booting.
 
   * ### How do I provide custom arguments to QEMU?
 
