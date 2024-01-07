@@ -22,7 +22,7 @@ if [[ "${BOOT_MODE,,}" == "windows" ]]; then
   { wget "$DRIVERS" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
 
   if (( rc == 0 )); then
-    mv -f "$TMP" "$STORAGE/drivers.iso"
+    mv -f "$TMP" "$STORAGE/drivers.img"
   else
     info "Failed to download $DRIVERS, reason: $rc"
   fi
