@@ -98,6 +98,10 @@ getPorts() {
   local novnc="8006"
 
   if [[ "${DISPLAY,,}" == "vnc" ]] && [[ "$list" != *"$vnc"* ]]; then
+    [ -z "$list" ] && list="$vnc" || list="$list,$vnc"
+  fi
+
+  if [[ "${DISPLAY,,}" == "web" ]] && [[ "$list" != *"$novnc"* ]]; then
     [ -z "$list" ] && list="$vnc,$novnc" || list="$list,$vnc,$novnc"
   fi
 
