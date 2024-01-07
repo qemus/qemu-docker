@@ -2,18 +2,21 @@ FROM debian:trixie-slim
 
 ARG DEBCONF_NOWARNINGS="yes"
 ARG DEBIAN_FRONTEND noninteractive
+ARG DEBCONF_NONINTERACTIVE_SEEN true
 
 RUN apt-get update \
     && apt-get --no-install-recommends -y install \
  	tini \
 	wget \
         ovmf \
+        novnc \
 	procps \
 	iptables \
 	iproute2 \
 	dnsmasq \
 	net-tools \
         qemu-utils \
+ 	websockify \
 	ca-certificates \
 	netcat-openbsd \
 	qemu-system-x86 \
@@ -24,7 +27,7 @@ COPY ./src /run/
 RUN chmod +x /run/*.sh
 
 VOLUME /storage
-EXPOSE 22 5900
+EXPOSE 22 5900 8006
 
 ENV CPU_CORES "1"
 ENV RAM_SIZE "1G"

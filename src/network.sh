@@ -95,9 +95,10 @@ getPorts() {
 
   local list=$1
   local vnc="5900"
+  local novnc="8006"
 
   if [[ "${DISPLAY,,}" == "vnc" ]] && [[ "$list" != *"$vnc"* ]]; then
-    [ -z "$list" ] && list="$vnc" || list="$list,$vnc"
+    [ -z "$list" ] && list="$vnc,$novnc" || list="$list,$vnc,$novnc"
   fi
 
   [ -z "$list" ] && return 0
