@@ -11,8 +11,7 @@ case "${DISPLAY,,}" in
     DISPLAY_OPTS="-display vnc=:0 -vga virtio"
     ;;
   web)
-    addPackage "novnc" "NoVNC"
-    addPackage "websockify" "Websockify"
+    addPackage "novnc" "web-based VNC client"
     DISPLAY_OPTS="-display vnc=:0 -vga virtio"
     ;;
   *)
