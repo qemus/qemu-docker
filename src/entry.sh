@@ -17,7 +17,7 @@ cd /run
 
 trap - ERR
 
-if [[ "${DISPLAY,,}" == "vnc" ]]; then
+if [[ "${DISPLAY,,}" == "web" ]]; then
   websockify -D --web /usr/share/novnc/ 8006 localhost:5900
 fi
 
