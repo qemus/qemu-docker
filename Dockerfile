@@ -9,14 +9,12 @@ RUN apt-get update \
  	tini \
 	wget \
         ovmf \
-        novnc \
 	procps \
 	iptables \
 	iproute2 \
 	dnsmasq \
 	net-tools \
         qemu-utils \
- 	websockify \
 	ca-certificates \
 	netcat-openbsd \
 	qemu-system-x86 \
