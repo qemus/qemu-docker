@@ -4,17 +4,35 @@ set -Eeuo pipefail
 FILE="$STORAGE/boot.img"
 [ -f "$FILE" ] && return 0
 
-TMP="/boot.img"
-rm -f "$TMP"
-
-info "Downloading $BOOT as boot image..."
-
 # Check if running with interactive TTY or redirected to docker log
 if [ -t 1 ]; then
   PROGRESS="--progress=bar:noscroll"
 else
   PROGRESS="--progress=dot:giga"
 fi
+
+if [[ "${BOOT_MODE,,}" == "windows" ]]; then
+
+  TMP="$STORAGE/drivers.tmp"
+  rm -f "$TMP"
+
+  info "Downloading VirtIO drivers for Windows..."
+  DRIVERS="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
+
+  { wget "$DRIVERS" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
+
+  if (( rc == 0 )); then
+    mv -f "$TMP" "$STORAGE/drivers.iso"
+  else
+    info "Failed to download $DRIVERS, reason: $rc"
+  fi
+fi
+
+TMP="$STORAGE/boot.tmp"
+rm -f "$TMP"
+
+BASE=$(basename "$BOOT")
+info "Downloading $BASE as boot image..."
 
 [[ "$DEBUG" == [Yy1]* ]] && set -x
 
