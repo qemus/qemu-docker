@@ -18,7 +18,7 @@ cd /run
 trap - ERR
 
 if [[ "${DISPLAY,,}" == "vnc" ]]; then
-  websockify -D --web /usr/share/novnc/ 6008 localhost:5900
+  websockify -D --web /usr/share/novnc/ 8006 localhost:5900
 fi
 
 info "Booting image using $VERS..."
