@@ -10,7 +10,7 @@ set -Eeuo pipefail
 : ${DISK_DISCARD:='on'}         # Controls whether unmap (TRIM) commands are passed to the host.
 : ${DISK_ROTATION:='1'}         # Rotation rate, set to 1 for SSD storage and increase for HDD
 
-BOOT="$STORAGE/boot.img"
+BOOT="$STORAGE/$BASE"
 DRIVERS="$STORAGE/drivers.img"
 DISK_OPTS="-object iothread,id=io2"
 
@@ -28,7 +28,7 @@ fi
 if [ -f "$DRIVERS" ]; then
   DISK_OPTS="$DISK_OPTS \
     -drive id=cdrom1,if=none,format=raw,readonly=on,file=$DRIVERS \
-    -device scsi-cd,bus=scsi0.1,drive=cdrom1,bootindex=11"
+    -device scsi-cd,bus=scsi0.1,drive=cdrom1"
 fi
 
 fmt2ext() {
