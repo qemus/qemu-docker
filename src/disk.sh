@@ -5,19 +5,30 @@ set -Eeuo pipefail
 
 : ${DISK_IO:='native'}          # I/O Mode, can be set to 'native', 'threads' or 'io_turing'
 : ${DISK_FMT:=''}            # Disk file format, can be set to "raw" or "qcow2" (default)
+: ${DISK_FLAGS:=''}             # Specifies the options for use with the qcow2 disk format
 : ${DISK_CACHE:='none'}         # Caching mode, can be set to 'writeback' for better performance
 : ${DISK_DISCARD:='on'}         # Controls whether unmap (TRIM) commands are passed to the host.
 : ${DISK_ROTATION:='1'}         # Rotation rate, set to 1 for SSD storage and increase for HDD
-: ${DISK_FLAGS:=''}             # Specifies the options for use with the qcow2 disk format
 
-BOOT="$STORAGE/boot.img"
+BOOT="$STORAGE/$BASE"
+DRIVERS="$STORAGE/drivers.img"
 DISK_OPTS="-object iothread,id=io2"
+
+if [ -f "$BOOT" ] || [ -f "$DRIVERS" ]; then
+  DISK_OPTS="$DISK_OPTS \
+    -device virtio-scsi-pci,id=scsi0,iothread=io2,addr=0x5"
+fi
 
 if [ -f "$BOOT" ]; then
   DISK_OPTS="$DISK_OPTS \
-    -device virtio-scsi-pci,id=scsi0,iothread=io2,addr=0x5 \
     -drive id=cdrom0,if=none,format=raw,readonly=on,file=$BOOT \
     -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=10"
+fi
+
+if [ -f "$DRIVERS" ]; then
+  DISK_OPTS="$DISK_OPTS \
+    -drive id=cdrom1,if=none,format=raw,readonly=on,file=$DRIVERS \
+    -device scsi-cd,bus=scsi0.1,drive=cdrom1"
 fi
 
 fmt2ext() {
