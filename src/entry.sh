@@ -16,6 +16,11 @@ cd /run
 . config.sh     # Configure arguments
 
 trap - ERR
+
+if [[ "${DISPLAY,,}" == "vnc" ]]; then
+  websockify -D --web /usr/share/novnc/ 6008 localhost:5900
+fi
+
 info "Booting image using $VERS..."
 
 [[ "$DEBUG" == [Yy1]* ]] && set -x
