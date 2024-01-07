@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 echo "❯ Starting QEMU for Docker v$(</run/version)..."
-echo "❯ For support visit https://github.com/qemus/qemu-docker/"
+echo "❯ For support visit https://github.com/qemus/qemu-docker"
 
 cd /run
 
@@ -18,7 +18,7 @@ cd /run
 trap - ERR
 
 if [[ "${DISPLAY,,}" == "web" ]]; then
-  websockify -D --web /usr/share/novnc/ 8006 localhost:5900
+  websockify -D --web /usr/share/novnc/ 8006 localhost:5900 >/dev/null
 fi
 
 info "Booting image using $VERS..."
