@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-FILE="$STORAGE/boot.img"
-[ -f "$FILE" ] && return 0
+BASE="boot.img"
+[ -f "$STORAGE/$BASE" ] && return 0
+
+BASE=$(basename "$BOOT")
+[ -f "$STORAGE/$BASE" ] && return 0
 
 # Check if running with interactive TTY or redirected to docker log
 if [ -t 1 ]; then
@@ -13,28 +16,24 @@ fi
 
 if [[ "${BOOT_MODE,,}" == "windows" ]]; then
 
-  TMP="$STORAGE/drivers.tmp"
-  rm -f "$TMP"
+  DEST="$STORAGE/drivers.img"
 
-  info "Downloading VirtIO drivers for Windows..."
-  DRIVERS="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
+  if [ ! -f "$DEST" ]; then
 
-  { wget "$DRIVERS" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
+    info "Downloading VirtIO drivers for Windows..."
+    DRIVERS="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
 
-  if (( rc == 0 )); then
-    mv -f "$TMP" "$STORAGE/drivers.img"
-  else
-    info "Failed to download $DRIVERS, reason: $rc"
+    { wget "$DRIVERS" -O "$DEST" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
+
+    (( rc != 0 )) && info "Failed to download $DRIVERS, reason: $rc" && rm -f "$DEST"
+
   fi
 fi
 
-TMP="$STORAGE/boot.tmp"
+TMP="$STORAGE/${BASE%.*}.tmp"
 rm -f "$TMP"
 
-BASE=$(basename "$BOOT")
 info "Downloading $BASE as boot image..."
-
-[[ "$DEBUG" == [Yy1]* ]] && set -x
 
 { wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
 
@@ -47,9 +46,6 @@ if ((SIZE<100000)); then
   error "Invalid ISO file: Size is smaller than 100 KB" && exit 62
 fi
 
-mv -f "$TMP" "$FILE"
-
-{ set +x; } 2>/dev/null
-[[ "$DEBUG" == [Yy1]* ]] && echo
+mv -f "$TMP" "$STORAGE/$BASE"
 
 return 0
