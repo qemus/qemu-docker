@@ -4,6 +4,10 @@ set -Eeuo pipefail
 BASE="boot.img"
 [ -f "$STORAGE/$BASE" ] && return 0
 
+if [ -z "$BOOT" ]; then
+  error "No boot disk specified, set BOOT= to the URL of an ISO file." && exit 64
+fi
+
 BASE=$(basename "$BOOT")
 [ -f "$STORAGE/$BASE" ] && return 0
 
