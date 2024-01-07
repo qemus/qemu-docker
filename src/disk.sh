@@ -14,13 +14,9 @@ BOOT="$STORAGE/$BASE"
 DRIVERS="$STORAGE/drivers.img"
 DISK_OPTS="-object iothread,id=io2"
 
-if [ -f "$BOOT" ] || [ -f "$DRIVERS" ]; then
-  DISK_OPTS="$DISK_OPTS \
-    -device virtio-scsi-pci,id=scsi0,iothread=io2,addr=0x5"
-fi
-
 if [ -f "$BOOT" ]; then
   DISK_OPTS="$DISK_OPTS \
+    -device virtio-scsi-pci,id=scsi0,iothread=io2,addr=0x5 \
     -drive id=cdrom0,if=none,format=raw,readonly=on,file=$BOOT \
     -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=10"
 fi
@@ -28,7 +24,7 @@ fi
 if [ -f "$DRIVERS" ]; then
   DISK_OPTS="$DISK_OPTS \
     -drive id=cdrom1,if=none,format=raw,readonly=on,file=$DRIVERS \
-    -device scsi-cd,bus=scsi0.1,drive=cdrom1"
+    -device ide-cd,drive=cdrom1"
 fi
 
 fmt2ext() {
