@@ -23,7 +23,6 @@ RUN apt-get update \
 
 COPY ./src /run/
 RUN chmod +x /run/*.sh
-COPY /usr/share/novnc/vnc_lite.html /usr/share/novnc/index.html
 
 VOLUME /storage
 EXPOSE 22 5900 8006
