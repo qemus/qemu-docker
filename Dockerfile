@@ -12,6 +12,7 @@ RUN apt-get update \
 	procps \
 	iptables \
 	iproute2 \
+        apt-utils \
 	dnsmasq \
 	net-tools \
         qemu-utils \
