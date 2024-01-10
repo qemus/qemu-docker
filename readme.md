@@ -86,7 +86,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       - 8006:8006
     ```
 
-    Afterwards you can visit  [http://localhost:8006/vnc.html](http://localhost:8006/vnc.html) using any webbrowser to view the screen of the VM and interact with it via the keyboard/mouse.
+    Afterwards you can visit  [http://localhost:8006/](http://localhost:8006/) using any webbrowser to view the screen of the VM and interact with it via the keyboard/mouse.
 
   * ### How do I increase the amount of CPU or RAM?
 
