@@ -12,6 +12,7 @@ case "${DISPLAY,,}" in
     ;;
   web)
     addPackage "novnc" "web-based VNC client"
+    ln -sfn /usr/share/novnc/vnc_lite.html /usr/share/novnc/index.html
     DISPLAY_OPTS="-display vnc=:0 -vga virtio"
     ;;
   *)
