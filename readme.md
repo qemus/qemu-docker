@@ -62,7 +62,9 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
     ```
     
-    It will be downloaded only once, during the initial run of the container. You can also place a file called ```boot.img``` in the ```\storage``` folder if you want to use a local image.
+    It will be downloaded only once, during the initial run of the container.
+
+    Alternatively, you can place a file called ```boot.img``` in the ```/storage``` folder if you want to use a local image instead.
 
   * ### How do I interact with the VM?
 
@@ -193,7 +195,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       BOOT_MODE: "uefi"
     ```
 
-    You can also set this to ```windows``` to enable Windows booting.
+    You can also set this to ```windows``` to enable the Windows bootloader. Furthermore this will add a CD drive containing device drivers to the system, which can be used during the installation.
 
   * ### How do I provide custom arguments to QEMU?
 
@@ -201,7 +203,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
     ```yaml
     environment:
-      ARGUMENTS: "-usbdevice tablet"
+      ARGUMENTS: "-device usb-tablet"
     ```
 
 [build_url]: https://github.com/qemus/qemu-docker/
