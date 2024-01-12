@@ -62,7 +62,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
     ```
     
-    It will be downloaded only once, during the initial run of the container.
+    It will be downloaded only once, during the initial run of the container. You can also place a file called ```boot.img``` in the ```\storage``` folder if you want to use a local image.
 
   * ### How do I interact with the VM?
 
