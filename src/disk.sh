@@ -399,8 +399,32 @@ addDisk () {
   return 0
 }
 
+addDevice () {
+
+  local DISK_ID=$1
+  local DISK_DEV=$2
+  local DISK_DESC=$3
+  local DISK_INDEX=$4
+  local DISK_ADDRESS=$5
+
+  [ -z "$DISK_DEV" ] && return 0
+  [ ! -b "$DISK_DEV" ] && error "Device $DISK_DEV cannot be found! Please add it to the 'devices' section of your compose file." && exit 55
+
+  DISK_OPTS="$DISK_OPTS \
+    -device virtio-scsi-pci,id=hw-$DISK_ID,iothread=io2,bus=pcie.0,addr=$DISK_ADDRESS \
+    -drive file=$DISK_DEV,if=none,id=drive-$DISK_ID,format=raw,cache=$DISK_CACHE,aio=$DISK_IO,discard=$DISK_DISCARD,detect-zeroes=on \
+    -device scsi-hd,bus=hw-$DISK_ID.0,channel=0,scsi-id=0,lun=0,drive=drive-$DISK_ID,id=$DISK_ID,rotation_rate=$DISK_ROTATION,bootindex=$DISK_INDEX"
+
+  return 0
+}
+
+DISK1_FILE="$STORAGE/data"
+DISK2_FILE="/storage2/data2"
+DISK3_FILE="/storage3/data3"
+DISK4_FILE="/storage4/data4"
+
 if [ -z "$DISK_FMT" ]; then
-  if [ -f "$STORAGE/data.img" ]; then
+  if [ -f "$DISK1_FILE.img" ]; then
     DISK_FMT="raw"
   else
     DISK_FMT="qcow2"
@@ -417,56 +441,37 @@ else
   DISK_ALLOC="preallocation=falloc"
 fi
 
-DISK1_FILE="$STORAGE/data"
-DISK2_FILE="/storage2/data2"
-DISK3_FILE="/storage3/data3"
-DISK4_FILE="/storage4/data4"
-DISK5_FILE="/storage5/data5"
-DISK6_FILE="/storage6/data6"
-
 : ${DISK2_SIZE:=''}
 : ${DISK3_SIZE:=''}
 : ${DISK4_SIZE:=''}
-: ${DISK5_SIZE:=''}
-: ${DISK6_SIZE:=''}
 
-addDisk "userdata" "$DISK1_FILE" "$DISK_EXT" "disk" "$DISK_SIZE" "1" "0xa" "$DISK_FMT" || exit $?
-addDisk "userdata2" "$DISK2_FILE" "$DISK_EXT" "disk2" "$DISK2_SIZE" "2" "0xb" "$DISK_FMT" || exit $?
-addDisk "userdata3" "$DISK3_FILE" "$DISK_EXT" "disk3" "$DISK3_SIZE" "3" "0xc" "$DISK_FMT" || exit $?
-addDisk "userdata4" "$DISK4_FILE" "$DISK_EXT" "disk4" "$DISK4_SIZE" "4" "0xd" "$DISK_FMT" || exit $?
-addDisk "userdata5" "$DISK5_FILE" "$DISK_EXT" "disk5" "$DISK5_SIZE" "5" "0xe" "$DISK_FMT" || exit $?
-addDisk "userdata6" "$DISK6_FILE" "$DISK_EXT" "disk6" "$DISK6_SIZE" "6" "0xf" "$DISK_FMT" || exit $?
-
-addDevice () {
-
-  local DISK_ID=$1
-  local DISK_DEV=$2
-  local DISK_INDEX=$3
-  local DISK_ADDRESS=$4
-
-  [ -z "$DISK_DEV" ] && return 0
-  [ ! -b "$DISK_DEV" ] && error "Device $DISK_DEV cannot be found! Please add it to the 'devices' section of your compose file." && exit 55
-
-  DISK_OPTS="$DISK_OPTS \
-    -device virtio-scsi-pci,id=hw-$DISK_ID,iothread=io2,bus=pcie.0,addr=$DISK_ADDRESS \
-    -drive file=$DISK_DEV,if=none,id=drive-$DISK_ID,format=raw,cache=$DISK_CACHE,aio=$DISK_IO,discard=$DISK_DISCARD,detect-zeroes=on \
-    -device scsi-hd,bus=hw-$DISK_ID.0,channel=0,scsi-id=0,lun=0,drive=drive-$DISK_ID,id=$DISK_ID,rotation_rate=$DISK_ROTATION,bootindex=$DISK_INDEX"
-
-  return 0
-}
-
-: ${DEVICE:=''}        # Docker variable to passthrough a block device, like /dev/vdc1.
+: ${DEVICE:=''}        # Docker variables to passthrough a block device, like /dev/vdc1.
 : ${DEVICE2:=''}
 : ${DEVICE3:=''}
 : ${DEVICE4:=''}
-: ${DEVICE5:=''}
-: ${DEVICE6:=''}
 
-addDevice "userdata7" "$DEVICE" "7" "0x6" || exit $?
-addDevice "userdata8" "$DEVICE2" "8" "0x7" || exit $?
-addDevice "userdata9" "$DEVICE3" "9" "0x8" || exit $?
-addDevice "userdata4" "$DEVICE4" "4" "0xd" || exit $?
-addDevice "userdata5" "$DEVICE5" "5" "0xe" || exit $?
-addDevice "userdata6" "$DEVICE6" "6" "0xf" || exit $?
+if [ -n "$DEVICE" ]; then
+  addDevice "userdata" "$DEVICE" "device" "1" "0xa" || exit $?
+else
+  addDisk "userdata" "$DISK1_FILE" "$DISK_EXT" "disk" "$DISK_SIZE" "1" "0xa" "$DISK_FMT" || exit $?
+fi
+
+if [ -n "$DEVICE2" ]; then
+  addDevice "userdata2" "$DEVICE2" "device2" "2" "0xb" || exit $?
+else
+  addDisk "userdata2" "$DISK2_FILE" "$DISK_EXT" "disk2" "$DISK2_SIZE" "2" "0xb" "$DISK_FMT" || exit $?
+fi
+
+if [ -n "$DEVICE3" ]; then
+  addDevice "userdata3" "$DEVICE3" "device3" "3" "0xc" || exit $?
+else
+  addDisk "userdata3" "$DISK3_FILE" "$DISK_EXT" "disk3" "$DISK3_SIZE" "3" "0xc" "$DISK_FMT" || exit $?
+fi
+
+if [ -n "$DEVICE4" ]; then
+  addDevice "userdata4" "$DEVICE4" "device4" "4" "0xd" || exit $?
+else
+  addDisk "userdata4" "$DISK4_FILE" "$DISK_EXT" "disk4" "$DISK4_SIZE" "4" "0xd" "$DISK_FMT" || exit $?
+fi
 
 return 0
