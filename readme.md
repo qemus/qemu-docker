@@ -195,7 +195,16 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       BOOT_MODE: "uefi"
     ```
 
-    You can also set this to ```windows``` to enable the Windows bootloader. Furthermore this will add a CD drive containing device drivers to the system, which can be used during the installation.
+  * ### How do I boot Windows?
+
+    To enable Windows booting, add the following line to your compose file:
+
+    ```yaml
+    environment:
+      BOOT_MODE: "windows"
+    ```
+
+    This will also add a CD drive containing device drivers to the system, which can be used for the VirtIO hard drive during the installation. Afterwards install the VirtIO network drivers and the Windows guest tools.
 
   * ### How do I provide custom arguments to QEMU?
 
