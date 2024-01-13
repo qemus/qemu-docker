@@ -1,8 +1,8 @@
 FROM debian:trixie-slim
 
 ARG DEBCONF_NOWARNINGS="yes"
-ARG DEBIAN_FRONTEND noninteractive
-ARG DEBCONF_NONINTERACTIVE_SEEN true
+ARG DEBIAN_FRONTEND "noninteractive"
+ARG DEBCONF_NONINTERACTIVE_SEEN "true"
 
 RUN apt-get update \
     && apt-get --no-install-recommends -y install \
@@ -33,7 +33,7 @@ ENV RAM_SIZE "1G"
 ENV DISK_SIZE "16G"
 ENV BOOT "http://www.example.com/image.iso"
 
-ARG VERSION_ARG="0.0"
+ARG VERSION_ARG "0.0"
 RUN echo "$VERSION_ARG" > /run/version
 
 ENTRYPOINT ["/usr/bin/tini", "-s", "/run/entry.sh"]
