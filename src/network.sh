@@ -3,18 +3,18 @@ set -Eeuo pipefail
 
 # Docker environment variables
 
-: "${DHCP:='N'}"
-: "${HOST_PORTS:=''}"
-: "${MAC:='82:cf:d0:5e:57:66'}"
+: "${DHCP:="N"}"
+: "${HOST_PORTS:=""}"
+: "${MAC:="82:cf:d0:5e:57:66"}"
 
-: "${VM_NET_DEV:=''}"
-: "${VM_NET_TAP:='qemu'}"
+: "${VM_NET_DEV:=""}"
+: "${VM_NET_TAP:="qemu"}"
 : "${VM_NET_MAC:="$MAC"}"
-: "${VM_NET_HOST:='QEMU'}"
+: "${VM_NET_HOST:="QEMU"}"
 
-: "${DNSMASQ_OPTS:=''}"
-: "${DNSMASQ:='/usr/sbin/dnsmasq'}"
-: "${DNSMASQ_CONF_DIR:='/etc/dnsmasq.d'}"
+: "${DNSMASQ_OPTS:=""}"
+: "${DNSMASQ:="/usr/sbin/dnsmasq"}"
+: "${DNSMASQ_CONF_DIR:="/etc/dnsmasq.d"}"
 
 ADD_ERR="Please add the following setting to your container:"
 
