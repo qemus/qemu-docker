@@ -197,16 +197,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
   * ### How do I boot Windows?
 
-    To enable Windows booting, add the following line to your compose file:
-
-    ```yaml
-    environment:
-      BOOT_MODE: "windows"
-    ```
-
-    This will also add a CD drive containing device drivers to the system, which can be used for the VirtIO hard drive during the installation. Afterwards install the VirtIO network drivers and the Windows guest tools.
-
-    An easier solution is to use [this container](https://github.com/dockur/windows), which is based on this project, but aimed specificly at running Windows. It will automaticly download the correct ISO file from the Microsoft servers for example.
+    This container is mainly focussed at Linux. For emulating Windows there is [another container](https://github.com/dockur/windows). It includes a TPM emulator, drivers, and will automaticly download the correct ISO file from the Microsoft servers.
 
   * ### How do I provide custom arguments to QEMU?
 
