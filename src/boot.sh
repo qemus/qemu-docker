@@ -3,7 +3,7 @@ set -Eeuo pipefail
 
 # Docker environment variables
 
-: ${BOOT_MODE:='legacy'}  # Boot mode
+: "${BOOT_MODE:='legacy'}"  # Boot mode
 
 SECURE=""
 BOOT_OPTS=""
