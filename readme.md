@@ -92,7 +92,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
   * ### How do I increase the amount of CPU or RAM?
 
-    By default, a single core and 1 GB of RAM are allocated to the container.
+    By default, a single CPU core and 1 GB of RAM are allocated to the container.
 
     To increase this, add the following environment variables:
 
