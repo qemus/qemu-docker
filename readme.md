@@ -206,6 +206,8 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
     This will also add a CD drive containing device drivers to the system, which can be used for the VirtIO hard drive during the installation. Afterwards install the VirtIO network drivers and the Windows guest tools.
 
+    An easier solution is to use [this container](https://github.com/dockur/windows), which is based on this project, but aimed specificly at running Windows. It will automaticly download the correct ISO file from the Microsoft servers for example.
+
   * ### How do I provide custom arguments to QEMU?
 
     You can create the `ARGUMENTS` environment variable to provide additional arguments to QEMU at runtime:
