@@ -124,6 +124,10 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
     Replace the example path `/var/qemu` with the desired storage folder.
 
+  * ### How do I boot Windows?
+
+    This container is mainly focussed on emulating Linux-based operating systems. So for emulating Windows there is [another container](https://github.com/dockur/windows) that includes a TPM emulator, all the necessary drivers, and will automaticly download the correct ISO file from the Microsoft servers.
+
   * ### How do I verify if my system supports KVM?
 
     To verify if your system supports KVM, run the following commands:
@@ -194,10 +198,6 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
     environment:
       BOOT_MODE: "uefi"
     ```
-
-  * ### How do I boot Windows?
-
-    This container is mainly focussed at Linux. For emulating Windows there is [another container](https://github.com/dockur/windows). It includes a TPM emulator, drivers, and will automaticly download the correct ISO file from the Microsoft servers.
 
   * ### How do I provide custom arguments to QEMU?
 
