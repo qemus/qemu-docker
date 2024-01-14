@@ -3,9 +3,9 @@ set -Eeuo pipefail
 
 # Docker environment variables
 
-: "${DHCP:='N'}
-: "${HOST_PORTS:=''}
-: "${MAC:='82:cf:d0:5e:57:66'}
+: "${DHCP:='N'}"
+: "${HOST_PORTS:=''}"
+: "${MAC:='82:cf:d0:5e:57:66'}"
 
 : "${VM_NET_DEV:=''}"
 : "${VM_NET_TAP:='qemu'}"
