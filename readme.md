@@ -1,4 +1,4 @@
-<h1 align="center">QEMU for Docker<br />
+<h1 align="center">QEMU in Docker<br />
 <div align="center">
 <img src="https://github.com/qemus/qemu-docker/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="128" />
 </div>
