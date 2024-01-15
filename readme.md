@@ -177,7 +177,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
     Please note that this IP address won't be accessible from the Docker host due to the design of macvlan, which doesn't permit communication between the two. If this is a concern, you need to create a [second macvlan](https://blog.oddbit.com/post/2018-03-12-using-docker-macvlan-networks/#host-access) as a workaround.
 
-  * ### How can the container acquire an IP address from my router?
+  * ### How can the VM acquire an IP address from my router?
 
     After configuring the container for macvlan (see above), it is possible for the VM to become part of your home network by requesting an IP from your router, just like your other devices.
 
@@ -190,7 +190,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       - 'c *:* rwm'
     ```
 
-    Please note that even if you don't need DHCP, it's still recommended to enable this feature as it prevents NAT issues and increases performance by using a `macvtap` interface.
+    Please note that in this mode, the container and the VM will each have their own separate IP's. The container will keep the macvlan IP, and the VM will be reachable via the DHCP IP.
 
   * ### How do I boot with UEFI?
 
