@@ -11,7 +11,6 @@ set -Eeuo pipefail
 : "${DISK_ROTATION:="1"}"         # Rotation rate, set to 1 for SSD storage and increase for HDD
 
 BOOT="$STORAGE/$BASE"
-DRIVERS="$STORAGE/drivers.img"
 DISK_OPTS="-object iothread,id=io2"
 
 if [ -f "$BOOT" ]; then
@@ -20,6 +19,9 @@ if [ -f "$BOOT" ]; then
     -drive id=cdrom0,if=none,format=raw,readonly=on,file=$BOOT \
     -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=10"
 fi
+
+DRIVERS="$STORAGE/drivers.img"
+[ ! -f "$DRIVERS" ] && DRIVERS="/run/drivers.iso"
 
 if [ -f "$DRIVERS" ]; then
   DISK_OPTS="$DISK_OPTS \
