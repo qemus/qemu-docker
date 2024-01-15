@@ -13,7 +13,7 @@
 
 QEMU in a docker container for running x64 virtual machines (even on ARM platforms).
 
-It uses high-performance QEMU options (like KVM acceleration, kernel-mode networking, IO threading, etc) to achieve near-native speed.
+It uses high-performance QEMU options (like KVM acceleration, kernel-mode networking, IO threading, etc.) to achieve near-native speed.
 
 ## Features
 
@@ -68,7 +68,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
   * ### How do I interact with the VM?
 
-    If you just need text-based output you can use the Docker console, or connect via SSH.
+    If you just need text-based output, you can use the Docker console or connect via SSH.
 
     If you need graphical output, you can enable VNC by adding the following lines to your compose file:
 
@@ -79,7 +79,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       - 5900:5900
     ```
 
-    If you want to enable the web-based VNC viewer, so that you do not need to install any client software, add the following lines to your compose file instead:
+    If you want to enable the web-based VNC viewer so that you do not need to install any client software, add the following lines to your compose file instead:
 
     ```yaml
     environment:
@@ -88,7 +88,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       - 8006:8006
     ```
 
-    Afterwards you can visit  [http://localhost:8006/](http://localhost:8006/) using any webbrowser to view the screen of the VM and interact with it via the keyboard/mouse.
+    Afterwards you can visit  [http://localhost:8006/](http://localhost:8006/) using any web browser to view the screen of the VM and interact with it via the keyboard or mouse.
 
   * ### How do I increase the amount of CPU or RAM?
 
@@ -126,7 +126,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
   * ### How do I boot Windows?
 
-    For emulating Windows there is [dockur/windows](https://github.com/dockur/windows), which is more dedicated to that purpose. It has all the same features as this container, but additionally includes a TPM emulator, all the necessary drivers, and it will even automaticly download the correct ISO file from the Microsoft servers.
+    For emulating Windows, there is [dockur/windows](https://github.com/dockur/windows), which is more dedicated to that purpose. It has all the same features as this container, but additionally includes a TPM emulator, all the necessary drivers, and it will even automatically download the correct ISO file from the Microsoft servers.
 
   * ### How do I verify if my system supports KVM?
 
@@ -171,7 +171,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
         external: true
     ```
    
-    An added benefit of this approach is that you won't have to perform any port mapping anymore since all ports will be exposed by default.
+    An added benefit of this approach is that you won't have to perform any port mapping anymore, since all ports will be exposed by default.
 
     Please note that this IP address won't be accessible from the Docker host due to the design of macvlan, which doesn't permit communication between the two. If this is a concern, you need to create a [second macvlan](https://blog.oddbit.com/post/2018-03-12-using-docker-macvlan-networks/#host-access) as a workaround.
 
@@ -188,7 +188,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       - 'c *:* rwm'
     ```
 
-    Please note that in this mode, the container and the VM will each have their own separate IP's. The container will keep the macvlan IP, and the VM will be reachable via the DHCP IP.
+    Please note that in this mode, the container and the VM will each have their own separate IPs. The container will keep the macvlan IP, and the VM will be reachable via the DHCP IP.
 
   * ### How do I boot with UEFI?
 
