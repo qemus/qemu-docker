@@ -30,7 +30,7 @@ version: "3"
 services:
   qemu:
     container_name: qemu
-    image: qemux/qemu-docker:latest
+    image: qemux/qemu-docker
     environment:
       DISPLAY: "vnc"
       BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
@@ -48,7 +48,7 @@ services:
 Via `docker run`
 
 ```bash
-docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5900:5900 --device=/dev/kvm --cap-add NET_ADMIN qemux/qemu-docker:latest
+docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5900:5900 --device=/dev/kvm --cap-add NET_ADMIN qemux/qemu-docker
 ```
 
 ## FAQ
