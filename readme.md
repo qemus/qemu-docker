@@ -126,9 +126,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
   * ### How do I boot Windows?
 
-    This container is mainly focussed on emulating Linux-based operating systems.
-
-    For emulating Windows there is [dockur/windows](https://github.com/dockur/windows), which is dedicated to that purpose. It has the same features as this container, but additionally includes a TPM emulator, all the necessary drivers, and it will even automaticly download the correct ISO file from the Microsoft servers.
+    For emulating Windows there is [dockur/windows](https://github.com/dockur/windows), which is more dedicated to that purpose. It has all the same features as this container, but additionally includes a TPM emulator, all the necessary drivers, and it will even automaticly download the correct ISO file from the Microsoft servers.
 
   * ### How do I verify if my system supports KVM?
 
