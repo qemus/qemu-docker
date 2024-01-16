@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# Display wait message
+MSG="Please wait while the ISO is being downloaded..."
+/run/server.sh "QEMU" "$MSG" &
+
 # Check if running with interactive TTY or redirected to docker log
 if [ -t 1 ]; then
   PROGRESS="--progress=bar:noscroll"
