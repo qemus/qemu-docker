@@ -202,6 +202,8 @@ closeNetwork() {
 
   if [[ "$DHCP" == [Yy1]* ]]; then
 
+    fKill "server.sh"
+
     ip link set "$VM_NET_TAP" down || true
     ip link delete "$VM_NET_TAP" || true
 
@@ -252,6 +254,8 @@ getInfo() {
 # ######################################
 #  Configure Network
 # ######################################
+
+fKill "server.sh"
 
 if [ ! -c /dev/vhost-net ]; then
   if mknod /dev/vhost-net c 10 238; then
