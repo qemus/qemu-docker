@@ -9,6 +9,7 @@ RUN apt-get update \
  	tini \
 	wget \
         ovmf \
+	socat \
 	procps \
 	iptables \
 	iproute2 \
