@@ -21,9 +21,9 @@ html()
     echo "$h"
 }
 
-BODY="$1<script>setTimeout(() => { document.location.reload(); }, 4999);</script>"
+BODY="$2<script>setTimeout(() => { document.location.reload(); }, 4999);</script>"
 
-HTML=$(html "$BODY" "$2")
+HTML=$(html "$BODY" "$1")
 printf '%b' "HTTP/1.1 200 OK\nContent-Length: ${#HTML}\nConnection: close\n\n$HTML" > "$TMP_FILE"
 
 socat TCP4-LISTEN:80,reuseaddr,fork,crlf SYSTEM:"cat $TMP_FILE" 2> /dev/null &
