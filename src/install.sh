@@ -12,22 +12,6 @@ else
   PROGRESS="--progress=dot:giga"
 fi
 
-if [[ "${BOOT_MODE,,}" == "windows" ]]; then
-
-  DEST="$STORAGE/drivers.img"
-
-  if [ ! -f "$DEST" ]; then
-
-    info "Downloading VirtIO drivers for Windows..."
-    DRIVERS="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso"
-
-    { wget "$DRIVERS" -O "$DEST" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
-
-    (( rc != 0 )) && info "Failed to download $DRIVERS, reason: $rc" && rm -f "$DEST"
-
-  fi
-fi
-
 BASE="boot.img"
 [ -f "$STORAGE/$BASE" ] && return 0
 
