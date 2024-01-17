@@ -21,10 +21,10 @@ RUN apt-get update \
 	ca-certificates \
 	netcat-openbsd \
 	qemu-system-x86 \
-    && novnc="v1.4.0" \
-    && wget https://github.com/novnc/noVNC/archive/refs/tags/$novnc.tar.gz -O /tmp/novnc.tar.gz -q \
+    && novnc="1.4.0" \
+    && wget https://github.com/novnc/noVNC/archive/refs/tags/v"$novnc".tar.gz -O /tmp/novnc.tar.gz -q \
     && tar -xf /tmp/novnc.tar.gz -C /tmp/ \
-    && cd /tmp/noVNC-$novnc \
+    && cd /tmp/noVNC-"$novnc" \
     && mkdir -p /usr/share/novnc \    
     && mv app core vendor package.json *.html /usr/share/novnc \
     && apt-get clean \
