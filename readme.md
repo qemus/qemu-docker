@@ -1,4 +1,4 @@
-<h1 align="center">QEMU in Docker<br />
+<h1 align="center">QEMU<br />
 <div align="center">
 <img src="https://github.com/qemus/qemu-docker/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="128" />
 </div>
@@ -32,15 +32,13 @@ services:
     container_name: qemu
     image: qemux/qemu-docker
     environment:
-      DISPLAY: "vnc"
       BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
     devices:
       - /dev/kvm
     cap_add:
       - NET_ADMIN
     ports:
-      - 2222:22
-      - 5900:5900
+      - 8006:8006
     stop_grace_period: 2m
     restart: unless-stopped
 ```
