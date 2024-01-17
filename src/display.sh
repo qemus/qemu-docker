@@ -3,20 +3,22 @@ set -Eeuo pipefail
 
 # Docker environment variables
 
-: "${GPU:="N"}"           # GPU passthrough
-: "${DISPLAY:="none"}"  # Display type
+: "${GPU:="N"}"         # GPU passthrough
+: "${VGA:="virtio"}"    # VGA adaptor
+: "${DISPLAY:="web"}"   # Display type
 
 case "${DISPLAY,,}" in
   vnc)
-    DISPLAY_OPTS="-display vnc=:0 -vga virtio"
+    DISPLAY_OPTS="-display vnc=:0 -vga $VGA"
     ;;
   web)
-    addPackage "novnc" "web-based VNC client"
-    ln -sfn /usr/share/novnc/vnc_lite.html /usr/share/novnc/index.html
-    DISPLAY_OPTS="-display vnc=:0 -vga virtio"
+    DISPLAY_OPTS="-display vnc=:0,websocket=5700 -vga $VGA"
     ;;
+  none)
+    DISPLAY_OPTS="-display none -vga none"
+    ;;   
   *)
-    DISPLAY_OPTS="-display $DISPLAY -vga none"
+    DISPLAY_OPTS="-display $DISPLAY -vga $VGA"
     ;;
 esac
 
@@ -24,8 +26,10 @@ if [[ "$GPU" != [Yy1]* ]] || [[ "$ARCH" != "amd64" ]]; then
   return 0
 fi
 
-DISPLAY_OPTS="-display egl-headless,rendernode=/dev/dri/renderD128 -vga virtio"
-[[ "${DISPLAY,,}" == "vnc" || "${DISPLAY,,}" == "web" ]] && DISPLAY_OPTS="$DISPLAY_OPTS -vnc :0"
+DISPLAY_OPTS="-display egl-headless,rendernode=/dev/dri/renderD128 -vga $VGA"
+
+[[ "${DISPLAY,,}" == "vnc" ]] && DISPLAY_OPTS="$DISPLAY_OPTS -vnc :0"
+[[ "${DISPLAY,,}" == "web" ]] && DISPLAY_OPTS="$DISPLAY_OPTS -vnc :0,websocket=5700"
 
 [ ! -d /dev/dri ] && mkdir -m 755 /dev/dri
 

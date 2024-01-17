@@ -1,4 +1,4 @@
-<h1 align="center">QEMU in Docker<br />
+<h1 align="center">QEMU<br />
 <div align="center">
 <img src="https://github.com/qemus/qemu-docker/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="128" />
 </div>
@@ -32,15 +32,13 @@ services:
     container_name: qemu
     image: qemux/qemu-docker
     environment:
-      DISPLAY: "vnc"
       BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
     devices:
       - /dev/kvm
     cap_add:
       - NET_ADMIN
     ports:
-      - 2222:22
-      - 5900:5900
+      - 8006:8006
     stop_grace_period: 2m
     restart: unless-stopped
 ```
@@ -48,7 +46,7 @@ services:
 Via `docker run`
 
 ```bash
-docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5900:5900 --device=/dev/kvm --cap-add NET_ADMIN qemux/qemu-docker
+docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device=/dev/kvm --cap-add NET_ADMIN qemux/qemu-docker
 ```
 
 ## FAQ
@@ -166,7 +164,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
     Please note that in this mode, the container and the VM will each have their own separate IPs. The container will keep the macvlan IP, and the VM will be reachable via the DHCP IP.
 
-    * ### How do I pass-through a disk?
+  * ### How do I pass-through a disk?
 
     It is possible to pass-through disk devices directly by adding them to your compose file in this way:
 

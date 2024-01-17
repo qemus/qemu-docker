@@ -1,22 +1,20 @@
 version: "3"
 services:
-    qemu:
-        container_name: qemu
-        image: qemux/qemu-docker:latest
-        environment:
-            DISPLAY: "vnc"
-            RAM_SIZE: "1G"
-            CPU_CORES: "1"
-            DISK_SIZE: "16G"
-            BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
-        devices:
-            - /dev/kvm
-        device_cgroup_rules:
-            - 'c *:* rwm'
-        cap_add:
-            - NET_ADMIN
-        ports:
-            - 2222:22
-            - 5900:5900
-        stop_grace_period: 2m
-        restart: unless-stopped
+  qemu:
+    container_name: qemu
+    image: qemux/qemu-docker
+    environment:
+      RAM_SIZE: "1G"
+      CPU_CORES: "1"
+      DISK_SIZE: "16G"
+      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
+    devices:
+      - /dev/kvm
+    device_cgroup_rules:
+      - 'c *:* rwm'
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8006:8006
+    stop_grace_period: 2m
+    restart: unless-stopped

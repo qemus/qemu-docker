@@ -18,7 +18,7 @@ cd /run
 trap - ERR
 
 if [[ "${DISPLAY,,}" == "web" ]]; then
-  websockify -D --web /usr/share/novnc/ 8006 localhost:5900 2>/dev/null
+  nginx -e stderr
 fi
 
 info "Booting image using $VERS..."
