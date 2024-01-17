@@ -53,42 +53,18 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
 ## FAQ
 
-  * ### How do I specify the boot disk?
+  * ### How do I use it?
 
-    You can modify the `BOOT` environment variable to specify the URL of an ISO image:
+    You begin by setting the `BOOT` environment variable to the URL of an ISO image of the OS you want to install:
 
     ```yaml
     environment:
       BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
     ```
     
-    It will be downloaded only once, during the initial run of the container.
+    Start the container and connect to port 8006 of the container in your web browser.
 
-    Alternatively, you can place a file called ```boot.img``` in the ```/storage``` folder if you want to use a local image instead.
-
-  * ### How do I interact with the VM?
-
-    If you just need text-based output, you can use the Docker console or connect via SSH.
-
-    If you need graphical output, you can enable VNC by adding the following lines to your compose file:
-
-    ```yaml
-    environment:
-      DISPLAY: "vnc"
-    ports:
-      - 5900:5900
-    ```
-
-    If you want to enable the web-based VNC viewer so that you do not need to install any client software, add the following lines to your compose file instead:
-
-    ```yaml
-    environment:
-      DISPLAY: "web"
-    ports:
-      - 8006:8006
-    ```
-
-    Afterwards you can visit  [http://localhost:8006/](http://localhost:8006/) using any web browser to view the screen of the VM and interact with it via the keyboard or mouse.
+    After the download is finished, you will see the screen and can interact with it via the keyboard and mouse. Enjoy your new machine, and don't forget to star this repo!
 
   * ### How do I increase the amount of CPU or RAM?
 
@@ -102,7 +78,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
       CPU_CORES: "4"
     ```
 
-  * ### How do I change the size of the data disk?
+  * ### How do I change the size of the disk?
 
     To expand the default size of 16 GB, add the `DISK_SIZE` setting to your compose file and set it to your preferred capacity:
 
@@ -113,9 +89,9 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
     
     This can also be used to resize the existing disk to a larger capacity without any data loss.
     
-  * ### How do I change the location of the data disk?
+  * ### How do I change the storage location?
 
-    To change the location of the data disk, include the following bind mount in your compose file:
+    To change the storage location, include the following bind mount in your compose file:
 
     ```yaml
     volumes:
@@ -190,6 +166,21 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
     Please note that in this mode, the container and the VM will each have their own separate IPs. The container will keep the macvlan IP, and the VM will be reachable via the DHCP IP.
 
+    * ### How do I pass-through a disk?
+
+    It is possible to pass-through disk devices directly by adding them to your compose file in this way:
+
+    ```yaml
+    environment:
+      DEVICE: "/dev/sda"
+      DEVICE2: "/dev/sdb"
+    devices:
+      - /dev/sda
+      - /dev/sdb
+    ```
+
+    Use ```DEVICE``` if you want it to become your main drive, and use ```DEVICE2``` and higher to add them as secondary drives.
+    
   * ### How do I boot with UEFI?
 
     To enable UEFI booting, add the following line to your compose file:
