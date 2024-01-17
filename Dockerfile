@@ -24,8 +24,9 @@ RUN apt-get update \
     && novnc="v1.4.0" \
     && wget https://github.com/novnc/noVNC/archive/refs/tags/$novnc.tar.gz -O /tmp/novnc.tar.gz -q \
     && tar -xf /tmp/novnc.tar.gz -C /tmp/ \
-    && mkdir -p /usr/share/novnc \
-    && mv /tmp/noVNC-$novnc/app /tmp/noVNC-$novnc/core /tmp/noVNC-$novnc/vendor /tmp/noVNC-$novnc/package.json /tmp/noVNC-$novnc/*.html /usr/share/novnc \
+    && cd /tmp/noVNC-$novnc \
+    && mkdir -p /usr/share/novnc \    
+    && mv app core vendor package.json *.html /usr/share/novnc \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
