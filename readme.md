@@ -166,7 +166,7 @@ docker run -it --rm -e "DISPLAY=vnc" -e "BOOT=http://example.com/image.iso" -p 5
 
     Please note that in this mode, the container and the VM will each have their own separate IPs. The container will keep the macvlan IP, and the VM will be reachable via the DHCP IP.
 
-    * ### How do I pass-through a disk?
+  * ### How do I pass-through a disk?
 
     It is possible to pass-through disk devices directly by adding them to your compose file in this way:
 
