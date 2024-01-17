@@ -2,7 +2,7 @@ version: "3"
 services:
   qemu:
     container_name: qemu
-    image: qemux/qemu-docker:latest
+    image: qemux/qemu-docker
     environment:
       RAM_SIZE: "1G"
       CPU_CORES: "1"
@@ -15,8 +15,6 @@ services:
     cap_add:
       - NET_ADMIN
     ports:
-      - 2222:22
-      - 5900:5900
-      - 8006:8006      
+      - 8006:8006
     stop_grace_period: 2m
     restart: unless-stopped
