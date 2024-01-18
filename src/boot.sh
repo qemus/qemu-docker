@@ -54,6 +54,16 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]]; then
   BOOT_OPTS="$BOOT_OPTS -drive file=$DEST.rom,if=pflash,unit=0,format=raw,readonly=on"
   BOOT_OPTS="$BOOT_OPTS -drive file=$DEST.vars,if=pflash,unit=1,format=raw"
 
+  if [[ "${BOOT_MODE,,}" == "windows" ]]; then
+
+    BOOT_OPTS="$BOOT_OPTS -chardev socket,id=chrtpm,path=/dev/shm/tpm/swtpm-sock"
+    BOOT_OPTS="$BOOT_OPTS -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0"
+
+    mkdir -p /dev/shm/tpm
+    swtpm socket -t -d --tpmstate dir=/dev/shm/tpm --ctrl type=unixio,path=/dev/shm/tpm/swtpm-sock --log level=1 --tpm2
+
+  fi
+
 fi
 
 return 0
