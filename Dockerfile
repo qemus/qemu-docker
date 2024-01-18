@@ -11,6 +11,7 @@ RUN apt-get update \
         ovmf \
 	socat \
  	nginx \
+        swtpm \
 	procps \
 	iptables \
 	iproute2 \
@@ -21,13 +22,13 @@ RUN apt-get update \
 	ca-certificates \
 	netcat-openbsd \
 	qemu-system-x86 \
+    && apt-get clean \
     && novnc="1.4.0" \
+    && mkdir -p /usr/share/novnc \
     && wget https://github.com/novnc/noVNC/archive/refs/tags/v"$novnc".tar.gz -O /tmp/novnc.tar.gz -q \
     && tar -xf /tmp/novnc.tar.gz -C /tmp/ \
     && cd /tmp/noVNC-"$novnc" \
-    && mkdir -p /usr/share/novnc \    
     && mv app core vendor package.json *.html /usr/share/novnc \
-    && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY ./src /run/
