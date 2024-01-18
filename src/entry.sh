@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 echo "❯ Starting QEMU for Docker v$(</run/version)..."
 echo "❯ For support visit https://github.com/qemus/qemu-docker"
+echo
 
 cd /run
 
