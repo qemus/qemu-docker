@@ -60,7 +60,7 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]]; then
     BOOT_OPTS="$BOOT_OPTS -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0"
 
     mkdir -p /dev/shm/tpm
-    swtpm socket -t -d --tpmstate dir=/dev/shm/tpm --ctrl type=unixio,path=/dev/shm/tpm/swtpm-sock --log level=1 --tpm2
+    swtpm socket -t -d --tpmstate dir=/dev/shm/tpm --ctrl type=unixio,path=/dev/shm/tpm/swtpm-sock --tpm2
 
   fi
 
