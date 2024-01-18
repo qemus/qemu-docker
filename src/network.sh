@@ -106,7 +106,7 @@ getPorts() {
   fi
 
   [ -z "$list" ] && return 0
-  
+
   if [[ "$list" != *","* ]]; then
     echo " ! --dport $list"
   else

@@ -16,7 +16,7 @@ case "${DISPLAY,,}" in
     ;;
   none)
     DISPLAY_OPTS="-display none -vga none"
-    ;;   
+    ;;
   *)
     DISPLAY_OPTS="-display $DISPLAY -vga $VGA"
     ;;
