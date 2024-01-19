@@ -51,8 +51,8 @@ fKill () {
 
 html()
 {
+    : "${2:="4999"}"
     local timeout="$2"
-    [ -z "$timeout" ] && timeout="4999"
     local body="$1<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
     
     local HTML
