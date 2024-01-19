@@ -32,7 +32,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY ./src /run/
-COPY nginx.conf /etc/nginx/sites-enabled/novnc.conf
+COPY ./web/index.html /var/www
+COPY ./web/nginx.conf /etc/nginx/sites-enabled/novnc.conf
 
 RUN chmod +x /run/*.sh
 
