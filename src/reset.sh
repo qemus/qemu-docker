@@ -75,7 +75,7 @@ addPackage () {
   fi
 
   MSG="Installing $desc..."
-  info "$MSG" && html "$MSG
+  info "$MSG" && html "$MSG"
 
   DEBIAN_FRONTEND=noninteractive apt-get -qq update
   DEBIAN_FRONTEND=noninteractive apt-get -qq --no-install-recommends -y install "$pkg" > /dev/null
