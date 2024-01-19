@@ -22,6 +22,7 @@ trap 'error "Status $? while: $BASH_COMMAND (line $LINENO/$BASH_LINENO)"' ERR
 
 # Helper variables
 
+STORAGE="/storage"
 PAGE="/dev/shm/index.html"
 TEMPLATE="/var/www/index.html"
 
@@ -31,8 +32,6 @@ ARCH=$(dpkg --print-architecture)
 VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
 
 # Check folder
-
-STORAGE="/storage"
 [ ! -d "$STORAGE" ] && error "Storage folder ($STORAGE) not found!" && exit 13
 
 # Helper functions
@@ -51,15 +50,13 @@ fKill () {
 
 html()
 {
-    local timeout="$3"
+    local timeout="$2"
     [ -z "$timeout" ] && timeout="4999"
+    local body="$1<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
 
     local HTML
-    local title="$1"
-    local body="$2<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
-
     HTML=$(<"$TEMPLATE")
-    HTML="${HTML/[1]/$title}"
+    HTML="${HTML/[1]/$APP}"
     HTML="${HTML/[2]/$body}"
 
     printf '%b' "HTTP/1.1 200 OK\nContent-Length: ${#HTML}\nConnection: close\n\n$HTML" > "$PAGE"
