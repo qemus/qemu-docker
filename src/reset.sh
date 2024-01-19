@@ -22,6 +22,9 @@ trap 'error "Status $? while: $BASH_COMMAND (line $LINENO/$BASH_LINENO)"' ERR
 
 # Helper variables
 
+PAGE="/dev/shm/index.html"
+TEMPLATE="/var/www/index.html"
+
 KERNEL=$(uname -r | cut -b 1)
 MINOR=$(uname -r | cut -d '.' -f2)
 ARCH=$(dpkg --print-architecture)
@@ -44,6 +47,23 @@ fKill () {
   done
 
   return 0
+}
+
+html()
+{
+    local timeout="$3"
+    [ -z "$timeout" ] && timeout="4999"
+
+    local HTML
+    local title="$1"
+    local body="$2<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
+
+    HTML=$(<"$TEMPLATE")
+    HTML="${HTML/[1]/$title}"
+    HTML="${HTML/[2]/$body}"
+
+    printf '%b' "HTTP/1.1 200 OK\nContent-Length: ${#HTML}\nConnection: close\n\n$HTML" > "$PAGE"
+    return 0
 }
 
 addPackage () {
