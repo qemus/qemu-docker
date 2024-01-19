@@ -53,6 +53,8 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
 
   * ### How do I use it?
 
+    Very simple! These are the steps:
+
     - Set the `BOOT` environment variable to the URL of an ISO image you want to install.
 
     - Start the container and connect to port 8006 in your web browser.
