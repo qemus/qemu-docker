@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-echo "❯ Starting QEMU for Docker v$(</run/version)..."
-echo "❯ For support visit https://github.com/qemus/qemu-docker"
+APP="QEMU"
+SUPPORT="https://github.com/qemus/qemu-docker"
+
+echo "❯ Starting $APP for Docker v$(</run/version)..."
+echo "❯ For support visit $SUPPORT"
 echo
 
 cd /run
