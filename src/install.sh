@@ -20,6 +20,8 @@ if [ -z "$BOOT" ]; then
 fi
 
 BASE=$(basename "$BOOT")
+BASE="${BASE%%\?*}"
+
 [ -f "$STORAGE/$BASE" ] && return 0
 
 TMP="$STORAGE/${BASE%.*}.tmp"
