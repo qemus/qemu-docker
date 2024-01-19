@@ -116,7 +116,9 @@ createDisk() {
     fi
   fi
 
-  info "Creating a $DISK_TYPE $DISK_DESC image in $DISK_FMT format with a size of $DISK_SPACE..."
+  MSG="Creating a $DISK_TYPE $DISK_DESC image in $DISK_FMT format with a size of $DISK_SPACE..."
+  info "$MSG" && html "$MSG"
+
   local FAIL="Could not create a $DISK_TYPE $DISK_FMT $DISK_DESC image of $DISK_SPACE ($DISK_FILE)"
 
   case "${DISK_FMT,,}" in
@@ -199,7 +201,9 @@ resizeDisk() {
   fi
 
   local GB=$(( (CUR_SIZE + 1073741823)/1073741824 ))
-  info "Resizing $DISK_DESC from ${GB}G to $DISK_SPACE..."
+  MSG="Resizing $DISK_DESC from ${GB}G to $DISK_SPACE..."
+  info "$MSG" && html "$MSG"
+
   local FAIL="Could not resize the $DISK_TYPE $DISK_FMT $DISK_DESC image from ${GB}G to $DISK_SPACE ($DISK_FILE)"
 
   case "${DISK_FMT,,}" in
@@ -266,7 +270,8 @@ convertDisk() {
     fi
   fi
 
-  info "Converting $DISK_DESC to $DST_FMT, please wait until completed..."
+  MSG="Converting $DISK_DESC to $DST_FMT, please wait until completed..."
+  info "$MSG" && html "$MSG"
 
   local CONV_FLAGS="-p"
   local DISK_PARAM="$DISK_ALLOC"
@@ -305,7 +310,8 @@ convertDisk() {
     fi
   fi
 
-  info "Conversion of $DISK_DESC to $DST_FMT completed succesfully!"
+  MSG="Conversion of $DISK_DESC to $DST_FMT completed succesfully!"
+  info "$MSG" && html "$MSG"
 
   return 0
 }
