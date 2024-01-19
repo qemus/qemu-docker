@@ -20,10 +20,11 @@ if [ -z "$BOOT" ]; then
 fi
 
 BASE=$(basename "$BOOT")
-BASE="${BASE%%\?*}"
+[ -f "$STORAGE/$BASE" ] && return 0
+
+BASE=$(basename "${BOOT%%\?*}")
 : "${BASE//+/ }"; printf -v BASE '%b' "${_//%/\\x}"
 BASE=$(echo "$BASE" | sed -e 's/[^A-Za-z0-9._-]/_/g')
-    
 [ -f "$STORAGE/$BASE" ] && return 0
 
 TMP="$STORAGE/${BASE%.*}.tmp"
