@@ -59,7 +59,7 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
 
     - Start the container and connect to port 8006 in your web browser.
 
-    - Wait until the download is finished, you will see the screen and can control it via the keyboard and mouse.
+    - You will see the screen and can control it via the keyboard and mouse.
 
     - Enjoy your brand new machine, and don't forget to star this repo!
 
