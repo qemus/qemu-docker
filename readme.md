@@ -53,16 +53,13 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
 
   * ### How do I use it?
 
-    You begin by setting the `BOOT` environment variable to the URL of an ISO image of the OS you want to install:
+    - Set the `BOOT` environment variable to the URL of an ISO image you want to install.
 
-    ```yaml
-    environment:
-      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
-    ```
-    
-    Start the container and connect to port 8006 of the container in your web browser.
+    - Start the container and connect to port 8006 in your web browser.
 
-    After the download is finished, you will see the screen and can interact with it via the keyboard and mouse. Enjoy your new machine, and don't forget to star this repo!
+    - Wait until the download is finished, you will see the screen and can control it via the keyboard and mouse.
+
+    - Enjoy your brand new machine, and don't forget to star this repo!
 
   * ### How do I increase the amount of CPU or RAM?
 
