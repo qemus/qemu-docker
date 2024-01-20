@@ -27,7 +27,10 @@ var interval = 1000;
 		    if (request.status==200){
 			var val = request.responseText;
 			if( val != null && val.length != 0 ) {
-			  document.getElementById('info').innerHTML = val;
+			  var el = document.getElementById('info');
+			  if (el.innerHTML != val) { 
+			    el.innerHTML = val;
+			  }
 			  setTimeout(getInfo, interval);
 			  return true;
 			}
