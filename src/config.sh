@@ -15,4 +15,14 @@ DEV_OPTS="$DEV_OPTS -device virtio-rng-pci,rng=objrng0,id=rng0,bus=pcie.0,addr=0
 ARGS="$DEF_OPTS $CPU_OPTS $RAM_OPTS $MAC_OPTS $DISPLAY_OPTS $MON_OPTS $SERIAL_OPTS $NET_OPTS $DISK_OPTS $BOOT_OPTS $DEV_OPTS $USB_OPTS $ARGUMENTS"
 ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
+if [[ "${DISPLAY,,}" == "web" ]]; then
+  rm -f /dev/shm/index.html
+else
+  if [[ "${DISPLAY,,}" == "vnc" ]]; then
+    html "You can now connect to VNC on port 5900." "0"
+  else
+    html "The virtual machine was booted successfully." "0"
+  fi
+fi
+
 return 0
