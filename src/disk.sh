@@ -426,6 +426,8 @@ addDevice () {
   return 0
 }
 
+html "Initializing disks..."
+
 DISK1_FILE="$STORAGE/data"
 DISK2_FILE="/storage2/data2"
 DISK3_FILE="/storage3/data3"
