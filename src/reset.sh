@@ -105,7 +105,7 @@ addPackage () {
 
 # Start webserver
 cp -r /var/www/* /dev/shm
-html "Starting $APP..."
+html "Starting $APP for Docker..."
 nginx -e stderr
 
 return 0
