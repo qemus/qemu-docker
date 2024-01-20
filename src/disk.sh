@@ -65,8 +65,8 @@ getSize() {
   local DISK_FILE=$1
   local DISK_EXT DISK_FMT
 
-  DISK_EXT="$(echo "${DISK_FILE//*./}" | sed 's/^.*\.//')"
-  DISK_FMT="$(ext2fmt "$DISK_EXT")"
+  DISK_EXT=$(echo "${DISK_FILE//*./}" | sed 's/^.*\.//')
+  DISK_FMT=$(ext2fmt "$DISK_EXT")
 
   case "${DISK_FMT,,}" in
     raw)
