@@ -11,20 +11,22 @@
                 font-family: Verdana, Arial, sans-serif;
             }
 
-            main {
-                text-align: center;
-                margin-top: 100px;
-            }
+#page-container {
+  position: relative;
+  min-height: 100vh;
+}
 
-            footer {
+#content-wrap {
                 text-align: center;
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                height: 75px;
-            }
+  padding-bottom: 2.5rem;    /* Footer height */
+}
 
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 2.5rem;            /* Footer height */
+}
             a,
             a:hover,
             a:active,
@@ -59,13 +61,14 @@
     </head>
 
     <body>
-        <main>
-            <h1>[3]</h1>
-        </main>
-        <footer>
-            <h4>[4]</h4>
-            <h5>[5]</h5>
-        </footer>
+<div id="page-container">
+   <div id="content-wrap">
+     <h1 style="margin-top: 100px;">[3]</h1>
+   </div>
+   <footer id="footer">
+      <h4>[4]<br/>[5]</h4>
+   </footer>
+ </div>
     </body>
 
 </html>
