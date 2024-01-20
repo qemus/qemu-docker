@@ -23,13 +23,15 @@
 
 	function processInfo() {
 		if (request.readyState == 4) {
+		    if (request.status==200){
 			var val = request.responseText;
 			if( val != null && val.length != 0 ) {
 			  document.getElementById('info').innerHTML = val;
 			  setTimeout(getInfo, 2000);
-			} else {
-			  document.location.reload();
+			  return true;
 			}
+		     }
+		     document.location.reload();
 		}
 	}
 
