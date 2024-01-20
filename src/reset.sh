@@ -42,11 +42,25 @@ VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
 
 # Helper functions
 
+escape () {
+    local s
+    s=${1//&/\&amp;}
+    s=${s//</\&lt;}
+    s=${s//>/\&gt;}
+    s=${s//'"'/\&quot;}
+    printf -- %s "$s"
+    return 0
+}
+
 html()
 {
-    local title="<title>$APP</title>"
+    local title
+    local body
     
-    local body="$1"
+    title="$(escape $APP)"
+    title="<title>$title</title>"
+    
+    body="$(escape $1)"
     if [[ "$body" == *"..." ]]; then
       body="<p class=\"loading\">${body/.../}</p>"
     fi
