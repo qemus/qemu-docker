@@ -1,48 +1,45 @@
 var request;
 var interval = 1000;
 
-	function getInfo() {
+function getInfo() {
 
-		var url = "/msg.html";
+    var url = "/msg.html";
 
-		if (window.XMLHttpRequest) {
-			request = new XMLHttpRequest();
-		}
-		else if (window.ActiveXObject) {
-			request = new ActiveXObject("Microsoft.XMLHTTP");
-		}
+    if (window.XMLHttpRequest) {
+        request = new XMLHttpRequest();
+    } else if (window.ActiveXObject) {
+        request = new ActiveXObject("Microsoft.XMLHTTP");
+    }
 
-		try {
-			request.onreadystatechange = processInfo;
-			request.open("GET", url, true);
-			request.send();
-		}
-		catch (e) {
-			document.location.reload();
-		}
-	}
+    try {
+        request.onreadystatechange = processInfo;
+        request.open("GET", url, true);
+        request.send();
+    } catch (e) {
+        document.location.reload();
+    }
+}
 
-	function processInfo() {
-	  try {
-		if (request.readyState == 4) {
-		    if (request.status==200){
-			var val = request.responseText;
-			if( val != null && val.length != 0 ) {
-			  var el = document.getElementById('info');
-			  if (el.innerHTML != val) { 
-			    el.innerHTML = val;
-			  }
-			  setTimeout(getInfo, interval);
-			  return true;
-			}
-		     }
-		     document.location.reload();
-		}
-	   }
-	   catch (e) {
-	     document.location.reload();
-	   }
-	}
+function processInfo() {
+    try {
+        if (request.readyState == 4) {
+            if (request.status == 200) {
+                var val = request.responseText;
+                if (val != null && val.length != 0) {
+                    var el = document.getElementById('info');
+                    if (el.innerHTML != val) {
+                        el.innerHTML = val;
+                    }
+                    setTimeout(getInfo, interval);
+                    return true;
+                }
+            }
+            document.location.reload();
+        }
+    } catch (e) {
+        document.location.reload();
+    }
+}
 
 setTimeout(getInfo, interval);
 //setTimeout(() => { document.location.reload(); }, 60000);
