@@ -35,7 +35,7 @@ COPY ./src /run/
 COPY ./web /var/www/
 
 RUN chmod +x /run/*.sh
-RUN mv /var/www/nginx.config /etc/nginx/sites-enabled/web.conf
+RUN mv /var/www/nginx.conf /etc/nginx/sites-enabled/web.conf
 
 VOLUME /storage
 EXPOSE 22 5900 8006
