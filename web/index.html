@@ -11,22 +11,18 @@
                 font-family: Verdana, Arial, sans-serif;
             }
             
-#page-container {
-  max-height: 300px;
-  overflow: auto;
-}
-
 #content-wrap {
                 text-align: center;
     padding: 20px;
-  overflow-y: auto;
-  height: 1200px;
+}
+div#footer{
+   position:fixed;
+   bottom:0px;
+   height:20px;
 }
 
-#footer {
-    padding: 15px;
-  position: sticky;
-  bottom: 0;
+div#empty-space{
+   height:20px; /* Same height as footer */
 }
             a,
             a:hover,
@@ -66,10 +62,11 @@
    <div id="content-wrap">
      <h1 style="margin-top: 100px;">[3]</h1>
    </div>
-   <footer id="footer">
+    <div id="empty-space"/>
+   <div id="footer">
        [4]
        [5]
-   </footer>
+   </div>
  </div>
     </body>
 
