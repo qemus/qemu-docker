@@ -9,7 +9,6 @@ RUN apt-get update \
  	tini \
 	wget \
         ovmf \
-	socat \
  	nginx \
         swtpm \
 	procps \
@@ -32,6 +31,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY ./src /run/
+COPY ./web/style.css /var/www
 COPY ./web/index.html /var/www
 COPY ./web/nginx.conf /etc/nginx/sites-enabled/novnc.conf
 
