@@ -88,7 +88,6 @@ addPackage () {
 }
 
 # Start webserver
-rm -f /var/www/nginx.config
 cp -r /var/www/* /dev/shm
 html "Starting $APP..."
 nginx -e stderr
