@@ -2,7 +2,7 @@
 
 	function getInfo() {
 
-		var url = "/msg";
+		var url = "/msg.html";
 
 		if (window.XMLHttpRequest) {
 			request = new XMLHttpRequest();
@@ -24,8 +24,10 @@
 	function processInfo() {
 		if (request.readyState == 4) {
 			var val = request.responseText;
-			document.getElementById('info').innerHTML = val;
-      setTimeout(getInfo, 2000);
+			if( val != null && val.length != 0 ) {
+			  document.getElementById('info').innerHTML = val;
+			}
+                       setTimeout(getInfo, 2000);
 		}
 	}
 
