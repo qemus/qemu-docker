@@ -58,9 +58,9 @@ html()
     local HTML
     HTML=$(<"$TEMPLATE")
     HTML="${HTML/[1]/$APP}"
-    HTML="${HTML/[2]/$1}"
-    HTML="${HTML/[3]/$FOOTER}"
-    HTML="${HTML/[4]/$script}"
+    HTML="${HTML/[2]/$script}"
+    HTML="${HTML/[3]/$1}"
+    HTML="${HTML/[4]/$FOOTER}"
 
     printf '%b' "HTTP/1.1 200 OK\nContent-Length: ${#HTML}\nConnection: close\n\n$HTML" > "$PAGE"
     return 0
