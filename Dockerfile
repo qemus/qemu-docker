@@ -28,6 +28,7 @@ RUN apt-get update \
     && tar -xf /tmp/novnc.tar.gz -C /tmp/ \
     && cd /tmp/noVNC-"$novnc" \
     && mv app core vendor package.json *.html /usr/share/novnc \
+    && unlink /etc/nginx/sites-enabled/default \
     && sed -i 's/^worker_processes.*/worker_processes 1;/' /etc/nginx/nginx.conf \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
