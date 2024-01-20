@@ -30,7 +30,7 @@ KERNEL=$(uname -r | cut -b 1)
 MINOR=$(uname -r | cut -d '.' -f2)
 ARCH=$(dpkg --print-architecture)
 VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
-FOOTER="$APP for Docker v"$(</run/version)"<BR/>For support visit $SUPPORT"
+FOOTER="$APP for Docker v"$(</run/version)" ]<BR/>[ For support visit $SUPPORT"
 
 # Check folder
 [ ! -d "$STORAGE" ] && error "Storage folder ($STORAGE) not found!" && exit 13
@@ -57,10 +57,10 @@ html()
 
     local HTML
     HTML=$(<"$TEMPLATE")
-    HTML="${HTML/[1]/$APP}"
-    HTML="${HTML/[2]/$script}"
-    HTML="${HTML/[3]/$1}"
-    HTML="${HTML/[4]/$FOOTER}"
+    HTML="${HTML/\[1\]/$APP}"
+    HTML="${HTML/\[2\]/$script}"
+    HTML="${HTML/\[3\]/$1}"
+    HTML="${HTML/\[4\]/\[ $FOOTER \]}"
 
     printf '%b' "HTTP/1.1 200 OK\nContent-Length: ${#HTML}\nConnection: close\n\n$HTML" > "$PAGE"
     return 0
