@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Display wait message
-html "Please wait while the container is being started..."
-/run/server.sh &
-
 # Check if running with interactive TTY or redirected to docker log
 if [ -t 1 ]; then
   PROGRESS="--progress=bar:noscroll"
@@ -46,5 +42,5 @@ fi
 
 mv -f "$TMP" "$STORAGE/$BASE"
 
-html "Download finished, booting container..."
+html "Download finished successfully..."
 return 0
