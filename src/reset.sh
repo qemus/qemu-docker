@@ -53,14 +53,15 @@ fKill () {
 html()
 {
     local title="<title>$APP</title>"
-    local timeout="4999"
-    [ ! -z "${2:-}" ] && timeout="$2"
-    local script="<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
-
+    
     local body="$1"
     if [[ "$body" == *"..." ]]; then
       body="<p class=\"loading\">${body/.../}</p>"
     fi
+
+    local timeout="4999"
+    [ ! -z "${2:-}" ] && timeout="$2"
+    local script="<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
 
     local HTML
     HTML=$(<"$TEMPLATE")
@@ -70,7 +71,8 @@ html()
     HTML="${HTML/\[4\]/$FOOTER1}"
     HTML="${HTML/\[5\]/$FOOTER2}"
 
-    printf '%b' "HTTP/1.1 200 OK\nContent-Length: ${#HTML}\nConnection: close\n\n$HTML" > "$PAGE"
+    echo "$HTML" > "$PAGE"
+
     return 0
 }
 
