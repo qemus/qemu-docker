@@ -56,11 +56,11 @@ html()
 {
     local title
     local body
-    
-    title="$(escape $APP)"
+
+    title=$(escape "$APP")
     title="<title>$title</title>"
-    
-    body="$(escape $1)"
+
+    body=$(escape "$1")
     if [[ "$body" == *"..." ]]; then
       body="<p class=\"loading\">${body/.../}</p>"
     fi
