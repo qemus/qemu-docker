@@ -30,3 +30,4 @@
 	}
 
 setTimeout(getInfo, 2000);
+setTimeout(() => { document.location.reload(); }, 60000);
