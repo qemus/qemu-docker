@@ -54,7 +54,11 @@ html()
     local timeout="4999"
     [ ! -z "${2:-}" ] && timeout="$2"
     local script="<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
-
+    local body="$1"
+    if [[ "$body" == *"..." ]]; then
+      body="<p class='loading'>$body</p>"
+    fi
+    
     local HTML
     HTML=$(<"$TEMPLATE")
     HTML="${HTML/\[1\]/$APP}"
