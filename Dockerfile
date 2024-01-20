@@ -6,21 +6,21 @@ ARG DEBCONF_NONINTERACTIVE_SEEN "true"
 
 RUN apt-get update \
     && apt-get --no-install-recommends -y install \
- 	tini \
-	wget \
+        tini \
+        wget \
         ovmf \
- 	nginx \
+        nginx \
         swtpm \
-	procps \
-	iptables \
-	iproute2 \
+        procps \
+        iptables \
+        iproute2 \
         apt-utils \
-	dnsmasq \
-	net-tools \
+        dnsmasq \
+        net-tools \
         qemu-utils \
-	ca-certificates \
-	netcat-openbsd \
-	qemu-system-x86 \
+        ca-certificates \
+        netcat-openbsd \
+        qemu-system-x86 \
     && apt-get clean \
     && novnc="1.4.0" \
     && mkdir -p /usr/share/novnc \
