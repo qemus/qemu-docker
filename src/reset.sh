@@ -25,12 +25,13 @@ trap 'error "Status $? while: $BASH_COMMAND (line $LINENO/$BASH_LINENO)"' ERR
 STORAGE="/storage"
 PAGE="/dev/shm/index.html"
 TEMPLATE="/var/www/index.html"
+FOOTER1="$APP for Docker v"$(</run/version)""
+FOOTER2="For support visit $SUPPORT"
 
 KERNEL=$(uname -r | cut -b 1)
 MINOR=$(uname -r | cut -d '.' -f2)
 ARCH=$(dpkg --print-architecture)
 VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
-FOOTER="$APP for Docker v"$(</run/version)" ]<BR/>[ For support visit $SUPPORT"
 
 # Check folder
 [ ! -d "$STORAGE" ] && error "Storage folder ($STORAGE) not found!" && exit 13
@@ -51,9 +52,11 @@ fKill () {
 
 html()
 {
+    local title="<title>$APP</title>"
     local timeout="4999"
     [ ! -z "${2:-}" ] && timeout="$2"
     local script="<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
+    local footer="$FOOTER1<br/>$FOOTER2"
 
     local body="$1"
     if [[ "$body" == *"..." ]]; then
@@ -62,10 +65,10 @@ html()
 
     local HTML
     HTML=$(<"$TEMPLATE")
-    HTML="${HTML/\[1\]/$APP}"
+    HTML="${HTML/\[1\]/$title}"
     HTML="${HTML/\[2\]/$script}"
     HTML="${HTML/\[3\]/$body}"
-    HTML="${HTML/\[4\]/\[ $FOOTER \]}"
+    HTML="${HTML/\[4\]/$footer}"
 
     printf '%b' "HTTP/1.1 200 OK\nContent-Length: ${#HTML}\nConnection: close\n\n$HTML" > "$PAGE"
     return 0
