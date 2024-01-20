@@ -10,22 +10,23 @@
                 background-color: #125bdb;
                 font-family: Verdana, Arial, sans-serif;
             }
-
+            
 #page-container {
-  position: relative;
-  min-height: 100vh;
+  max-height: 300px;
+  overflow: auto;
 }
 
 #content-wrap {
                 text-align: center;
-  padding-bottom: 2.5rem;    /* Footer height */
+    padding: 20px;
+  overflow-y: auto;
+  height: 1200px;
 }
 
 #footer {
-  position: absolute;
+    padding: 15px;
+  position: sticky;
   bottom: 0;
-  width: 100%;
-  height: 2.5rem;            /* Footer height */
 }
             a,
             a:hover,
@@ -66,7 +67,8 @@
      <h1 style="margin-top: 100px;">[3]</h1>
    </div>
    <footer id="footer">
-      <h4>[4]<br/>[5]</h4>
+       [4]
+       [5]
    </footer>
  </div>
     </body>
