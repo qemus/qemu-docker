@@ -490,4 +490,5 @@ else
   addDisk "userdata4" "$DISK4_FILE" "$DISK_EXT" "disk4" "$DISK4_SIZE" "4" "0xd" "$DISK_FMT" || exit $?
 fi
 
+html "Initialized disks successfully..."
 return 0
