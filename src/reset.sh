@@ -54,16 +54,17 @@ html()
     local timeout="4999"
     [ ! -z "${2:-}" ] && timeout="$2"
     local script="<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
+
     local body="$1"
     if [[ "$body" == *"..." ]]; then
-      body="<p class='loading'>$body</p>"
+      body="<p class=\"loading\">${body/.../}</p>"
     fi
-    
+
     local HTML
     HTML=$(<"$TEMPLATE")
     HTML="${HTML/\[1\]/$APP}"
     HTML="${HTML/\[2\]/$script}"
-    HTML="${HTML/\[3\]/$1}"
+    HTML="${HTML/\[3\]/$body}"
     HTML="${HTML/\[4\]/\[ $FOOTER \]}"
 
     printf '%b' "HTTP/1.1 200 OK\nContent-Length: ${#HTML}\nConnection: close\n\n$HTML" > "$PAGE"
