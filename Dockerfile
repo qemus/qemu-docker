@@ -33,9 +33,9 @@ RUN apt-get update \
 
 COPY ./src /run/
 COPY ./web /var/www/
-COPY ./web/nginx.conf /etc/nginx/sites-enabled/web.conf
 
 RUN chmod +x /run/*.sh
+RUN mv /var/www/nginx.config /etc/nginx/sites-enabled/web.conf
 
 VOLUME /storage
 EXPOSE 22 5900 8006
