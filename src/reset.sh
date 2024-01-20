@@ -26,7 +26,7 @@ STORAGE="/storage"
 PAGE="/dev/shm/index.html"
 TEMPLATE="/var/www/index.html"
 FOOTER1="$APP for Docker v"$(</run/version)""
-FOOTER2="For support visit $SUPPORT"
+FOOTER2="<a href='$SUPPORT'>$SUPPORT</a>"
 
 KERNEL=$(uname -r | cut -b 1)
 MINOR=$(uname -r | cut -d '.' -f2)
@@ -56,7 +56,6 @@ html()
     local timeout="4999"
     [ ! -z "${2:-}" ] && timeout="$2"
     local script="<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
-    local footer="$FOOTER1<br/>$FOOTER2"
 
     local body="$1"
     if [[ "$body" == *"..." ]]; then
@@ -68,7 +67,8 @@ html()
     HTML="${HTML/\[1\]/$title}"
     HTML="${HTML/\[2\]/$script}"
     HTML="${HTML/\[3\]/$body}"
-    HTML="${HTML/\[4\]/$footer}"
+    HTML="${HTML/\[4\]/$FOOTER1}"
+    HTML="${HTML/\[5\]/$FOOTER2}"
 
     printf '%b' "HTTP/1.1 200 OK\nContent-Length: ${#HTML}\nConnection: close\n\n$HTML" > "$PAGE"
     return 0
