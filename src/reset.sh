@@ -42,25 +42,6 @@ VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
 
 # Helper functions
 
-fWait () {
-  local name=$1
-
-  while pgrep -f -l "$name" >/dev/null; do
-    sleep 0.2
-  done
-
-  return 0
-}
-
-fKill () {
-  local name=$1
-
-  { pkill -f "$name" || true; } 2>/dev/null
-  fWait "$name"
-
-  return 0
-}
-
 html()
 {
     local title="<title>$APP</title>"
