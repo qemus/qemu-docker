@@ -23,6 +23,7 @@ var interval = 1000;
 	}
 
 	function processInfo() {
+	  try {
 		if (request.readyState == 4) {
 		    if (request.status==200){
 			var val = request.responseText;
@@ -37,6 +38,10 @@ var interval = 1000;
 		     }
 		     document.location.reload();
 		}
+	   }
+	   catch (e) {
+	     document.location.reload();
+	   }
 	}
 
 setTimeout(getInfo, interval);
