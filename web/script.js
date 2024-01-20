@@ -17,7 +17,7 @@
 			request.send();
 		}
 		catch (e) {
-			alert("Unable to connect to server");
+			document.location.reload();
 		}
 	}
 
@@ -26,10 +26,12 @@
 			var val = request.responseText;
 			if( val != null && val.length != 0 ) {
 			  document.getElementById('info').innerHTML = val;
+			  setTimeout(getInfo, 2000);
+			} else {
+			  document.location.reload();
 			}
-                       setTimeout(getInfo, 2000);
 		}
 	}
 
 setTimeout(getInfo, 2000);
-setTimeout(() => { document.location.reload(); }, 60000);
+//setTimeout(() => { document.location.reload(); }, 60000);
