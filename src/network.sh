@@ -168,7 +168,7 @@ configureNAT() {
   update-alternatives --set iptables /usr/sbin/iptables-legacy > /dev/null
   update-alternatives --set ip6tables /usr/sbin/ip6tables-legacy > /dev/null
 
-  exclude="$(getPorts "$HOST_PORTS")"
+  exclude=$(getPorts "$HOST_PORTS")
 
   iptables -t nat -A POSTROUTING -o "$VM_NET_DEV" -j MASQUERADE
   # shellcheck disable=SC2086
