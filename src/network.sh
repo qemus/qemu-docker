@@ -95,14 +95,12 @@ getPorts() {
 
   local list=$1
   local vnc="5900"
-  local novnc="8006"
+  local web="8006"
 
-  if [[ "${DISPLAY,,}" == "vnc" ]] && [[ "$list" != *"$vnc"* ]]; then
+  [ -z "$list" ] && list="$web" || list="$list,$web"
+
+  if [[ "${DISPLAY,,}" == "vnc" ]] || [[ "${DISPLAY,,}" == "web" ]]; then
     [ -z "$list" ] && list="$vnc" || list="$list,$vnc"
-  fi
-
-  if [[ "${DISPLAY,,}" == "web" ]] && [[ "$list" != *"$novnc"* ]]; then
-    [ -z "$list" ] && list="$vnc,$novnc" || list="$list,$vnc,$novnc"
   fi
 
   [ -z "$list" ] && return 0
@@ -195,33 +193,6 @@ configureNAT() {
   return 0
 }
 
-closeNetwork() {
-
-  exec 30<&- || true
-  exec 40<&- || true
-
-  if [[ "$DHCP" == [Yy1]* ]]; then
-
-    fKill "server.sh"
-
-    ip link set "$VM_NET_TAP" down || true
-    ip link delete "$VM_NET_TAP" || true
-
-  else
-
-    fKill "dnsmasq"
-
-    ip link set "$VM_NET_TAP" down promisc off || true
-    ip link delete "$VM_NET_TAP" || true
-
-    ip link set dockerbridge down || true
-    ip link delete dockerbridge || true
-
-  fi
-
-  return 0
-}
-
 getInfo() {
 
   if [ -z "$VM_NET_DEV" ]; then
@@ -255,8 +226,6 @@ getInfo() {
 #  Configure Network
 # ######################################
 
-fKill "server.sh"
-
 if [ ! -c /dev/vhost-net ]; then
   if mknod /dev/vhost-net c 10 238; then
     chmod 660 /dev/vhost-net
@@ -264,6 +233,7 @@ if [ ! -c /dev/vhost-net ]; then
 fi
 
 getInfo
+html "Initializing network..."
 
 if [[ "$DEBUG" == [Yy1]* ]]; then
   info "Container IP is $IP with gateway $GATEWAY on interface $VM_NET_DEV" && echo
@@ -289,4 +259,5 @@ fi
 
 NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet0,mac=$VM_NET_MAC,id=net0"
 
+html "Initialized network successfully..."
 return 0

@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-echo "❯ Starting QEMU for Docker v$(</run/version)..."
-echo "❯ For support visit https://github.com/qemus/qemu-docker"
-echo
+APP="QEMU"
+SUPPORT="https://github.com/qemus/qemu-docker"
 
 cd /run
 
@@ -17,10 +16,6 @@ cd /run
 . config.sh     # Configure arguments
 
 trap - ERR
-
-if [[ "${DISPLAY,,}" == "web" ]]; then
-  nginx -e stderr
-fi
 
 info "Booting image using $VERS..."
 

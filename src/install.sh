@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-# Display wait message
-MSG="Please wait while the ISO is being downloaded..."
-/run/server.sh "QEMU" "$MSG" &
-
 # Check if running with interactive TTY or redirected to docker log
 if [ -t 1 ]; then
   PROGRESS="--progress=bar:noscroll"
@@ -30,7 +26,8 @@ BASE=$(echo "$BASE" | sed -e 's/[^A-Za-z0-9._-]/_/g')
 TMP="$STORAGE/${BASE%.*}.tmp"
 rm -f "$TMP"
 
-info "Downloading $BASE as boot image..."
+MSG="Downloading $BASE as boot image..."
+info "$MSG" && html "$MSG"
 
 { wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
 
@@ -45,4 +42,5 @@ fi
 
 mv -f "$TMP" "$STORAGE/$BASE"
 
+html "Download finished successfully..."
 return 0
