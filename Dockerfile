@@ -28,12 +28,12 @@ RUN apt-get update \
     && tar -xf /tmp/novnc.tar.gz -C /tmp/ \
     && cd /tmp/noVNC-"$novnc" \
     && mv app core vendor package.json *.html /usr/share/novnc \
+    && sed -i 's/^worker_processes.*/worker_processes 1;/' /etc/nginx/nginx.conf \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY ./src /run/
-COPY ./web/style.css /var/www
-COPY ./web/index.html /var/www
-COPY ./web/nginx.conf /etc/nginx/sites-enabled/novnc.conf
+COPY ./web /var/www/
+COPY ./web/nginx.conf /etc/nginx/sites-enabled/web.conf
 
 RUN chmod +x /run/*.sh
 
