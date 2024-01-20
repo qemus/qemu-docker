@@ -1,4 +1,5 @@
-	var request;
+var request;
+var interval = 1000;
 
 	function getInfo() {
 
@@ -27,7 +28,7 @@
 			var val = request.responseText;
 			if( val != null && val.length != 0 ) {
 			  document.getElementById('info').innerHTML = val;
-			  setTimeout(getInfo, 2000);
+			  setTimeout(getInfo, interval);
 			  return true;
 			}
 		     }
@@ -35,5 +36,5 @@
 		}
 	}
 
-setTimeout(getInfo, 2000);
+setTimeout(getInfo, interval);
 //setTimeout(() => { document.location.reload(); }, 60000);
