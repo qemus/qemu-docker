@@ -233,6 +233,7 @@ if [ ! -c /dev/vhost-net ]; then
 fi
 
 getInfo
+html "Initializing network..."
 
 if [[ "$DEBUG" == [Yy1]* ]]; then
   info "Container IP is $IP with gateway $GATEWAY on interface $VM_NET_DEV" && echo
@@ -258,4 +259,5 @@ fi
 
 NET_OPTS="$NET_OPTS -device virtio-net-pci,romfile=,netdev=hostnet0,mac=$VM_NET_MAC,id=net0"
 
+html "Initialized network successfully..."
 return 0
