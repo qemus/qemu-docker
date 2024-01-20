@@ -56,9 +56,11 @@ html()
 {
     local title
     local body
+    local footer
 
     title=$(escape "$APP")
     title="<title>$title</title>"
+    footer=$(escape "$FOOTER1")
 
     body=$(escape "$1")
     if [[ "$body" == *"..." ]]; then
@@ -75,7 +77,7 @@ html()
     HTML="${HTML/\[1\]/$title}"
     HTML="${HTML/\[2\]/$script}"
     HTML="${HTML/\[3\]/$body}"
-    HTML="${HTML/\[4\]/$FOOTER1}"
+    HTML="${HTML/\[4\]/$footer}"
     HTML="${HTML/\[5\]/$FOOTER2}"
 
     echo "$HTML" > "$PAGE"
