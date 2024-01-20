@@ -27,7 +27,7 @@ echo
 # Helper variables
 
 STORAGE="/storage"
-INFO="/dev/shm/msg"
+INFO="/dev/shm/msg.html"
 PAGE="/dev/shm/index.html"
 TEMPLATE="/var/www/index.html"
 FOOTER1="$APP for Docker v$(</run/version)"
