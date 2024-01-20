@@ -10,6 +10,10 @@ trap 'error "Status $? while: $BASH_COMMAND (line $LINENO/$BASH_LINENO)"' ERR
 [ ! -f "/run/entry.sh" ] && error "Script must run inside Docker container!" && exit 11
 [ "$(id -u)" -ne "0" ] && error "Script must be executed with root privileges." && exit 12
 
+echo "❯ Starting $APP for Docker v$(</run/version)..."
+echo "❯ For support visit $SUPPORT"
+echo
+
 # Docker environment variables
 
 : "${BOOT:=""}"           # URL of the ISO file
@@ -38,14 +42,21 @@ VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
 
 # Helper functions
 
+fWait () {
+  local name=$1
+
+  while pgrep -f -l "$name" >/dev/null; do
+    sleep 0.2
+  done
+
+  return 0
+}
+
 fKill () {
   local name=$1
 
   { pkill -f "$name" || true; } 2>/dev/null
-
-  while pgrep -f -l "$name" >/dev/null; do
-    sleep 0.1
-  done
+  fWait "$name"
 
   return 0
 }
@@ -62,6 +73,7 @@ html()
     local timeout="4999"
     [ ! -z "${2:-}" ] && timeout="$2"
     local script="<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
+    [[ "$timeout" == "0" ]] && script=""
 
     local HTML
     HTML=$(<"$TEMPLATE")
@@ -93,5 +105,8 @@ addPackage () {
 
   return 0
 }
+
+html "Starting $APP..."
+nginx -e stderr
 
 return 0
