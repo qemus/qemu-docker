@@ -29,7 +29,7 @@ echo
 STORAGE="/storage"
 PAGE="/dev/shm/index.html"
 TEMPLATE="/var/www/index.html"
-FOOTER1="$APP for Docker v"$(</run/version)""
+FOOTER1="$APP for Docker v$(</run/version)"
 FOOTER2="<a href='$SUPPORT'>$SUPPORT</a>"
 
 KERNEL=$(uname -r | cut -b 1)
@@ -52,7 +52,7 @@ html()
     fi
 
     local timeout="4999"
-    [ ! -z "${2:-}" ] && timeout="$2"
+    [ -n "${2:-}" ] && timeout="$2"
     local script="<script>setTimeout(() => { document.location.reload(); }, $timeout);</script>"
     [[ "$timeout" == "0" ]] && script=""
 
