@@ -58,7 +58,7 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]]; then
 
     BOOT_OPTS="$BOOT_OPTS -chardev socket,id=chrtpm,path=/dev/shm/tpm/swtpm-sock"
     BOOT_OPTS="$BOOT_OPTS -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0"
-    BOOT_OPTS="$BOOT_OPTS -no-hpet -global kvm-pit.lost_tick_policy=discard -global ICH9-LPC.disable_s3=1"
+    BOOT_OPTS="$BOOT_OPTS -global kvm-pit.lost_tick_policy=discard -global ICH9-LPC.disable_s3=1"
 
     mkdir -p /dev/shm/tpm
     swtpm socket -t -d --tpmstate dir=/dev/shm/tpm --ctrl type=unixio,path=/dev/shm/tpm/swtpm-sock --tpm2
