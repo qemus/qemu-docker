@@ -67,16 +67,16 @@ function setInfo(msg, loading, error) {
         if (msg == null || msg.length == 0) {
             return false;
         }
-        
+
         var el = document.getElementById("spinner");
 
         error = !!error;
-        if(!error) {
+        if (!error) {
             el.style.visibility = 'visible';
         } else {
             el.style.visibility = 'hidden';
         }
-        
+
         loading = !!loading;
         if (loading) {
             msg = "<p class=\"loading\">" + msg + "</p>"
@@ -87,9 +87,9 @@ function setInfo(msg, loading, error) {
         if (el.innerHTML != msg) {
             el.innerHTML = msg;
         }
-        
+
         return true;
-        
+
     } catch (e) {
         console.log("Error: " + e.message);
         return false;
