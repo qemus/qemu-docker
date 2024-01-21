@@ -4,21 +4,21 @@ body {
 	font-family: Verdana, Arial, sans-serif;
 }
 
-#content-wrap {
+#content {
 	text-align: center;
 	padding: 20px;
 	margin-top: 100px;
 }
 
-#footer {
+footer {
 	width: 98%;
 	position: fixed;
 	bottom: 0px;
 	height: 40px;
-  text-align: center;
+        text-align: center;
 }
 
-#empty-space {
+#empty {
 	height: 40px;
 	/* Same height as footer */
 }
