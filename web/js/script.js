@@ -97,7 +97,6 @@ function setInfo(msg, loading, error) {
 }
 
 function setError(text) {
-
     return setInfo(text, false, true);
 }
 
@@ -111,4 +110,4 @@ function reload() {
     }, 3000);
 }
 
-setTimeout(getInfo, interval);
+schedule();
