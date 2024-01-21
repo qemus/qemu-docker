@@ -57,6 +57,7 @@ html()
 {
     local title
     local body
+    local script
     local footer
 
     title=$(escape "$APP")
@@ -68,8 +69,7 @@ html()
       body="<p class=\"loading\">${body/.../}</p>"
     fi
 
-    local script=""
-    [ -n "${2:-}" ] && script="$2"
+    [ -n "${2:-}" ] && script="$2" || script=""
 
     local HTML
     HTML=$(<"$TEMPLATE")
