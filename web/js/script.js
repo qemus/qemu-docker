@@ -16,8 +16,9 @@ function getInfo() {
         request.open("GET", url, true);
         request.send();
     } catch (e) {
-        console.log(e.message);
-        setInfo(e.message);
+        var err = "Error: " + e.message;
+        console.log(err);
+        setInfo(err);
         reload();
     }
 }
@@ -28,15 +29,15 @@ function processInfo() {
             return true;
         }
 
-        var val = request.responseText;
-        if (val == null || val.length == 0) {
-            //setInfo("Empty response");
-            reload();
+        var msg = request.responseText;
+        if (msg == null || msg.length == 0) {
+            setInfo("Lost connection");
+            schedule();
             return false;
         }
 
         if (request.status == 200) {
-            setInfo(val);
+            setInfo(msg);
             schedule();
             return true;
         }
@@ -47,13 +48,14 @@ function processInfo() {
             return true;
         }
 
-        //setInfo("Status " + request.status);
-        reload();
+        setInfo("Error: Received status " + request.status);
+        schedule();
         return false;
 
     } catch (e) {
-        console.log(e.message);
-        setInfo(e.message);
+        var err = "Error: " + e.message;
+        console.log(err);
+        setInfo(err);
         reload();
         return false;
     }
@@ -79,7 +81,7 @@ function setInfo(text, loading) {
 
         return true;
     } catch (e) {
-        console.log(e.message);
+        console.log("Error: " + e.message);
         return false;
     }
 }
@@ -95,4 +97,3 @@ function reload() {
 }
 
 setTimeout(getInfo, interval);
-//setTimeout(() => { document.location.reload(); }, 60000);
