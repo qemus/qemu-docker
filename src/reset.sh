@@ -79,8 +79,8 @@ html()
     HTML="${HTML/\[4\]/$footer}"
     HTML="${HTML/\[5\]/$FOOTER2}"
 
-    echo "$body" > "$INFO"
     echo "$HTML" > "$PAGE"
+    echo "$body$script" > "$INFO"
 
     return 0
 }
