@@ -4,8 +4,8 @@ set -Eeuo pipefail
 # Docker environment variables
 
 : "${KVM:="Y"}"
+: "${CPU_FLAGS:=""}"
 : "${CPU_MODEL:="host"}"
-: "${CPU_FEATURES:="+ssse3,+sse4.1,+sse4.2"}"
 
 [ "$ARCH" != "amd64" ] && KVM="N"
 
@@ -36,20 +36,35 @@ fi
 
 if [[ "$KVM" != [Nn]* ]]; then
 
+  CPU_FEATURES="kvm=on"
   KVM_OPTS=",accel=kvm -enable-kvm"
+
+  if [[ "${BOOT_MODE,,}" == "windows" ]]; then
+
+    CPU_FEATURES="kvm=on,+hypervisor,+invtsc,l3-cache=on,migratable=no,hv_passthrough"
+
+  fi
 
 else
 
   KVM_OPTS=""
+  CPU_FEATURES="+ssse3,+sse4.1,+sse4.2"
 
-  if [[ "$CPU_MODEL" == "host"* ]]; then
+  if [[ "${CPU_MODEL,,}" == "host"* ]]; then
+
     if [[ "$ARCH" == "amd64" ]]; then
-      CPU_MODEL="max,$CPU_FEATURES"
+      CPU_MODEL="max"
     else
-      CPU_MODEL="qemu64,$CPU_FEATURES"
+      CPU_MODEL="qemu64"
     fi
-  fi
 
+  fi
+fi
+
+if [ -z "$CPU_FLAGS" ]; then
+  CPU_FLAGS="$CPU_MODEL,$CPU_FEATURES"
+else
+  CPU_FLAGS="$CPU_MODEL,$CPU_FEATURES,$CPU_FLAGS"
 fi
 
 return 0
