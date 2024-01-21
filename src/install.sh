@@ -16,14 +16,6 @@ BASE="boot.img"
 [ ! -f "$STORAGE/$BASE" ] && BASE="boot.ISO"
 [ ! -f "$STORAGE/$BASE" ] && BASE="BOOT.IMG"
 [ ! -f "$STORAGE/$BASE" ] && BASE="BOOT.ISO"
-[ ! -f "$STORAGE/$BASE" ] && BASE="custom.iso"
-[ ! -f "$STORAGE/$BASE" ] && BASE="custom.img"
-[ ! -f "$STORAGE/$BASE" ] && BASE="Custom.iso"
-[ ! -f "$STORAGE/$BASE" ] && BASE="Custom.img"
-[ ! -f "$STORAGE/$BASE" ] && BASE="custom.ISO"
-[ ! -f "$STORAGE/$BASE" ] && BASE="custom.IMG"
-[ ! -f "$STORAGE/$BASE" ] && BASE="CUSTOM.ISO"
-[ ! -f "$STORAGE/$BASE" ] && BASE="CUSTOM.IMG"
 
 [ -f "$STORAGE/$BASE" ] && return 0
 
