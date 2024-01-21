@@ -11,6 +11,27 @@ fi
 BASE="boot.img"
 [ -f "$STORAGE/$BASE" ] && return 0
 
+BASE="boot.iso"
+[ -f "$STORAGE/$BASE" ] && return 0
+
+BASE="Boot.img"
+[ -f "$STORAGE/$BASE" ] && return 0
+
+BASE="Boot.iso"
+[ -f "$STORAGE/$BASE" ] && return 0
+
+BASE="boot.IMG"
+[ -f "$STORAGE/$BASE" ] && return 0
+
+BASE="boot.ISO"
+[ -f "$STORAGE/$BASE" ] && return 0
+
+BASE="BOOT.IMG"
+[ -f "$STORAGE/$BASE" ] && return 0
+
+BASE="BOOT.ISO"
+[ -f "$STORAGE/$BASE" ] && return 0
+
 if [ -z "$BOOT" ]; then
   error "No boot disk specified, set BOOT= to the URL of an ISO file." && exit 64
 fi
