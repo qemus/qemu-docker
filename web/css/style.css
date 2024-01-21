@@ -31,10 +31,10 @@ a:visited {
 	color: white;
 }
 
-footer a:link { color: #0c8aeb; }
-footer a:visited { color: #0c8aeb; }
-footer a:hover { color: #0c8aeb; }
-footer a:active { color: #0c8aeb; }
+footer a:link,
+footer a:visited,
+footer a:hover,
+footer a:active { color: #73e6ff; }
 
 .loading:after {
 	content: " .";
