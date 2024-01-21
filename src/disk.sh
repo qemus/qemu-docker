@@ -4,7 +4,7 @@ set -Eeuo pipefail
 # Docker environment variables
 
 : "${DISK_IO:="native"}"          # I/O Mode, can be set to 'native', 'threads' or 'io_turing'
-: "${DISK_FMT:=""}"            # Disk file format, can be set to "raw" or "qcow2" (default)
+: "${DISK_FMT:=""}"            # Disk file format, can be set to "raw" (default) or "qcow2"
 : "${DISK_FLAGS:=""}"             # Specifies the options for use with the qcow2 disk format
 : "${DISK_CACHE:="none"}"         # Caching mode, can be set to 'writeback' for better performance
 : "${DISK_DISCARD:="on"}"         # Controls whether unmap (TRIM) commands are passed to the host.
@@ -434,21 +434,17 @@ DISK3_FILE="/storage3/data3"
 DISK4_FILE="/storage4/data4"
 
 if [ -z "$DISK_FMT" ]; then
-  if [ -f "$DISK1_FILE.img" ]; then
-    DISK_FMT="raw"
-  else
+  if [ -f "$DISK1_FILE.qcow2" ]; then
     DISK_FMT="qcow2"
+  else
+    DISK_FMT="raw"
   fi
 fi
 
 DISK_EXT=$(fmt2ext "$DISK_FMT")
 
 if [ -z "$ALLOCATE" ]; then
-  if [[ "${DISK_FMT,,}" == "raw" ]]; then
-    ALLOCATE="Y"
-  else
-    ALLOCATE="N"
-  fi
+  ALLOCATE="N"
 fi
 
 if [[ "$ALLOCATE" == [Nn]* ]]; then
