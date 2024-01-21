@@ -30,7 +30,7 @@ function processInfo() {
 
         var val = request.responseText;
         if (val == null || val.length == 0) {
-            setInfo("Empty response");
+            //setInfo("Empty response");
             reload();
             return false;
         }
@@ -42,12 +42,12 @@ function processInfo() {
         }
 
         if (request.status == 404) {
-            setInfo("Connecting to web viewer", true);
+            setInfo("Connecting to VNC", true);
             reload();
             return true;
         }
 
-        setInfo("Status " + request.status);
+        //setInfo("Status " + request.status);
         reload();
         return false;
 
