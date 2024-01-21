@@ -9,27 +9,22 @@ else
 fi
 
 BASE="boot.img"
-[ -f "$STORAGE/$BASE" ] && return 0
+[ ! -f "$STORAGE/$BASE" ] && BASE="boot.iso"
+[ ! -f "$STORAGE/$BASE" ] && BASE="Boot.img"
+[ ! -f "$STORAGE/$BASE" ] && BASE="Boot.iso"
+[ ! -f "$STORAGE/$BASE" ] && BASE="boot.IMG"
+[ ! -f "$STORAGE/$BASE" ] && BASE="boot.ISO"
+[ ! -f "$STORAGE/$BASE" ] && BASE="BOOT.IMG"
+[ ! -f "$STORAGE/$BASE" ] && BASE="BOOT.ISO"
+[ ! -f "$STORAGE/$BASE" ] && BASE="custom.iso"
+[ ! -f "$STORAGE/$BASE" ] && BASE="custom.img"
+[ ! -f "$STORAGE/$BASE" ] && BASE="Custom.iso"
+[ ! -f "$STORAGE/$BASE" ] && BASE="Custom.img"
+[ ! -f "$STORAGE/$BASE" ] && BASE="custom.ISO"
+[ ! -f "$STORAGE/$BASE" ] && BASE="custom.IMG"
+[ ! -f "$STORAGE/$BASE" ] && BASE="CUSTOM.ISO"
+[ ! -f "$STORAGE/$BASE" ] && BASE="CUSTOM.IMG"
 
-BASE="boot.iso"
-[ -f "$STORAGE/$BASE" ] && return 0
-
-BASE="Boot.img"
-[ -f "$STORAGE/$BASE" ] && return 0
-
-BASE="Boot.iso"
-[ -f "$STORAGE/$BASE" ] && return 0
-
-BASE="boot.IMG"
-[ -f "$STORAGE/$BASE" ] && return 0
-
-BASE="boot.ISO"
-[ -f "$STORAGE/$BASE" ] && return 0
-
-BASE="BOOT.IMG"
-[ -f "$STORAGE/$BASE" ] && return 0
-
-BASE="BOOT.ISO"
 [ -f "$STORAGE/$BASE" ] && return 0
 
 if [ -z "$BOOT" ]; then
