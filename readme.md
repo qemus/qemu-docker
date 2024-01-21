@@ -99,7 +99,14 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
 
   * ### How do I boot Windows?
 
-    For emulating Windows, there is [dockur/windows](https://github.com/dockur/windows), which is more dedicated to that purpose. It has all the same features as this container, but additionally includes all the necessary drivers, and it will even automatically download the correct ISO image from the Microsoft servers.
+    To enable Windows booting, add the following line to your compose file:
+
+    ```yaml
+    environment:
+      BOOT_MODE: "windows"
+    ```
+
+    But it is better to use [dockur/windows](https://github.com/dockur/windows), as it includes all the drivers required during installation.
 
   * ### How do I verify if my system supports KVM?
 
@@ -186,6 +193,10 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
     environment:
       BOOT_MODE: "uefi"
     ```
+
+  * ### How do I boot a local image?
+
+    Place a file called `boot.iso` in the `/storage` folder to skip the download.
 
   * ### How do I provide custom arguments to QEMU?
 
