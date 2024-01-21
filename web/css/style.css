@@ -31,6 +31,11 @@ a:visited {
 	color: white;
 }
 
+footer a:link { color: #0c8aeb; }
+footer a:visited { color: #0c8aeb; }
+footer a:hover { color: #0c8aeb; }
+footer a:active { color: #0c8aeb; }
+
 .loading:after {
 	content: " .";
 	animation: dots 1s steps(5, end) infinite;
