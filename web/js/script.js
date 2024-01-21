@@ -18,7 +18,7 @@ function getInfo() {
     } catch (e) {
         var err = "Error: " + e.message;
         console.log(err);
-        setInfo(err);
+        setError(err);
         reload();
     }
 }
@@ -31,7 +31,7 @@ function processInfo() {
 
         var msg = request.responseText;
         if (msg == null || msg.length == 0) {
-            setInfo("Lost connection");
+            setError("Lost connection");
             schedule();
             return false;
         }
@@ -48,14 +48,14 @@ function processInfo() {
             return true;
         }
 
-        setInfo("Error: Received status " + request.status);
+        setError("Error: Received status " + request.status);
         schedule();
         return false;
 
     } catch (e) {
         var err = "Error: " + e.message;
         console.log(err);
-        setInfo(err);
+        setError(err);
         reload();
         return false;
     }
@@ -78,8 +78,37 @@ function setInfo(text, loading) {
         if (el.innerHTML != text) {
             el.innerHTML = text;
         }
-
+        
+        el = document.getElementById("spinner");
+        el.style.visibility = 'visible';
+        
         return true;
+        
+    } catch (e) {
+        console.log("Error: " + e.message);
+        return false;
+    }
+}
+
+function setError(text, loading) {
+
+    try {
+        if (text == null || text.length == 0) {
+            return false;
+        }
+
+        var el = document.getElementById("info");
+
+        if (el.innerHTML != text) {
+            el.innerHTML = text;
+        }
+        
+        el = document.getElementById("spinner");
+        el.style.visibility = 'hidden';
+        document.body.style.backgroundColor = "red";
+        
+        return true;
+        
     } catch (e) {
         console.log("Error: " + e.message);
         return false;
