@@ -6,7 +6,7 @@ SERIAL_OPTS="-serial mon:stdio"
 USB_OPTS="-device qemu-xhci -device usb-tablet"
 MON_OPTS="-monitor telnet:localhost:7100,server,nowait,nodelay"
 RAM_OPTS=$(echo "-m $RAM_SIZE" | sed 's/MB/M/g;s/GB/G/g;s/TB/T/g')
-CPU_OPTS="-cpu $CPU_MODEL -smp $CPU_CORES,sockets=1,dies=1,cores=$CPU_CORES,threads=1"
+CPU_OPTS="-cpu $CPU_FLAGS -smp $CPU_CORES,sockets=1,dies=1,cores=$CPU_CORES,threads=1"
 MAC_OPTS="-machine type=q35${SECURE},graphics=off,dump-guest-core=off,hpet=off${KVM_OPTS}"
 DEV_OPTS="-device virtio-balloon-pci,id=balloon0,bus=pcie.0,addr=0x4"
 DEV_OPTS="$DEV_OPTS -object rng-random,id=objrng0,filename=/dev/urandom"
