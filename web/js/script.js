@@ -60,19 +60,19 @@ function processInfo() {
 }
 
 function setInfo(text, loading) {
-    
+
     try {
         if (text == null || text.length == 0) {
             return false;
         }
 
         loading = !!loading;
-        if (loading) { 
-          text="<p class=\"loading\">" + text + "</p>"
+        if (loading) {
+            text = "<p class=\"loading\">" + text + "</p>"
         }
-        
+
         var el = document.getElementById("info");
-        
+
         if (el.innerHTML != text) {
             el.innerHTML = text;
         }
