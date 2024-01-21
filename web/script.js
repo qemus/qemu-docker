@@ -16,29 +16,72 @@ function getInfo() {
         request.open("GET", url, true);
         request.send();
     } catch (e) {
-        document.location.reload();
+        setInfo(e.message);
+        reload();
     }
 }
 
 function processInfo() {
     try {
-        if (request.readyState == 4) {
-            if (request.status == 200) {
-                var val = request.responseText;
-                if (val != null && val.length != 0) {
-                    var el = document.getElementById('info');
-                    if (el.innerHTML != val) {
-                        el.innerHTML = val;
-                    }
-                    setTimeout(getInfo, interval);
-                    return true;
-                }
-            }
-            document.location.reload();
+        if (request.readyState != 4) {
+            return true;
         }
+
+        var val = request.responseText;
+        if (val == null || val.length == 0) {
+            setInfo("Empty response");
+            reload();
+            return false;
+        }
+
+        if (request.status == 200) {
+            setInfo(val);
+            schedule();
+            return true;
+        }
+
+        if (request.status == 404) {
+            setInfo("404");
+            reload();
+            return true;
+        }
+
+        setInfo("Status " + request.status);
+        reload();
+        return false;
+
     } catch (e) {
-        document.location.reload();
+        setInfo(e.message);
+        reload();
+        return false;
     }
+}
+
+function setInfo(text) {
+    try {
+        if (text == null || text.length == 0) {
+            return false;
+        }
+
+        var el = document.getElementById("info");
+        if (el.innerHTML != text) {
+            el.innerHTML = text;
+        }
+
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+function schedule() {
+    setTimeout(getInfo, interval);
+}
+
+function reload() {
+    setTimeout(() => {
+        document.location.reload();
+    }, 2000);
 }
 
 setTimeout(getInfo, interval);
