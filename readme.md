@@ -196,7 +196,7 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
 
   * ### How do I boot a local image?
 
-    Place a file called `boot.iso` in the `/storage` folder to skip the download.
+    To skip the download, rename your image to `boot.iso` and place it in an empty `/storage` folder.
 
   * ### How do I provide custom arguments to QEMU?
 
