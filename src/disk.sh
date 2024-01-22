@@ -17,7 +17,7 @@ if [ -f "$BOOT" ]; then
   DISK_OPTS="$DISK_OPTS \
     -device virtio-scsi-pci,id=scsi0,iothread=io2,addr=0x5 \
     -drive id=cdrom0,if=none,format=raw,readonly=on,file=$BOOT \
-    -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=10"
+    -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=$BOOT_INDEX"
 fi
 
 DRIVERS="$STORAGE/drivers.img"
@@ -465,27 +465,27 @@ fi
 : "${DEVICE4:=""}"
 
 if [ -n "$DEVICE" ]; then
-  addDevice "userdata" "$DEVICE" "device" "1" "0xa" || exit $?
+  addDevice "userdata" "$DEVICE" "device" "3" "0xa" || exit $?
 else
-  addDisk "userdata" "$DISK1_FILE" "$DISK_EXT" "disk" "$DISK_SIZE" "1" "0xa" "$DISK_FMT" || exit $?
+  addDisk "userdata" "$DISK1_FILE" "$DISK_EXT" "disk" "$DISK_SIZE" "3" "0xa" "$DISK_FMT" || exit $?
 fi
 
 if [ -n "$DEVICE2" ]; then
-  addDevice "userdata2" "$DEVICE2" "device2" "2" "0xb" || exit $?
+  addDevice "userdata2" "$DEVICE2" "device2" "4" "0xb" || exit $?
 else
-  addDisk "userdata2" "$DISK2_FILE" "$DISK_EXT" "disk2" "$DISK2_SIZE" "2" "0xb" "$DISK_FMT" || exit $?
+  addDisk "userdata2" "$DISK2_FILE" "$DISK_EXT" "disk2" "$DISK2_SIZE" "4" "0xb" "$DISK_FMT" || exit $?
 fi
 
 if [ -n "$DEVICE3" ]; then
-  addDevice "userdata3" "$DEVICE3" "device3" "3" "0xc" || exit $?
+  addDevice "userdata3" "$DEVICE3" "device3" "5" "0xc" || exit $?
 else
-  addDisk "userdata3" "$DISK3_FILE" "$DISK_EXT" "disk3" "$DISK3_SIZE" "3" "0xc" "$DISK_FMT" || exit $?
+  addDisk "userdata3" "$DISK3_FILE" "$DISK_EXT" "disk3" "$DISK3_SIZE" "5" "0xc" "$DISK_FMT" || exit $?
 fi
 
 if [ -n "$DEVICE4" ]; then
-  addDevice "userdata4" "$DEVICE4" "device4" "4" "0xd" || exit $?
+  addDevice "userdata4" "$DEVICE4" "device4" "6" "0xd" || exit $?
 else
-  addDisk "userdata4" "$DISK4_FILE" "$DISK_EXT" "disk4" "$DISK4_SIZE" "4" "0xd" "$DISK_FMT" || exit $?
+  addDisk "userdata4" "$DISK4_FILE" "$DISK_EXT" "disk4" "$DISK4_SIZE" "6" "0xd" "$DISK_FMT" || exit $?
 fi
 
 html "Initialized disks successfully..."
