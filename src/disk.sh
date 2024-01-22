@@ -116,8 +116,8 @@ createDisk() {
     fi
   fi
 
-  MSG="Creating a $DISK_TYPE $DISK_DESC image in $DISK_FMT format with a size of $DISK_SPACE..."
-  info "$MSG" && html "$MSG"
+  html "Creating a $DISK_DESC image..."
+  info "Creating a $DISK_TYPE $DISK_DESC image in $DISK_FMT format with a size of $DISK_SPACE..."
 
   local FAIL="Could not create a $DISK_TYPE $DISK_FMT $DISK_DESC image of $DISK_SPACE ($DISK_FILE)"
 
@@ -270,8 +270,8 @@ convertDisk() {
     fi
   fi
 
-  MSG="Converting $DISK_DESC to $DST_FMT, please wait until completed..."
-  info "$MSG" && html "$MSG"
+  html "Converting $DISK_DESC to $DST_FMT..."
+  info "Converting $DISK_DESC to $DST_FMT, please wait until completed..."
 
   local CONV_FLAGS="-p"
   local DISK_PARAM="$DISK_ALLOC"
@@ -310,8 +310,8 @@ convertDisk() {
     fi
   fi
 
-  MSG="Conversion of $DISK_DESC to $DST_FMT completed succesfully!"
-  info "$MSG" && html "$MSG"
+  html "Conversion of $DISK_DESC completed..."
+  info "Conversion of $DISK_DESC to $DST_FMT completed succesfully!"
 
   return 0
 }
