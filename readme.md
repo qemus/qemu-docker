@@ -106,7 +106,7 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
       BOOT_MODE: "windows"
     ```
 
-    But it is better to use [dockur/windows](https://github.com/dockur/windows) instead, as it includes all the drivers required during installation.
+    But you might want to give [dockur/windows](https://github.com/dockur/windows) a try instead, as it includes all the drivers required during installation and many other features.
 
   * ### How do I verify if my system supports KVM?
 
