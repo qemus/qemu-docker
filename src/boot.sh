@@ -60,9 +60,9 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]]; then
 
     if [[ "$TPM" == [Yy1]* ]]; then
 
-      mkdir -p /dev/shm/tpm
-      chmod 755 /dev/shm/tpm
-      swtpm socket -t -d --tpmstate dir=/dev/shm/tpm --ctrl type=unixio,path=/run/swtpm-sock --tpm2
+      mkdir -p /run/shm/tpm
+      chmod 755 /run/shm/tpm
+      swtpm socket -t -d --tpmstate dir=/run/shm/tpm --ctrl type=unixio,path=/run/swtpm-sock --tpm2
 
       for (( i = 1; i < 50; i++ )); do
 
