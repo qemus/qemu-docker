@@ -16,8 +16,8 @@ ARGS="$DEF_OPTS $CPU_OPTS $RAM_OPTS $MAC_OPTS $DISPLAY_OPTS $MON_OPTS $SERIAL_OP
 ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
 if [[ "${DISPLAY,,}" == "web" ]]; then
-  rm -f /run/shm/msg.html
-  rm -f /run/shm/index.html
+  rm -f "$INFO"
+  rm -f "$PAGE"
 else
   if [[ "${DISPLAY,,}" == "vnc" ]]; then
     html "You can now connect to VNC on port 5900." "0"
