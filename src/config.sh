@@ -16,8 +16,10 @@ ARGS="$DEF_OPTS $CPU_OPTS $RAM_OPTS $MAC_OPTS $DISPLAY_OPTS $MON_OPTS $SERIAL_OP
 ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
 if [[ "${DISPLAY,,}" == "web" ]]; then
-  [ ! -f "$INFO" ] && error "File $INFO not found?!" || rm -f "$INFO"
-  [ ! -f "$PAGE" ] && error "File $PAGE not found?!" || rm -f "$PAGE"
+  [ ! -f "$INFO" ] && error "File $INFO not found?!"
+  rm -f "$INFO"
+  [ ! -f "$PAGE" ] && error "File $PAGE not found?!"
+  rm -f "$PAGE"
 else
   if [[ "${DISPLAY,,}" == "vnc" ]]; then
     html "You can now connect to VNC on port 5900." "0"
