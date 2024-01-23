@@ -193,6 +193,36 @@ configureNAT() {
   return 0
 }
 
+closeNetwork() {
+
+  # Shutdown nginx
+  nginx -s stop 2> /dev/null
+  fWait "nginx"
+
+  exec 30<&- || true
+  exec 40<&- || true
+
+  if [[ "$DHCP" == [Yy1]* ]]; then
+
+    ip link set "$VM_NET_TAP" down || true
+    ip link delete "$VM_NET_TAP" || true
+
+  else
+
+    local pid="/var/run/dnsmasq.pid"
+    [ -f "$pid" ] && pKill "$(<"$pid")"
+
+    ip link set "$VM_NET_TAP" down promisc off || true
+    ip link delete "$VM_NET_TAP" || true
+
+    ip link set dockerbridge down || true
+    ip link delete dockerbridge || true
+
+  fi
+
+  return 0
+}
+
 getInfo() {
 
   if [ -z "$VM_NET_DEV" ]; then
