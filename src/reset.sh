@@ -39,6 +39,14 @@ MINOR=$(uname -r | cut -d '.' -f2)
 ARCH=$(dpkg --print-architecture)
 VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
 
+# Check system
+
+if [ ! -d "/dev/shm" ]; then
+  error "Directory /dev/shm not found!" && exit 14
+else
+  [ ! -d "/run/shm" ] && ln -s /dev/shm /run/shm
+fi
+
 # Check folder
 [ ! -d "$STORAGE" ] && error "Storage folder ($STORAGE) not found!" && exit 13
 
