@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 # Docker environment variables
-
+: "${TPM:="Y"}"         # Enable TPM
 : "${BOOT_MODE:="legacy"}"  # Boot mode
 
 SECURE=""
@@ -56,14 +56,35 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]]; then
 
   if [[ "${BOOT_MODE,,}" == "windows" ]]; then
 
-    BOOT_OPTS="$BOOT_OPTS -chardev socket,id=chrtpm,path=/run/swtpm-sock"
-    BOOT_OPTS="$BOOT_OPTS -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0"
     BOOT_OPTS="$BOOT_OPTS -global kvm-pit.lost_tick_policy=discard -global ICH9-LPC.disable_s3=1"
 
-    mkdir -p /dev/shm/tpm
-    chmod 755 /dev/shm/tpm
-    swtpm socket -t -d --tpmstate dir=/dev/shm/tpm --ctrl type=unixio,path=/run/swtpm-sock --tpm2
+    if [[ "$TPM" == [Yy1]* ]]; then
 
+      mkdir -p /dev/shm/tpm
+      chmod 755 /dev/shm/tpm
+      swtpm socket -t -d --tpmstate dir=/dev/shm/tpm --ctrl type=unixio,path=/run/swtpm-sock --tpm2
+
+      for (( i = 1; i < 50; i++ )); do
+
+        [ -S "/run/swtpm-sock" ] && break
+  
+        if [ $(( $i % 10 )) -eq 0 ] ; then
+          echo "Waiting for TPM socket to become available..."
+        fi
+
+        sleep 0.1
+
+      done
+
+      if [ ! -S "/run/swtpm-sock" ]; then
+        TPM="N"
+        error "TPM socket not found? Disabling TPM support..."
+      else
+        BOOT_OPTS="$BOOT_OPTS -chardev socket,id=chrtpm,path=/run/swtpm-sock"
+        BOOT_OPTS="$BOOT_OPTS -tpmdev emulator,id=tpm0,chardev=chrtpm -device tpm-tis,tpmdev=tpm0"
+      fi
+
+    fi
   fi
 
 fi
