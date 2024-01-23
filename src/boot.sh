@@ -68,7 +68,7 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]]; then
 
         [ -S "/run/swtpm-sock" ] && break
   
-        if [ (( $i % 10 )) -eq 0 ] ; then
+        if (( $i % 10 == 0 )); then
           echo "Waiting for TPM socket to become available..."
         fi
 
