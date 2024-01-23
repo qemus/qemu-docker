@@ -24,7 +24,7 @@ echo
 : "${RAM_SIZE:="1G"}"     # Maximum RAM amount
 : "${DISK_SIZE:="16G"}"   # Initial data disk size
 : "${BOOT_INDEX:="10"}"   # Boot index of CD drive
- 
+
 # Helper variables
 
 STORAGE="/storage"
@@ -48,9 +48,53 @@ else
 fi
 
 # Check folder
-[ ! -d "$STORAGE" ] && error "Storage folder ($STORAGE) not found!" && exit 13
+
+if [ ! -d "$STORAGE" ]; then
+  error "Storage folder ($STORAGE) not found!" && exit 13
+fi
 
 # Helper functions
+
+isAlive() {
+  local pid=$1
+
+  if kill -0 "$pid" 2>/dev/null; then
+    return 0
+  fi
+
+  return 1
+}
+
+pKill() {
+  local pid=$1
+
+  { kill -15 "$pid" || true; } 2>/dev/null
+
+  while isAlive "$pid"; do
+    sleep 0.2
+  done
+
+  return 0
+}
+
+fWait() {
+  local name=$1
+
+  while pgrep -f -l "$name" >/dev/null; do
+    sleep 0.2
+  done
+
+  return 0
+}
+
+fKill() {
+  local name=$1
+
+  { pkill -f "$name" || true; } 2>/dev/null
+  fWait "$name"
+
+  return 0
+}
 
 escape () {
     local s
@@ -89,13 +133,12 @@ html()
     HTML="${HTML/\[5\]/$FOOTER2}"
 
     echo "$HTML" > "$PAGE"
-    echo "$body$script" > "$INFO"
+    echo "$body" > "$INFO"
 
     return 0
 }
 
-addPackage () {
-
+addPackage() {
   local pkg=$1
   local desc=$2
 
