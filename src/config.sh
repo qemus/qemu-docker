@@ -17,9 +17,6 @@ ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
 if [[ "${BOOT_MODE,,}" == "windows" ]]; then
 
-  mkdir -p /dev/shm/tpm
-  swtpm socket -t -d --tpmstate dir=/dev/shm/tpm --ctrl type=unixio,path=/dev/shm/tpm/swtpm-sock --tpm2
-
   if [ ! -f "/dev/shm/tpm/swtpm-sock" ]; then
     error "TPM socket not found?" && exit 46
   fi
