@@ -62,9 +62,9 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]]; then
 
       mkdir -p /run/shm/tpm
       chmod 755 /run/shm/tpm
-      swtpm socket -t -d --tpmstate dir=/run/shm/tpm --ctrl type=unixio,path=/run/swtpm-sock --tpm2
+      swtpm socket -t -d --tpmstate dir=/run/shm/tpm --ctrl type=unixio,path=/run/swtpm-sock --pid file=/run/tpm.pid --tpm2
 
-      for (( i = 1; i < 50; i++ )); do
+      for (( i = 1; i < 20; i++ )); do
 
         [ -S "/run/swtpm-sock" ] && break
   
