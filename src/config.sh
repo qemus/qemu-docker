@@ -15,6 +15,17 @@ DEV_OPTS="$DEV_OPTS -device virtio-rng-pci,rng=objrng0,id=rng0,bus=pcie.0,addr=0
 ARGS="$DEF_OPTS $CPU_OPTS $RAM_OPTS $MAC_OPTS $DISPLAY_OPTS $MON_OPTS $SERIAL_OPTS $NET_OPTS $DISK_OPTS $BOOT_OPTS $DEV_OPTS $USB_OPTS $ARGUMENTS"
 ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
+if [[ "${BOOT_MODE,,}" == "windows" ]]; then
+
+  mkdir -p /dev/shm/tpm
+  swtpm socket -t -d --tpmstate dir=/dev/shm/tpm --ctrl type=unixio,path=/dev/shm/tpm/swtpm-sock --tpm2
+
+  if [ ! -f "/dev/shm/tpm/swtpm-sock" ]; then
+    error "TPM socket not found?" && exit 46
+  fi
+
+fi
+
 if [[ "${DISPLAY,,}" == "web" ]]; then
   rm -f /dev/shm/msg.html
   rm -f /dev/shm/index.html
@@ -24,10 +35,6 @@ else
   else
     html "The virtual machine was booted successfully." "0"
   fi
-fi
-
-if [ ! -f "/dev/shm/tpm/swtpm-sock" ]; then
-  error "TPM socket not found?" && exit 46
 fi
 
 return 0
