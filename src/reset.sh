@@ -28,8 +28,8 @@ echo
 # Helper variables
 
 STORAGE="/storage"
-INFO="/dev/shm/msg.html"
-PAGE="/dev/shm/index.html"
+INFO="/run/shm/msg.html"
+PAGE="/run/shm/index.html"
 TEMPLATE="/var/www/index.html"
 FOOTER1="$APP for Docker v$(</run/version)"
 FOOTER2="<a href='$SUPPORT'>$SUPPORT</a>"
@@ -113,7 +113,7 @@ addPackage () {
 }
 
 # Start webserver
-cp -r /var/www/* /dev/shm
+cp -r /var/www/* /run/shm
 html "Starting $APP for Docker..."
 nginx -e stderr
 
