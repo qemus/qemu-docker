@@ -26,4 +26,8 @@ else
   fi
 fi
 
+if [ ! -f "/dev/shm/tpm/swtpm-sock" ]; then
+  error "TPM socket not found?" && exit 46
+fi
+
 return 0
