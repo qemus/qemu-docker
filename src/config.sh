@@ -17,6 +17,14 @@ ARGS=$(echo "$ARGS" | sed 's/\t/ /g' | tr -s ' ')
 
 if [[ "${BOOT_MODE,,}" == "windows" ]]; then
 
+  for (( i = 0; i < 10; i++ )); do
+
+    [ -f "/dev/shm/tpm/swtpm-sock" ] && break
+    echo "Waiting for TPM socket to become available..."
+    sleep 1
+
+  done
+
   if [ ! -f "/dev/shm/tpm/swtpm-sock" ]; then
     error "TPM socket not found?" && exit 46
   fi
