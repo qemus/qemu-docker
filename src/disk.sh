@@ -20,7 +20,7 @@ if [ -f "$BOOT" ]; then
     -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=$BOOT_INDEX"
 fi
 
-DRIVERS="$STORAGE/drivers.img"
+DRIVERS="$STORAGE/drivers.iso"
 [ ! -f "$DRIVERS" ] && DRIVERS="/run/drivers.iso"
 
 if [ -f "$DRIVERS" ]; then
