@@ -26,7 +26,9 @@ if [[ "$GPU" != [Yy1]* ]] || [[ "$ARCH" != "amd64" ]]; then
   return 0
 fi
 
-DISPLAY_OPTS="-display egl-headless,rendernode=/dev/dri/renderD128 -vga $VGA"
+[[ "${VGA,,}" == "virtio" ]] && VGA="virtio-vga-gl"
+DISPLAY_OPTS="-display egl-headless,rendernode=/dev/dri/renderD128"
+DISPLAY_OPTS="$DISPLAY_OPTS -vga none -device $VGA"
 
 [[ "${DISPLAY,,}" == "vnc" ]] && DISPLAY_OPTS="$DISPLAY_OPTS -vnc :0"
 [[ "${DISPLAY,,}" == "web" ]] && DISPLAY_OPTS="$DISPLAY_OPTS -vnc :0,websocket=5700"
