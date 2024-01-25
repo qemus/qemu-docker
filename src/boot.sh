@@ -21,6 +21,9 @@ case "${BOOT_MODE,,}" in
     ROM="OVMF_CODE_4M.ms.fd"
     VARS="OVMF_VARS_4M.ms.fd"
     ;;
+  windows_legacy)
+    BOOT_OPTS=""
+    ;;
   legacy)
     BOOT_OPTS=""
     ;;
@@ -30,9 +33,8 @@ case "${BOOT_MODE,,}" in
     ;;
 esac
 
-if [[ "${BOOT_MODE,,}" != "legacy" ]]; then
+if [[ "${BOOT_MODE,,}" != "legacy" ]] && [[ "${BOOT_MODE,,}" != "windows_legacy" ]]; then
 
-  BOOT_OPTS=""
   OVMF="/usr/share/OVMF"
   DEST="$STORAGE/${BOOT_MODE,,}"
 
