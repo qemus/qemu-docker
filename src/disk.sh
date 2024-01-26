@@ -10,14 +10,16 @@ set -Eeuo pipefail
 : "${DISK_DISCARD:="on"}"         # Controls whether unmap (TRIM) commands are passed to the host.
 : "${DISK_ROTATION:="1"}"         # Rotation rate, set to 1 for SSD storage and increase for HDD
 
-BOOT="$STORAGE/$BASE"
 DISK_OPTS="-object iothread,id=io2"
+DISK_OPTS="$DISK_OPTS -device virtio-scsi-pci,id=scsi0,iothread=io2,addr=0x5"
+DISK_OPTS="$DISK_OPTS -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=$BOOT_INDEX"
 
-if [ -f "$BOOT" ]; then
-  DISK_OPTS="$DISK_OPTS \
-    -device virtio-scsi-pci,id=scsi0,iothread=io2,addr=0x5 \
-    -drive id=cdrom0,if=none,format=raw,readonly=on,file=$BOOT \
-    -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=$BOOT_INDEX"
+BOOT="$STORAGE/$BASE"
+
+if [ ! -f "$BOOT" ]; then
+  DISK_OPTS="$DISK_OPTS -drive id=cdrom0,if=none,format=raw,readonly=on"
+else
+  DISK_OPTS="$DISK_OPTS -drive id=cdrom0,if=none,format=raw,readonly=on,file=$BOOT"
 fi
 
 DRIVERS="$STORAGE/drivers.iso"
