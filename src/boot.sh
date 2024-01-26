@@ -68,7 +68,9 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]] && [[ "${BOOT_MODE,,}" != "windows_legacy"
       mkdir -p /run/shm/tpm
       chmod 755 /run/shm/tpm
 
-      swtpm socket -t -d --tpmstate dir=/run/shm/tpm --ctrl type=unixio,path=/run/swtpm-sock --pid file=/var/run/tpm.pid --tpm2
+      if ! swtpm socket -t -d --tpmstate dir=/run/shm/tpm --ctrl type=unixio,path=/run/swtpm-sock --pid file=/var/run/tpm.pid --tpm2; then
+        error "Failed to start TPM emulator, reason: $?" && exit 19
+      fi
 
       for (( i = 1; i < 20; i++ )); do
 
