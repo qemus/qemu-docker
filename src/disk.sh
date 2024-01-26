@@ -16,10 +16,10 @@ DISK_OPTS="$DISK_OPTS -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=$BOOT_I
 
 BOOT="$STORAGE/$BASE"
 
-if [ ! -f "$BOOT" ]; then
-  DISK_OPTS="$DISK_OPTS -drive id=cdrom0,if=none,format=raw,readonly=on"
-else
+if [ -f "$BOOT" ]; then
   DISK_OPTS="$DISK_OPTS -drive id=cdrom0,if=none,format=raw,readonly=on,file=$BOOT"
+else
+  DISK_OPTS="$DISK_OPTS -drive id=cdrom0,if=none,format=raw,readonly=on,file=/dev/null"
 fi
 
 DRIVERS="$STORAGE/drivers.iso"
