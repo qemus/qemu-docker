@@ -39,7 +39,7 @@ info "$MSG" && html "$MSG"
 
 { wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
 
-(( rc != 0 )) && error "Failed to download $BOOT, reason: $rc" && exit 60
+(( rc != 0 )) && error "Failed to download $BOOT , reason: $rc" && exit 60
 [ ! -f "$TMP" ] && error "Failed to download $BOOT" && exit 61
 
 SIZE=$(stat -c%s "$TMP")
