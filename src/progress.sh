@@ -24,7 +24,7 @@ do
   if [ -f "$file" ]; then
     bytes=$(du -sb "$file" | cut -f1)
     if (( bytes > 1000 )); then
-      size=$(echo "$bytes" | numfmt --to=si --suffix=B  | sed -r 's/([A-Z])/ \1/')
+      size=$(echo "$bytes" | numfmt --to=iec --suffix=B  | sed -r 's/([A-Z])/ \1/')
       echo "${body//(\[P\])/($size)}"> "$info"
     fi
   fi
