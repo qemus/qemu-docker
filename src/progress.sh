@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-info="/run/shm/msg.html"
-
 escape () {
     local s
     s=${1//&/\&amp;}
@@ -15,6 +13,7 @@ escape () {
 
 file="$1"
 body=$(escape "$2")
+info="/run/shm/msg.html"
 
 if [[ "$body" == *"..." ]]; then
   body="<p class=\"loading\">${body/.../}</p>"
