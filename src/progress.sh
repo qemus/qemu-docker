@@ -22,8 +22,11 @@ fi
 while true
 do
   if [ -f "$file" ]; then
-    size=$(stat -c '%s' "$file" | numfmt --to=si --suffix=B)
-    echo "${body//(\[P\])/($size)}"> "$info"
+    bytes=$(du -sb "$file" | cut -f1)
+    if (( bytes > 1000 )); then
+      size=$(echo "$bytes" | numfmt --to=si --suffix=B  | sed -r 's/([A-Z])/ \1/')
+      echo "${body//(\[P\])/($size)}"> "$info"
+    fi
   fi
   sleep 1
 done
