@@ -34,13 +34,18 @@ BASE=$(echo "$BASE" | sed -e 's/[^A-Za-z0-9._-]/_/g')
 TMP="$STORAGE/${BASE%.*}.tmp"
 rm -f "$TMP"
 
-MSG="Downloading $BASE as boot image..."
+MSG="Downloading $BASE ..."
 info "$MSG" && html "$MSG"
 
+/run/progress.sh "$TMP" "Downloading $BASE ([P])..." &
 { wget "$BOOT" -O "$TMP" -q --no-check-certificate --show-progress "$PROGRESS"; rc=$?; } || :
+
+fKill "progress.sh"
 
 (( rc != 0 )) && error "Failed to download $BOOT , reason: $rc" && exit 60
 [ ! -f "$TMP" ] && error "Failed to download $BOOT" && exit 61
+
+html "Download finished successfully..."
 
 SIZE=$(stat -c%s "$TMP")
 
@@ -50,5 +55,4 @@ fi
 
 mv -f "$TMP" "$STORAGE/$BASE"
 
-html "Download finished successfully..."
 return 0
