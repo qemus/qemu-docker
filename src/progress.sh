@@ -22,8 +22,8 @@ fi
 
 while true
 do
-	mb=$(ls -s --block-size=1048576 "$file" | cut -d' ' -f1)
-  out="${body//[P]/$mb;}"
+  mb=$(ls -s --block-size=1048576 "$file" | cut -d' ' -f1)
+  out="${body//(\[P\])/( $mb MB );}"
   echo "$out" > "$info"
-	sleep 1
+  sleep 1
 done
