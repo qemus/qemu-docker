@@ -22,7 +22,7 @@ fi
 while true
 do
   if [ -f "$file" ]; then
-    size=$(stat -c '%s' "$file" | numfmt --to=si --suffix=B  | sed -r 's/([A-Z])/ \1/')
+    size=$(du -sb "$file" | cut -f1 | numfmt --to=si --suffix=B  | sed -r 's/([A-Z])/ \1/')
     echo "${body//(\[P\])/($size)}"> "$info"
   fi
   sleep 1
