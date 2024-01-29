@@ -3,9 +3,9 @@ set -Eeuo pipefail
 
 # Docker environment variables
 
+: "${MAC:=""}"
 : "${DHCP:="N"}"
 : "${HOST_PORTS:=""}"
-: "${MAC:="82:cf:d0:5e:57:66"}"
 
 : "${VM_NET_DEV:=""}"
 : "${VM_NET_TAP:="qemu"}"
@@ -34,7 +34,7 @@ configureDHCP() {
   fi
 
   while ! ip link set "$VM_NET_TAP" up; do
-    info "Waiting for address to become available..."
+    info "Waiting for MAC address to become available..."
     sleep 2
   done
 
@@ -152,7 +152,7 @@ configureNAT() {
   ip address add ${VM_NET_IP%.*}.1/24 broadcast ${VM_NET_IP%.*}.255 dev dockerbridge
 
   while ! ip link set dockerbridge up; do
-    info "Waiting for address to become available..."
+    info "Waiting for IP address to become available..."
     sleep 2
   done
 
@@ -160,7 +160,7 @@ configureNAT() {
   ip tuntap add dev "$VM_NET_TAP" mode tap
 
   while ! ip link set "$VM_NET_TAP" up promisc on; do
-    info "Waiting for tap to become available..."
+    info "Waiting for TAP to become available..."
     sleep 2
   done
 
@@ -238,14 +238,20 @@ getInfo() {
     error "$ADD_ERR -e \"VM_NET_DEV=NAME\" to specify another interface name." && exit 27
   fi
 
-  VM_NET_MAC="${VM_NET_MAC//-/:}"
+  if [ -z "$MAC" ]; then
+    # Generate MAC address based on hostname
+    MAC=$(echo "$HOST" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
+  fi
+
+  VM_NET_MAC="${MAC//-/:}"
+
   if [[ ${#VM_NET_MAC} == 12 ]]; then
     m="$VM_NET_MAC"
     VM_NET_MAC="${m:0:2}:${m:2:2}:${m:4:2}:${m:6:2}:${m:8:2}:${m:10:2}"
   fi
 
   if [[ ${#VM_NET_MAC} != 17 ]]; then
-    error "Invalid mac address: '$VM_NET_MAC', should be 12 or 17 digits long!" && exit 28
+    error "Invalid MAC address: '$VM_NET_MAC', should be 12 or 17 digits long!" && exit 28
   fi
 
   GATEWAY=$(ip r | grep default | awk '{print $3}')
@@ -268,7 +274,7 @@ getInfo
 html "Initializing network..."
 
 if [[ "$DEBUG" == [Yy1]* ]]; then
-  info "Container IP is $IP with gateway $GATEWAY on interface $VM_NET_DEV" && echo
+  info "Container: $HOST  IP: $IP  Gateway: $GATEWAY  Interface: $VM_NET_DEV  MAC: $VM_NET_MAC" && echo
 fi
 
 if [[ "$DHCP" == [Yy1]* ]]; then
