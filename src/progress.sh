@@ -22,8 +22,9 @@ fi
 
 while true
 do
-  mb=$(ls -s --block-size=1048576 "$file" | cut -d' ' -f1)
-  out="${body//(\[P\])/( $mb MB );}"
-  echo "$out" > "$info"
+  if [ -f "$file" ]; then
+    size=$(stat -c '%s' "$file" | numfmt --to=si --suffix=B)
+    echo "${body//(\[P\])/($size)}"> "$info"
+  fi
   sleep 1
 done
