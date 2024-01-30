@@ -34,7 +34,7 @@ configureDHCP() {
   fi
 
   while ! ip link set "$VM_NET_TAP" up; do
-    info "Waiting for MAC address to become available..."
+    info "Waiting for MAC address $VM_NET_MAC to become available..."
     sleep 2
   done
 
