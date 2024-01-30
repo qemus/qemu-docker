@@ -274,7 +274,9 @@ getInfo
 html "Initializing network..."
 
 if [[ "$DEBUG" == [Yy1]* ]]; then
-  info "Host: $HOST  IP: $IP  Gateway: $GATEWAY  Interface: $VM_NET_DEV  MAC: $VM_NET_MAC" && echo
+  info "Host: $HOST  IP: $IP  Gateway: $GATEWAY  Interface: $VM_NET_DEV  MAC: $VM_NET_MAC"
+  [ -f /etc/resolv.conf ] && cat /etc/resolv.conf 
+  echo
 fi
 
 if [[ "$DHCP" == [Yy1]* ]]; then
