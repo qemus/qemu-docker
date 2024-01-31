@@ -141,7 +141,6 @@ configureNAT() {
   # Create a bridge with a static IP for the VM guest
 
   VM_NET_IP='20.20.20.21'
-  [[ "$DEBUG" == [Yy1]* ]] && set -x
 
   { ip link add dev dockerbridge type bridge ; rc=$?; } || :
 
@@ -181,9 +180,6 @@ configureNAT() {
     # Hack for guest VMs complaining about "bad udp checksums in 5 packets"
     iptables -A POSTROUTING -t mangle -p udp --dport bootpc -j CHECKSUM --checksum-fill || true
   fi
-
-  { set +x; } 2>/dev/null
-  [[ "$DEBUG" == [Yy1]* ]] && echo
 
   NET_OPTS="-netdev tap,ifname=$VM_NET_TAP,script=no,downscript=no,id=hostnet0"
 
