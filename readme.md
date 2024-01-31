@@ -157,9 +157,9 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
 
 * ### How can the VM acquire an IP address from my router?
 
-  After configuring the container for macvlan (see above), it is possible for the VM to become part of your home network by requesting an IP from your router, just like your other devices.
+  After configuring the container for macvlan (see above), it is possible for the VM to become part of your home network by requesting an IP from your router, just like a real PC.
 
-  To enable this feature, add the following lines to your compose file:
+  To enable this mode, add the following lines to your compose file:
 
   ```yaml
   environment:
@@ -168,7 +168,7 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
     - 'c *:* rwm'
   ```
 
-  Please note that in this mode, the container and the VM will each have their own separate IPs. The container will keep the macvlan IP, and the VM will be reachable via the DHCP IP.
+  Please note that in this mode, the container and the VM will each have their own separate IPs. The container will keep the macvlan IP, and the VM will use the DHCP IP.
 
 * ### How do I pass-through a disk?
 
