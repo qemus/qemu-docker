@@ -184,7 +184,18 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
   ```
 
   Use `DEVICE` if you want it to become your main drive, and use `DEVICE2` and higher to add them as secondary drives.
-  
+
+* ### How do I pass-through a USB device?
+
+  To pass-through a USB device, first lookup its vendor and product id via the `lsusb` command, then add them to your compose file like this:
+
+  ```yaml
+  environment:
+    ARGUMENTS: "-device usb-host,vendorid=0x1234,productid=0x1234"
+  devices:
+    - /dev/bus/usb
+  ```
+
 * ### How do I boot with UEFI?
 
   To enable UEFI booting, add the following line to your compose file:
