@@ -86,7 +86,7 @@ getSize() {
 isCow() {
   local FS=$1
 
-  if [[ "${FS,,}" == "xfs" || "${FS,,}" == "zfs" || "${FS,,}" == "btrfs" || "${FS,,}" == "bcachefs" ]]; then
+  if [[ "${FS,,}" == "xfs" || "${FS,,}" == "btrfs" || "${FS,,}" == "bcachefs" ]]; then
     return 0
   fi
 
