@@ -26,13 +26,9 @@ fi
 DRIVERS="$STORAGE/drivers.iso"
 [ ! -f "$DRIVERS" ] && DRIVERS="/run/drivers.iso"
 
-if [ -f "$DRIVERS" ]; then
+if [ -f "$DRIVERS" ] && [[ "${MACHINE,,}" != "pc-q35-2"* ]]; then
   DISK_OPTS="$DISK_OPTS -drive id=cdrom1,media=cdrom,if=none,format=raw,readonly=on,file=$DRIVERS"
-  if [[ "${MACHINE,,}" != "pc-q35-2"* ]]; then
-    DISK_OPTS="$DISK_OPTS -device ide-cd,drive=cdrom1"
-  else
-    DISK_OPTS="$DISK_OPTS -device usb-storage,bus=ehci.0,drive=cdrom1"
-  fi
+  DISK_OPTS="$DISK_OPTS -device ide-cd,drive=cdrom1"
 fi
 
 fmt2ext() {
