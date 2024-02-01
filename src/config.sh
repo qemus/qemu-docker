@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-: "${MACHINE:="q35"}"
-: "${USB:="qemu-xhci"}"
 : "${SERIAL:="mon:stdio"}"
+: "${USB:="qemu-xhci,id=xhci"}"
 : "${MONITOR:="telnet:localhost:7100,server,nowait,nodelay"}"
 
 DEF_OPTS="-nodefaults"

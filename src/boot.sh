@@ -22,7 +22,7 @@ case "${BOOT_MODE,,}" in
     VARS="OVMF_VARS_4M.ms.fd"
     ;;
   windows_legacy)
-    USB="usb-ehci"
+    USB="usb-ehci,id=ehci"
     BOOT_OPTS=""
     ;;
   legacy)
