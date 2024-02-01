@@ -15,20 +15,19 @@ DISK_OPTS="$DISK_OPTS -device virtio-scsi-pci,id=scsi0,iothread=io2,addr=0x5"
 DISK_OPTS="$DISK_OPTS -device scsi-cd,bus=scsi0.0,drive=cdrom0,bootindex=$BOOT_INDEX"
 
 BOOT="$STORAGE/$BASE"
-
-if [ -f "$BOOT" ]; then
-  DISK_OPTS="$DISK_OPTS -drive id=cdrom0,if=none,format=raw,readonly=on,file=$BOOT"
-else
-  DISK_OPTS="$DISK_OPTS -drive id=cdrom0,if=none,format=raw,readonly=on,file=/dev/null"
-fi
+[ ! -f "$BOOT" ] && BOOT="/dev/null"
+DISK_OPTS="$DISK_OPTS -drive id=cdrom0,if=none,format=raw,readonly=on,file=$BOOT"
 
 DRIVERS="$STORAGE/drivers.iso"
 [ ! -f "$DRIVERS" ] && DRIVERS="/run/drivers.iso"
 
 if [ -f "$DRIVERS" ]; then
-  DISK_OPTS="$DISK_OPTS \
-    -drive id=cdrom1,if=none,format=raw,readonly=on,file=$DRIVERS \
-    -device ide-cd,drive=cdrom1"
+  DISK_OPTS="$DISK_OPTS -drive id=cdrom1,if=none,format=raw,readonly=on,file=$DRIVERS"
+  if [[ "${MACHINE,,}" != "pc-q35-2"* ]]; then
+    DISK_OPTS="$DISK_OPTS -device ide-cd,drive=cdrom1"
+  else
+    DISK_OPTS="$DISK_OPTS -device usb-storage,bus=ehci.0,drive=cdrom1"
+  fi
 fi
 
 fmt2ext() {
@@ -446,7 +445,7 @@ addDevice () {
   local OPTS
   OPTS=$(createDevice "$DISK_ID" "$DISK_DEV" "$DISK_INDEX" "$DISK_ADDRESS")
   DISK_OPTS="$DISK_OPTS $OPTS"
-  
+
   return 0
 }
 
