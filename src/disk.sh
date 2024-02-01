@@ -352,8 +352,9 @@ createDevice () {
   local DISK_FILE=$2
   local DISK_INDEX=$3
   local DISK_ADDRESS=$4
+  local DISK_FMT=$5
 
-  local result="-drive file=$DISK_FILE,if=none,id=drive-$DISK_ID,format=raw,cache=$DISK_CACHE,aio=$DISK_IO,discard=$DISK_DISCARD,detect-zeroes=on"
+  local result="-drive file=$DISK_FILE,if=none,id=drive-$DISK_ID,format=$DISK_FMT,cache=$DISK_CACHE,aio=$DISK_IO,discard=$DISK_DISCARD,detect-zeroes=on"
 
   if [[ "${MACHINE,,}" == "pc-q35-2"* ]]; then
 
@@ -425,7 +426,7 @@ addDisk () {
 
   fi
 
-  OPTS=$(createDevice "$DISK_ID" "$DISK_FILE" "$DISK_INDEX" "$DISK_ADDRESS")
+  OPTS=$(createDevice "$DISK_ID" "$DISK_FILE" "$DISK_INDEX" "$DISK_ADDRESS" "$DISK_FMT")
   DISK_OPTS="$DISK_OPTS $OPTS"
 
   return 0
@@ -443,7 +444,7 @@ addDevice () {
   [ ! -b "$DISK_DEV" ] && error "Device $DISK_DEV cannot be found! Please add it to the 'devices' section of your compose file." && exit 55
 
   local OPTS
-  OPTS=$(createDevice "$DISK_ID" "$DISK_DEV" "$DISK_INDEX" "$DISK_ADDRESS")
+  OPTS=$(createDevice "$DISK_ID" "$DISK_DEV" "$DISK_INDEX" "$DISK_ADDRESS" "raw")
   DISK_OPTS="$DISK_OPTS $OPTS"
 
   return 0
