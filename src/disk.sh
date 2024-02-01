@@ -356,7 +356,7 @@ createDevice () {
 
   local result="-drive file=$DISK_FILE,if=none,id=drive-$DISK_ID,format=raw,cache=$DISK_CACHE,aio=$DISK_IO,discard=$DISK_DISCARD,detect-zeroes=on"
 
-  if [[ "${BOOT_MODE,,}" == "windows_legacy" ]]; then
+  if [[ "${MACHINE,,}" == "pc-q35-2"* ]]; then
 
     result="$result -device virtio-blk-pci,scsi=off,bus=pcie.0,addr=$DISK_ADDRESS,drive=drive-$DISK_ID,id=$DISK_ID,iothread=io2,bootindex=$DISK_INDEX"
 
