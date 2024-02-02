@@ -20,4 +20,4 @@ trap - ERR
 info "Booting image using $VERS..."
 
 [[ "$DEBUG" == [Yy1]* ]] && set -x
-exec qemu-system-arm ${ARGS:+ $ARGS}
+exec qemu-system-aarch64 ${ARGS:+ $ARGS}
