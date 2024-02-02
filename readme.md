@@ -209,7 +209,7 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
 
   To skip the download, rename your image to `boot.iso` and place it in an empty `/storage` folder.
 
-* ### How do I run a ARM-based image?
+* ### How do I boot a ARM-based image?
 
   You can use [qemu-arm](https://github.com/qemus/qemu-arm/) to run ARM64 images.
 
