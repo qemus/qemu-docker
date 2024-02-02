@@ -11,7 +11,7 @@
 
 </div></h1>
 
-QEMU in a docker container for running ARM64 / AARCH64 virtual machines.
+QEMU in a docker container for running ARM-based virtual machines.
 
 It uses high-performance QEMU options (like KVM acceleration, kernel-mode networking, IO threading, etc.) to achieve near-native speed.
 
