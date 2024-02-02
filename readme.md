@@ -32,7 +32,7 @@ services:
     container_name: qemu
     image: qemux/qemu-docker
     environment:
-      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-minirootfs-3.19.1-x86_64.tar.gz"
+      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.1-x86_64.iso"
     devices:
       - /dev/kvm
     cap_add:
