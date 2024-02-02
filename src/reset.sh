@@ -18,7 +18,7 @@ echo
 
 : "${BOOT:=""}"           # URL of the ISO file
 : "${DEBUG:="N"}"         # Disable debugging
-: "${MACHINE:="q35"}"      # Machine selection
+: "${MACHINE:="virt"}"      # Machine selection
 : "${ALLOCATE:=""}"       # Preallocate diskspace
 : "${ARGUMENTS:=""}"      # Extra QEMU parameters
 : "${CPU_CORES:="1"}"     # Amount of CPU cores
@@ -39,7 +39,7 @@ HOST=$(hostname -s)
 KERNEL=$(uname -r | cut -b 1)
 MINOR=$(uname -r | cut -d '.' -f2)
 ARCH=$(dpkg --print-architecture)
-VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
+VERS=$(qemu-system-aarch64 --version | head -n 1 | cut -d '(' -f 1)
 
 # Check system
 

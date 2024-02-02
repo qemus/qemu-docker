@@ -1,6 +1,6 @@
 <h1 align="center">QEMU<br />
 <div align="center">
-<img src="https://github.com/qemus/qemu-docker/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="128" />
+<img src="https://github.com/qemus/qemu-arm/raw/master/.github/logo.png" title="Logo" style="max-width:100%;" width="128" />
 </div>
 <div align="center">
 
@@ -11,7 +11,7 @@
 
 </div></h1>
 
-QEMU in a docker container for running x86 and x64 virtual machines.
+QEMU in a docker container for running ARM-based virtual machines.
 
 It uses high-performance QEMU options (like KVM acceleration, kernel-mode networking, IO threading, etc.) to achieve near-native speed.
 
@@ -30,9 +30,9 @@ version: "3"
 services:
   qemu:
     container_name: qemu
-    image: qemux/qemu-docker
+    image: qemux/qemu-arm
     environment:
-      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.0-x86_64.iso"
+      BOOT: "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/aarch64/alpine-virt-3.19.1-aarch64.iso"
     devices:
       - /dev/kvm
     cap_add:
@@ -218,11 +218,11 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
     ARGUMENTS: "-device usb-tablet"
   ```
 
-[build_url]: https://github.com/qemus/qemu-docker/
-[hub_url]: https://hub.docker.com/r/qemux/qemu-docker/
-[tag_url]: https://hub.docker.com/r/qemux/qemu-docker/tags
+[build_url]: https://github.com/qemus/qemu-arm/
+[hub_url]: https://hub.docker.com/r/qemux/qemu-arm/
+[tag_url]: https://hub.docker.com/r/qemux/qemu-arm/tags
 
-[Build]: https://github.com/qemus/qemu-docker/actions/workflows/build.yml/badge.svg
-[Size]: https://img.shields.io/docker/image-size/qemux/qemu-docker/latest?color=066da5&label=size
-[Pulls]: https://img.shields.io/docker/pulls/qemux/qemu-docker.svg?style=flat&label=pulls&logo=docker
-[Version]: https://img.shields.io/docker/v/qemux/qemu-docker/latest?arch=amd64&sort=semver&color=066da5
+[Build]: https://github.com/qemus/qemu-arm/actions/workflows/build.yml/badge.svg
+[Size]: https://img.shields.io/docker/image-size/qemux/qemu-arm/latest?color=066da5&label=size
+[Pulls]: https://img.shields.io/docker/pulls/qemux/qemu-arm.svg?style=flat&label=pulls&logo=docker
+[Version]: https://img.shields.io/docker/v/qemux/qemu-arm/latest?arch=arm64&sort=semver&color=066da5

@@ -20,7 +20,7 @@ RUN apt-get update \
         qemu-utils \
         ca-certificates \
         netcat-openbsd \
-        qemu-system-x86 \
+        qemu-system-arm \
     && apt-get clean \
     && novnc="1.4.0" \
     && mkdir -p /usr/share/novnc \

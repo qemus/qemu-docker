@@ -7,7 +7,7 @@ set -Eeuo pipefail
 : "${CPU_FLAGS:=""}"
 : "${CPU_MODEL:="host"}"
 
-[ "$ARCH" != "amd64" ] && KVM="N"
+[ "$ARCH" != "arm"* ] && KVM="N"
 
 if [[ "$KVM" != [Nn]* ]]; then
 
@@ -18,10 +18,6 @@ if [[ "$KVM" != [Nn]* ]]; then
   else
     if ! sh -c 'echo -n > /dev/kvm' &> /dev/null; then
       KVM_ERR="(no write access)"
-    else
-      if ! grep -q -e vmx -e svm /proc/cpuinfo; then
-        KVM_ERR="(vmx/svm disabled)"
-      fi
     fi
   fi
 
@@ -48,14 +44,14 @@ if [[ "$KVM" != [Nn]* ]]; then
 else
 
   KVM_OPTS=""
-  CPU_FEATURES="+ssse3,+sse4.1,+sse4.2"
+  CPU_FEATURES=""
 
   if [[ "${CPU_MODEL,,}" == "host"* ]]; then
 
-    if [[ "$ARCH" == "amd64" ]]; then
+    if [[ "$ARCH" == "arm"* ]]; then
       CPU_MODEL="max"
     else
-      CPU_MODEL="qemu64"
+      CPU_MODEL="cortex-a76"
     fi
 
   fi
