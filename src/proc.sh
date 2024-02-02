@@ -39,12 +39,6 @@ if [[ "$KVM" != [Nn]* ]]; then
   CPU_FEATURES="kvm=on"
   KVM_OPTS=",accel=kvm -enable-kvm"
 
-  if [[ "${BOOT_MODE,,}" == "windows" ]] || [[ "${BOOT_MODE,,}" == "windows_legacy" ]]; then
-
-    CPU_FEATURES="$CPU_FEATURES,+hypervisor,+invtsc,l3-cache=on,migratable=no,hv_passthrough"
-
-  fi
-
 else
 
   KVM_OPTS=""
@@ -61,10 +55,25 @@ else
   fi
 fi
 
+if [[ "${BOOT_MODE,,}" == "windows" ]]; then
+
+  [ -n "$CPU_FEATURES" ] && CPU_FEATURES="$CPU_FEATURES,"
+  CPU_FEATURES="$CPU_FEATURES+hypervisor,+invtsc,l3-cache=on,migratable=no,hv_passthrough"
+
+fi
+
 if [ -z "$CPU_FLAGS" ]; then
-  CPU_FLAGS="$CPU_MODEL,$CPU_FEATURES"
+  if [ -z "$CPU_FEATURES" ]; then
+    CPU_FLAGS="$CPU_MODEL"
+  else
+    CPU_FLAGS="$CPU_MODEL,$CPU_FEATURES"
+  fi
 else
-  CPU_FLAGS="$CPU_MODEL,$CPU_FEATURES,$CPU_FLAGS"
+  if [ -z "$CPU_FEATURES" ]; then
+    CPU_FLAGS="$CPU_MODEL,$CPU_FLAGS"
+  else
+    CPU_FLAGS="$CPU_MODEL,$CPU_FEATURES,$CPU_FLAGS"
+  fi
 fi
 
 return 0
