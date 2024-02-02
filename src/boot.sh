@@ -30,7 +30,7 @@ case "${BOOT_MODE,,}" in
     ;;
   *)
     info "Unknown boot mode '${BOOT_MODE}', defaulting to 'legacy'"
-    BOOT_MODE="legacy"    
+    BOOT_MODE="legacy"
     ;;
 esac
 
@@ -75,7 +75,7 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]] && [[ "${BOOT_MODE,,}" != "windows_legacy"
       for (( i = 1; i < 20; i++ )); do
 
         [ -S "/run/swtpm-sock" ] && break
-  
+
         if (( i % 10 == 0 )); then
           echo "Waiting for TPM socket to become available..."
         fi
