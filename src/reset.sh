@@ -39,7 +39,7 @@ HOST=$(hostname -s)
 KERNEL=$(uname -r | cut -b 1)
 MINOR=$(uname -r | cut -d '.' -f2)
 ARCH=$(dpkg --print-architecture)
-VERS=$(qemu-system-x86_64 --version | head -n 1 | cut -d '(' -f 1)
+VERS=$(qemu-system-arm --version | head -n 1 | cut -d '(' -f 1)
 
 # Check system
 
