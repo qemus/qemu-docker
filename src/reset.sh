@@ -18,7 +18,7 @@ echo
 
 : "${BOOT:=""}"           # URL of the ISO file
 : "${DEBUG:="N"}"         # Disable debugging
-: "${MACHINE:="q35"}"      # Machine selection
+: "${MACHINE:="virt"}"      # Machine selection
 : "${ALLOCATE:=""}"       # Preallocate diskspace
 : "${ARGUMENTS:=""}"      # Extra QEMU parameters
 : "${CPU_CORES:="1"}"     # Amount of CPU cores
