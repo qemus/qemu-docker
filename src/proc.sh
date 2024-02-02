@@ -41,7 +41,7 @@ if [[ "$KVM" != [Nn]* ]]; then
 
   if [[ "${BOOT_MODE,,}" == "windows" ]] || [[ "${BOOT_MODE,,}" == "windows_legacy" ]]; then
 
-    CPU_FEATURES="kvm=on,+hypervisor,+invtsc,l3-cache=on,migratable=no,hv_passthrough"
+    CPU_FEATURES="$CPU_FEATURES,+hypervisor,+invtsc,l3-cache=on,migratable=no,hv_passthrough"
 
   fi
 
