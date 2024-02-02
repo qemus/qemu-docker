@@ -2,7 +2,7 @@
 set -Eeuo pipefail
 
 APP="QEMU"
-SUPPORT="https://github.com/qemus/qemu-arm"
+SUPPORT="https://github.com/qemus/qemu-docker"
 
 cd /run
 
@@ -20,4 +20,4 @@ trap - ERR
 info "Booting image using $VERS..."
 
 [[ "$DEBUG" == [Yy1]* ]] && set -x
-exec qemu-system-aarch64 ${ARGS:+ $ARGS}
+exec qemu-system-x86_64 ${ARGS:+ $ARGS}
