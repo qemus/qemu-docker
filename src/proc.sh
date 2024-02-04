@@ -38,12 +38,7 @@ if [[ "$KVM" != [Nn]* ]]; then
 
   CPU_FEATURES="kvm=on"
   KVM_OPTS=",accel=kvm -enable-kvm"
-
-  if [[ "${BOOT_MODE,,}" == "windows" ]] || [[ "${BOOT_MODE,,}" == "windows_legacy" ]]; then
-
-    WIN_FEATURES="+hypervisor,+invtsc,l3-cache=on,migratable=no,hv_passthrough"
-
-  fi
+  WIN_FEATURES="+hypervisor,+invtsc,l3-cache=on,migratable=no,hv_passthrough"
 
 else
 
@@ -52,12 +47,12 @@ else
 
   if [[ "${CPU_MODEL,,}" == "host"* ]]; then
 
-    if [[ "$ARCH" == "amd64" ]]; then
+    if [[ "$ARCH" != "amd64" ]]; then
+      CPU_MODEL="qemu64"
+      WIN_FEATURES="+hypervisor,l3-cache=on,hv_passthrough"
+    else
       CPU_MODEL="max"
       WIN_FEATURES="+hypervisor,l3-cache=on,migratable=no,hv_passthrough"
-    else
-      CPU_MODEL="qemu64"
-      WIN_FEATURES="+hypervisor,+invtsc,l3-cache=on,hv_passthrough"
     fi
 
   fi
