@@ -43,11 +43,11 @@ if [[ "$KVM" != [Nn]* ]]; then
 
 else
 
-  if [[ "$ARCH" != "amd64" ]]; then
-      CPU_FEATURES="l3-cache=on"
-    else
+  CPU_FEATURES="l3-cache=on"
+
+  if [[ "$ARCH" == "amd64" ]]; then
       CPU_MODEL="max"
-      CPU_FEATURES="l3-cache=on,migratable=no"
+      CPU_FEATURES="$CPU_FEATURES,migratable=no"
   fi
 
   KVM_OPTS=""
