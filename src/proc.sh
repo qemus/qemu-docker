@@ -44,7 +44,6 @@ if [[ "$KVM" != [Nn]* ]]; then
 else
 
   if [[ "$ARCH" != "amd64" ]]; then
-      CPU_MODEL="$MODEL"
       CPU_FEATURES="l3-cache=on"
     else
       CPU_MODEL="max"
