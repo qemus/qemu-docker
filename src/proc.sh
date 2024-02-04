@@ -5,7 +5,7 @@ set -Eeuo pipefail
 
 : "${KVM:="Y"}"
 : "${CPU_FLAGS:=""}"
-: "${CPU_MODEL:="host"}"
+: "${CPU_MODEL:="qemu64"}"
 
 [ "$ARCH" != "amd64" ] && KVM="N"
 
@@ -36,35 +36,45 @@ fi
 
 if [[ "$KVM" != [Nn]* ]]; then
 
-  CPU_FEATURES="kvm=on"
+  CPU_MODEL="host"
   KVM_OPTS=",accel=kvm -enable-kvm"
-
-  if [[ "${BOOT_MODE,,}" == "windows" ]] || [[ "${BOOT_MODE,,}" == "windows_legacy" ]]; then
-
-    CPU_FEATURES="kvm=on,+hypervisor,+invtsc,l3-cache=on,migratable=no,hv_passthrough"
-
-  fi
+  CPU_FEATURES="kvm=on,l3-cache=on,migratable=no"
+  WIN_FEATURES="+hypervisor,+invtsc,hv_passthrough"
 
 else
 
   KVM_OPTS=""
-  CPU_FEATURES="+ssse3,+sse4.1,+sse4.2"
+  CPU_FEATURES="l3-cache=on"
+  WIN_FEATURES="+hypervisor,hv_passthrough"
 
-  if [[ "${CPU_MODEL,,}" == "host"* ]]; then
-
-    if [[ "$ARCH" == "amd64" ]]; then
+  if [[ "$ARCH" == "amd64" ]]; then
       CPU_MODEL="max"
-    else
-      CPU_MODEL="qemu64"
-    fi
-
+      CPU_FEATURES="$CPU_FEATURES,migratable=no"
   fi
+
+  CPU_FEATURES="$CPU_FEATURES,+ssse3,+sse4.1,+sse4.2"
+
+fi
+
+if [[ "${BOOT_MODE,,}" == "windows" ]] || [[ "${BOOT_MODE,,}" == "windows_legacy" ]]; then
+
+  [ -n "$CPU_FEATURES" ] && CPU_FEATURES="$CPU_FEATURES,"
+  CPU_FEATURES="$CPU_FEATURES${WIN_FEATURES}"
+
 fi
 
 if [ -z "$CPU_FLAGS" ]; then
-  CPU_FLAGS="$CPU_MODEL,$CPU_FEATURES"
+  if [ -z "$CPU_FEATURES" ]; then
+    CPU_FLAGS="$CPU_MODEL"
+  else
+    CPU_FLAGS="$CPU_MODEL,$CPU_FEATURES"
+  fi
 else
-  CPU_FLAGS="$CPU_MODEL,$CPU_FEATURES,$CPU_FLAGS"
+  if [ -z "$CPU_FEATURES" ]; then
+    CPU_FLAGS="$CPU_MODEL,$CPU_FLAGS"
+  else
+    CPU_FLAGS="$CPU_MODEL,$CPU_FEATURES,$CPU_FLAGS"
+  fi
 fi
 
 return 0
