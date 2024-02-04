@@ -41,7 +41,7 @@ if [[ "$KVM" != [Nn]* ]]; then
 
   if [[ "${BOOT_MODE,,}" == "windows" ]] || [[ "${BOOT_MODE,,}" == "windows_legacy" ]]; then
 
-    CPU_FEATURES="kvm=on,+hypervisor,+invtsc,l3-cache=on,migratable=no,hv_passthrough"
+    WIN_FEATURES="+hypervisor,+invtsc,l3-cache=on,migratable=no,hv_passthrough"
 
   fi
 
@@ -54,18 +54,20 @@ else
 
     if [[ "$ARCH" == "amd64" ]]; then
       CPU_MODEL="max"
+      WIN_FEATURES="+hypervisor,l3-cache=on,migratable=no,hv_passthrough"
     else
       CPU_MODEL="qemu64"
+      WIN_FEATURES="+hypervisor,+invtsc,l3-cache=on,hv_passthrough"
     fi
 
   fi
+fi
 
-  if [[ "${BOOT_MODE,,}" == "windows" ]]; then
+if [[ "${BOOT_MODE,,}" == "windows" ]] || [[ "${BOOT_MODE,,}" == "windows_legacy" ]]; then
 
-    [ -n "$CPU_FEATURES" ] && CPU_FEATURES="$CPU_FEATURES,"
-    CPU_FEATURES="$CPU_FEATURES+hypervisor,l3-cache=on,migratable=no,hv_passthrough"
+  [ -n "$CPU_FEATURES" ] && CPU_FEATURES="$CPU_FEATURES,"
+  CPU_FEATURES="$CPU_FEATURES${WIN_FEATURES}"
 
-  fi
 fi
 
 if [ -z "$CPU_FLAGS" ]; then
