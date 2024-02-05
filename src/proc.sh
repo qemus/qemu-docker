@@ -5,8 +5,8 @@ set -Eeuo pipefail
 
 : "${KVM:="Y"}"
 : "${CPU_FLAGS:=""}"
+: "${CPU_MODEL:=""}"
 : "${DEF_MODEL:="qemu64"}"
-: "${CPU_MODEL:="$DEF_MODEL"}"
 
 [ "$ARCH" != "amd64" ] && KVM="N"
 
@@ -37,7 +37,7 @@ fi
 
 if [[ "$KVM" != [Nn]* ]]; then
 
-  if [[ "$CPU_MODEL" == "$DEF_MODEL" ]]; then
+  if [ -z "$CPU_MODEL" ]; then
     CPU_MODEL="host"
   fi
 
@@ -52,11 +52,16 @@ else
   WIN_FEATURES="+hypervisor,hv_passthrough"
 
   if [[ "$ARCH" == "amd64" ]]; then
-    if [[ "$CPU_MODEL" == "$DEF_MODEL" ]]; then
-      CPU_MODEL="max"
-    fi
     KVM_OPTS=" -accel tcg,thread=multi"
-    CPU_FEATURES="$CPU_FEATURES,migratable=no"
+  fi
+
+  if [ -z "$CPU_MODEL" ]; then
+    if [[ "$ARCH" == "amd64" ]]; then
+      CPU_MODEL="max"
+      CPU_FEATURES="$CPU_FEATURES,migratable=no"
+    else
+      CPU_MODEL="$DEF_MODEL"
+    fi
   fi
 
   CPU_FEATURES="$CPU_FEATURES,+ssse3,+sse4.1,+sse4.2"
