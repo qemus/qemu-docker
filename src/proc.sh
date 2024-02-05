@@ -28,7 +28,7 @@ if [[ "$KVM" != [Nn]* ]]; then
 
   if [ -n "$KVM_ERR" ]; then
     KVM="N"
-    error "KVM acceleration not detected $KVM_ERR, this will cause a major loss of performance."
+    error "KVM acceleration not available $KVM_ERR, this will cause a major loss of performance."
     error "See the FAQ on how to enable it, or continue without KVM by setting KVM=N (not recommended)."
     [[ "$DEBUG" != [Yy1]* ]] && exit 88
   fi
@@ -37,21 +37,23 @@ fi
 
 if [[ "$KVM" != [Nn]* ]]; then
 
+  KVM_OPTS=",accel=kvm -enable-kvm"
+  CPU_FEATURES="kvm=on,l3-cache=on"
+  WIN_FEATURES="+hypervisor,+invtsc,hv_passthrough"
+
   if [ -z "$CPU_MODEL" ]; then
     CPU_MODEL="host"
+    CPU_FEATURES="$CPU_FEATURES,migratable=no"
   fi
-
-  KVM_OPTS=",accel=kvm -enable-kvm"
-  CPU_FEATURES="kvm=on,l3-cache=on,migratable=no"
-  WIN_FEATURES="+hypervisor,+invtsc,hv_passthrough"
 
 else
 
-  KVM_OPTS=""
   CPU_FEATURES="l3-cache=on"
   WIN_FEATURES="+hypervisor,hv_passthrough"
 
-  if [[ "$ARCH" == "amd64" ]]; then
+  if [[ "$ARCH" != "amd64" ]]; then
+    KVM_OPTS=""
+  else
     KVM_OPTS=" -accel tcg,thread=multi"
   fi
 
