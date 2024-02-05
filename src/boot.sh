@@ -8,10 +8,6 @@ set -Eeuo pipefail
 SECURE=""
 BOOT_OPTS=""
 
-if [[ "$ARCH" == "amd64" ]]; then
-  BOOT_OPTS="-global kvm-pit.lost_tick_policy=discard"
-fi
-
 case "${BOOT_MODE,,}" in
   uefi)
     ROM="OVMF_CODE_4M.fd"
