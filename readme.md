@@ -222,6 +222,9 @@ docker run -it --rm -e "BOOT=http://example.com/image.iso" -p 8006:8006 --device
     ARGUMENTS: "-device usb-tablet"
   ```
 
+## Stars
+[![Stars](https://starchart.cc/qemus/qemu-docker.svg?variant=adaptive)](https://starchart.cc/qemus/qemu-docker)
+
 [build_url]: https://github.com/qemus/qemu-docker/
 [hub_url]: https://hub.docker.com/r/qemux/qemu-docker/
 [tag_url]: https://hub.docker.com/r/qemux/qemu-docker/tags
