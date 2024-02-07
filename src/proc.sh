@@ -3,6 +3,7 @@ set -Eeuo pipefail
 
 # Docker environment variables
 
+: "${HV="Y"}"
 : "${KVM:="Y"}"
 : "${CPU_FLAGS:=""}"
 : "${CPU_MODEL:=""}"
@@ -38,7 +39,7 @@ fi
 if [[ "$KVM" != [Nn]* ]]; then
 
   CPU_FEATURES="kvm=on,l3-cache=on"
-  WIN_FEATURES="+hypervisor,+invtsc,hv_passthrough"
+  HV_FEATURES="+hypervisor,+invtsc,hv_passthrough"
   KVM_OPTS=",accel=kvm -enable-kvm -global kvm-pit.lost_tick_policy=discard"
 
   if [ -z "$CPU_MODEL" ]; then
@@ -49,7 +50,7 @@ if [[ "$KVM" != [Nn]* ]]; then
 else
 
   CPU_FEATURES="l3-cache=on"
-  WIN_FEATURES="+hypervisor,hv_passthrough"
+  HV_FEATURES="+hypervisor,hv_passthrough"
 
   if [[ "$ARCH" != "amd64" ]]; then
     KVM_OPTS=""
@@ -70,10 +71,10 @@ else
 
 fi
 
-if [[ "${BOOT_MODE,,}" == "windows" ]] || [[ "${BOOT_MODE,,}" == "windows_legacy" ]]; then
+if [[ "$HV" != [Nn]* ]] && [[ "${BOOT_MODE,,}" == "windows"* ]]; then
 
   [ -n "$CPU_FEATURES" ] && CPU_FEATURES="$CPU_FEATURES,"
-  CPU_FEATURES="$CPU_FEATURES${WIN_FEATURES}"
+  CPU_FEATURES="$CPU_FEATURES${HV_FEATURES}"
 
 fi
 
