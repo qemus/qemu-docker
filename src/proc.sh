@@ -37,9 +37,9 @@ fi
 
 if [[ "$KVM" != [Nn]* ]]; then
 
-  KVM_OPTS=",accel=kvm -enable-kvm"
   CPU_FEATURES="kvm=on,l3-cache=on"
   WIN_FEATURES="+hypervisor,+invtsc,hv_passthrough"
+  KVM_OPTS=",accel=kvm -enable-kvm -global kvm-pit.lost_tick_policy=discard"
 
   if [ -z "$CPU_MODEL" ]; then
     CPU_MODEL="host"

@@ -23,7 +23,6 @@ case "${BOOT_MODE,,}" in
     ;;
   windows_legacy)
     USB="usb-ehci,id=ehci"
-    BOOT_OPTS=""
     ;;
   legacy)
     BOOT_OPTS=""
@@ -59,7 +58,7 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]] && [[ "${BOOT_MODE,,}" != "windows_legacy"
 
   if [[ "${BOOT_MODE,,}" == "windows" ]]; then
 
-    BOOT_OPTS="$BOOT_OPTS -global kvm-pit.lost_tick_policy=discard -global ICH9-LPC.disable_s3=1"
+    BOOT_OPTS="$BOOT_OPTS -global ICH9-LPC.disable_s3=1"
 
     if [[ "$TPM" == [Yy1]* ]]; then
 
