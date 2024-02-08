@@ -18,7 +18,7 @@ echo
 
 : "${BOOT:=""}"           # URL of the ISO file
 : "${DEBUG:="N"}"         # Disable debugging
-: "${MACHINE:="q35"}"      # Machine selection
+: "${MACHINE:="q35"}"     # Machine selection
 : "${ALLOCATE:=""}"       # Preallocate diskspace
 : "${ARGUMENTS:=""}"      # Extra QEMU parameters
 : "${CPU_CORES:="1"}"     # Amount of CPU cores
@@ -27,6 +27,9 @@ echo
 : "${BOOT_INDEX:="10"}"   # Boot index of CD drive
 
 # Helper variables
+
+PROCESS="${APP,,}"
+PROCESS="${PROCESS// /-}"
 
 STORAGE="/storage"
 INFO="/run/shm/msg.html"

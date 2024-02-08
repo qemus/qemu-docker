@@ -83,7 +83,7 @@ configureDNS() {
   DNSMASQ_OPTS="$DNSMASQ_OPTS --dhcp-option=option:dns-server,${VM_NET_IP%.*}.1 --dhcp-option=option:router,${VM_NET_IP%.*}.1"
 
     # Add DNS entry for container
-  DNSMASQ_OPTS="$DNSMASQ_OPTS --address=/host.local/${VM_NET_IP%.*}.1"
+  DNSMASQ_OPTS="$DNSMASQ_OPTS --address=/host.lan/${VM_NET_IP%.*}.1"
 
   DNSMASQ_OPTS=$(echo "$DNSMASQ_OPTS" | sed 's/\t/ /g' | tr -s ' ' | sed 's/^ *//')
   [[ "$DEBUG" == [Yy1]* ]] && set -x
@@ -243,7 +243,8 @@ getInfo() {
     MAC=$(echo "$HOST" | md5sum | sed 's/^\(..\)\(..\)\(..\)\(..\)\(..\).*$/02:\1:\2:\3:\4:\5/')
   fi
 
-  VM_NET_MAC="${MAC,,//-/:}"
+  VM_NET_MAC="${MAC^^}"
+  VM_NET_MAC="${VM_NET_MAC//-/:}"
 
   if [[ ${#VM_NET_MAC} == 12 ]]; then
     m="$VM_NET_MAC"
