@@ -8,14 +8,8 @@ else
   PROGRESS="--progress=dot:giga"
 fi
 
-BASE="boot.img"
-[ ! -f "$STORAGE/$BASE" ] && BASE="boot.iso"
-[ ! -f "$STORAGE/$BASE" ] && BASE="Boot.img"
-[ ! -f "$STORAGE/$BASE" ] && BASE="Boot.iso"
-[ ! -f "$STORAGE/$BASE" ] && BASE="boot.IMG"
-[ ! -f "$STORAGE/$BASE" ] && BASE="boot.ISO"
-[ ! -f "$STORAGE/$BASE" ] && BASE="BOOT.IMG"
-[ ! -f "$STORAGE/$BASE" ] && BASE="BOOT.ISO"
+BASE=$(find "$STORAGE" -maxdepth 1 -type f -iname boot.iso -printf "%f\n" | head -n 1)
+[ -z "$BASE" ] && BASE=$(find "$STORAGE" -maxdepth 1 -type f -iname boot.img -printf "%f\n" | head -n 1)
 
 [ -f "$STORAGE/$BASE" ] && return 0
 
