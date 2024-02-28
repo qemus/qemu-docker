@@ -239,7 +239,7 @@ getInfo() {
   fi
 
   if [ -z "$MAC" ]; then
-    local file="/storage/$PROCESS.mac"
+    local file="$STORAGE/$PROCESS.mac"
     if [ -f "$file" ]; then
       MAC=$(<"$file")
     else
