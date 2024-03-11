@@ -18,6 +18,7 @@ echo
 
 : "${BOOT:=""}"           # URL of the ISO file
 : "${DEBUG:="N"}"         # Disable debugging
+: "${CONSOLE:="N"}"       # Disable console
 : "${MACHINE:="q35"}"     # Machine selection
 : "${ALLOCATE:=""}"       # Preallocate diskspace
 : "${ARGUMENTS:=""}"      # Extra QEMU parameters
