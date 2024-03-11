@@ -14,6 +14,9 @@ case "${DISPLAY,,}" in
   web)
     DISPLAY_OPTS="-display vnc=:0,websocket=5700 -vga $VGA"
     ;;
+  disabled)
+    DISPLAY_OPTS="-display none -vga $VGA"
+    ;;
   none)
     DISPLAY_OPTS="-display none -vga none"
     ;;
