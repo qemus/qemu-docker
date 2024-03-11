@@ -169,6 +169,8 @@ docker run -it --rm --name qemu -e "BOOT=http://example.com/image.iso" -p 8006:8
   ```yaml
   environment:
     DHCP: "Y"
+  devices:
+    - /dev/vhost-net
   device_cgroup_rules:
     - 'c *:* rwm'
   ```
