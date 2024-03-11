@@ -5,6 +5,7 @@ set -Eeuo pipefail
 
 : "${MAC:=""}"
 : "${DHCP:="N"}"
+: "${NETWORK:="Y"}"
 : "${HOST_PORTS:=""}"
 
 : "${VM_NET_DEV:=""}"
@@ -201,6 +202,8 @@ closeNetwork() {
   nginx -s stop 2> /dev/null
   fWait "nginx"
 
+  [[ "$NETWORK" != [Yy1]* ]] && return 0
+
   exec 30<&- || true
   exec 40<&- || true
 
@@ -270,6 +273,11 @@ getInfo() {
 # ######################################
 #  Configure Network
 # ######################################
+
+if [[ "$NETWORK" != [Yy1]* ]]; then
+  NET_OPTS=""
+  return 0
+fi
 
 if [ ! -c /dev/vhost-net ]; then
   if mknod /dev/vhost-net c 10 238; then
