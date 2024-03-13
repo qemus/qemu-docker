@@ -21,6 +21,11 @@ case "${BOOT_MODE,,}" in
     ROM="OVMF_CODE_4M.ms.fd"
     VARS="OVMF_VARS_4M.ms.fd"
     ;;
+  windows_plain)
+    TPM="N"
+    ROM="OVMF_CODE_4M.fd"
+    VARS="OVMF_VARS_4M.fd"
+    ;;
   windows_legacy)
     USB="usb-ehci,id=ehci"
     ;;
@@ -48,7 +53,7 @@ if [[ "${BOOT_MODE,,}" != "legacy" ]] && [[ "${BOOT_MODE,,}" != "windows_legacy"
     cp "$OVMF/$VARS" "$DEST.vars"
   fi
 
-  if [[ "${BOOT_MODE,,}" != "uefi" ]]; then
+  if [[ "${BOOT_MODE,,}" == "secure" ]] || [[ "${BOOT_MODE,,}" == "windows" ]]; then
     SECURE=",smm=on"
     BOOT_OPTS="$BOOT_OPTS -global driver=cfi.pflash01,property=secure,value=on"
   fi
