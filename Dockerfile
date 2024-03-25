@@ -4,8 +4,8 @@ ARG DEBCONF_NOWARNINGS "yes"
 ARG DEBIAN_FRONTEND "noninteractive"
 ARG DEBCONF_NONINTERACTIVE_SEEN "true"
 
-RUN apt-get update \
-    && apt-get --no-install-recommends -y install \
+RUN apt-get update && \
+    apt-get --no-install-recommends -y install \
         tini \
         wget \
         ovmf \
@@ -20,17 +20,17 @@ RUN apt-get update \
         qemu-utils \
         ca-certificates \
         netcat-openbsd \
-        qemu-system-x86 \
-    && apt-get clean \
-    && novnc="1.4.0" \
-    && mkdir -p /usr/share/novnc \
-    && wget https://github.com/novnc/noVNC/archive/refs/tags/v"$novnc".tar.gz -O /tmp/novnc.tar.gz -q \
-    && tar -xf /tmp/novnc.tar.gz -C /tmp/ \
-    && cd /tmp/noVNC-"$novnc" \
-    && mv app core vendor package.json *.html /usr/share/novnc \
-    && unlink /etc/nginx/sites-enabled/default \
-    && sed -i 's/^worker_processes.*/worker_processes 1;/' /etc/nginx/nginx.conf \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+        qemu-system-x86 && \
+    apt-get clean && \
+    novnc="1.4.0" && \
+    mkdir -p /usr/share/novnc && \
+    wget https://github.com/novnc/noVNC/archive/refs/tags/v"$novnc".tar.gz -O /tmp/novnc.tar.gz -q && \
+    tar -xf /tmp/novnc.tar.gz -C /tmp/ && \
+    cd /tmp/noVNC-"$novnc" && \
+    mv app core vendor package.json *.html /usr/share/novnc && \
+    unlink /etc/nginx/sites-enabled/default && \
+    sed -i 's/^worker_processes.*/worker_processes 1;/' /etc/nginx/nginx.conf && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY ./src /run/
 COPY ./web /var/www/
